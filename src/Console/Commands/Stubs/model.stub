@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use App\Presenters\ServiceNamePresenter;
+use Devesharp\CRUD\Presenter\PresentableTrait;
+use Devesharp\Support\ModelGetTable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ServiceName extends Model
+{
+    use HasFactory, ModelGetTable, PresentableTrait;
+
+    protected $presenter = ServiceNamePresenter::class;
+
+    protected $guarded = [];
+
+    protected $casts = [
+        'enabled' => 'bool'
+    ];
+}

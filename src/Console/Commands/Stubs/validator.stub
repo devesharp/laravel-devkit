@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Validators;
+
+use Devesharp\CRUD\Validator;
+
+class ServiceValidator extends Validator
+{
+
+    protected array $rules = [
+        'create' => [
+            'name' => 'string|max:100|required',
+            'age' => 'numeric|required',
+            'active' => 'boolean',
+        ],
+        'update' => [
+            '_extends' => 'create',
+            'id' => 'numeric',
+        ],
+        // Busca
+        'search' => [
+            'filters.id' => 'numeric',
+            'filters.name' => 'string',
+        ],
+    ];
+
+    protected array $descriptions = [
+        'create' => [
+            'name' => 'Nome',
+            'age' => 'Idade',
+            'active' => 'Recurso ativo',
+        ],
+        'update' => [],
+        'search' => [
+            'filters.id' => 'Id do item',
+            'filters.name' => 'Nome do item'
+        ],
+    ];
+
+    public function create(array $data, $requester = null)
+    {
+        $context = 'create';
+
+        return $this->validate($data, $this->getValidate($context));
+    }
+
+    public function update(array $data, $requester = null)
+    {
+        $context = 'update';
+
+        return $this->validate($data, $this->removeRequiredRules($this->getValidate($context)));
+    }
+
+    public function search(array $data, $requester = null)
+    {
+        return $this->validate($data, $this->getValidateWithSearch('search'));
+    }
+}

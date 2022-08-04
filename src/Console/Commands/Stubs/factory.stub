@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\ServiceName;
+use Devesharp\Support\Factory;
+
+class ServiceNameFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = ServiceName::class;
+
+    protected $onlyRaw = [];
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'name' => 'john'
+        ];
+    }
+}

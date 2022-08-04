@@ -1,0 +1,5 @@
+Route::post('|SLUG|/search', '|CONTROLLER_NAME|@search');
+Route::get('|SLUG|/{id}', '|CONTROLLER_NAME|@get');
+Route::post('|SLUG|/{id}', '|CONTROLLER_NAME|@update');
+Route::post('|SLUG|', '|CONTROLLER_NAME|@create');
+Route::delete('|SLUG|/{id}', '|CONTROLLER_NAME|@delete');

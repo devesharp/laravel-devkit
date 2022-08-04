@@ -1,0 +1,181 @@
+<?php
+
+namespace Tests\Routes\ServiceName;
+
+use App\Models\Users;
+use App\Models\ServiceName;
+use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class ServiceNameRouteTest extends TestCase
+{
+    /**
+     * @testdox [POST]  api/{{route}}
+     */
+    public function testRouteServiceNameCreate()
+    {
+        $user = Users::factory()->create();
+        $user->access_token = JWTAuth::fromUser($user);
+        $ServiceNameData = ServiceName::factory()->raw();
+
+        $response = $this->withPost([
+            'name' => 'Criar ServiceName',
+            'group' => ['ServiceName'],
+            'uri' => 'api/{{route}}',
+            'data' => $ServiceNameData,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $user->access_token
+            ],
+            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
+            'validatorClass' => \App\Validators\ServiceNameValidator::class,
+            'validatorMethod' => 'create'
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $response->assertStatus(200);
+        $this->assertTrue($responseData['success']);
+        $this->assertEqualsArrayLeft($ServiceNameData, $responseData['data']);
+    }
+
+    /**
+     * @testdox [POST]  api/{{route}}/:id
+     */
+    public function testRouteServiceNameUpdate()
+    {
+        $user = Users::factory()->create();
+        $user->access_token = JWTAuth::fromUser($user);
+        $ServiceNameData = ServiceName::factory()->raw();
+        $resource = ServiceName::factory()->create();
+
+        $response = $this->withPost([
+            'name' => 'Atualizar ServiceName',
+            'group' => ['ServiceName'],
+            'uri' => 'api/{{route}}/:id',
+            'params' => [
+                [
+                    'name' => 'id',
+                    'value' => $resource->id,
+                    'description' => 'ID ServiceName',
+                ]
+            ],
+            'data' => $ServiceNameData,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $user->access_token
+            ],
+            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
+            'validatorClass' => \App\Validators\ServiceNameValidator::class,
+            'validatorMethod' => 'update'
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $response->assertStatus(200);
+        $this->assertTrue($responseData['success']);
+        $this->assertEqualsArrayLeft($ServiceNameData, $responseData['data']);
+    }
+
+    /**
+     * @testdox [GET]   api/{{route}}/:id
+     */
+    public function testRouteServiceNameGet()
+    {
+        $user = Users::factory()->create();
+        $user->access_token = JWTAuth::fromUser($user);
+
+        $resource = ServiceName::factory()->create();
+
+        $response = $this->withGet([
+            'name' => 'Resgatar ServiceName',
+            'group' => ['ServiceName'],
+            'uri' => 'api/{{route}}/:id',
+            'params' => [
+                [
+                    'name' => 'id',
+                    'value' => $resource->id,
+                    'description' => 'ID ServiceName',
+                ]
+            ],
+            'headers' => [
+                'Authorization' => 'Bearer ' . $user->access_token
+            ],
+            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
+            'validatorClass' => \App\Validators\ServiceNameValidator::class,
+            'validatorMethod' => 'get'
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $response->assertStatus(200);
+        $this->assertTrue($responseData['success']);
+        $this->assertEqualsArrayLeft($resource->getAttributes(), $responseData['data']);
+    }
+
+    /**
+     * @testdox [POST]  api/{{route}}/search
+     */
+    public function testRouteServiceNameSearch()
+    {
+        $user = Users::factory()->create();
+        $user->access_token = JWTAuth::fromUser($user);
+        $resource = ServiceName::factory()->create();
+
+        $response = $this->withPost([
+            'name' => 'Buscar ServiceName',
+            'group' => ['ServiceName'],
+            'uri' => 'api/{{route}}/search',
+            'data' => [
+                'filters' => []
+            ],
+            'headers' => [
+                'Authorization' => 'Bearer ' . $user->access_token
+            ],
+            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
+            'validatorClass' => \App\Validators\ServiceNameValidator::class,
+            'validatorMethod' => 'search'
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $response->assertStatus(200);
+        $this->assertEquals(1, $responseData['data']['count']);
+        $this->assertEquals(1, count($responseData['data']['results']));
+    }
+
+    /**
+     * @testdox [DELETE] api/{{route}}/:id
+     */
+    public function testRouteServiceNameDelete()
+    {
+        $user = Users::factory()->create();
+        $user->access_token = JWTAuth::fromUser($user);
+
+        $resource = ServiceName::factory()->create();
+
+        $response = $this->withDelete([
+            'name' => 'Deletar ServiceName',
+            'group' => ['ServiceName'],
+            'uri' => 'api/{{route}}/:id',
+            'params' => [
+                [
+                    'name' => 'id',
+                    'value' => $resource->id,
+                    'description' => 'ID ServiceName',
+                ]
+            ],
+            'data' => [],
+            'headers' => [
+                'Authorization' => 'Bearer ' . $user->access_token
+            ],
+            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
+            'validatorClass' => \App\Validators\ServiceNameValidator::class,
+            'validatorMethod' => 'delete'
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $response->assertStatus(200);
+        $this->assertTrue($responseData['success']);
+        $this->assertTrue(!!$responseData['data']);
+    }
+}

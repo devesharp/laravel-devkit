@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Repositories;
+
+use Devesharp\CRUD\Repository\RepositoryMysql;
+
+/**
+ * Class Service.
+ *
+ * @method public                 Builder getModel()
+ * @method \App\Models\Service findById($id, $enabled = true)
+ * @method \App\Models\Service findIdOrFail($id, $enabled = true)
+ */
+class ServiceRepository extends RepositoryMysql
+{
+    /**
+     * @var string
+     */
+    protected $model = \App\Models\Service::class;
+}

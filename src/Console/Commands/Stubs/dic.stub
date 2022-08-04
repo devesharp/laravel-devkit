@@ -1,0 +1,105 @@
+<?php
+
+namespace Tests\Unit\ServiceName;
+
+use App\Models\Users;
+use App\Models\ServiceName;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
+
+class ServiceNameTest extends TestCase
+{
+
+    public \App\Services\ServiceNameService $service;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->service = app('\App\Services\ServiceNameService');
+    }
+
+    /**
+     * @testdox create - default
+     */
+    public function testCreateServiceName()
+    {
+        $userAdmin = Users::factory()->create();
+        $ServiceNameData = ServiceName::factory()->raw();
+
+        $resource = $this->service->create($ServiceNameData, $userAdmin);
+
+        $this->assertGreaterThanOrEqual(1, $resource['id']);
+        $this->assertEqualsArrayLeft($ServiceNameData, $resource);
+    }
+
+    /**
+     * @testdox update - default
+     */
+    public function testUpdateServiceName()
+    {
+        $userAdmin = Users::factory()->create();
+        $ServiceNameData = ServiceName::factory()->raw();
+
+        $resource = $this->service->create($ServiceNameData, $userAdmin);
+
+        $ServiceNameDataUpdate = ServiceName::factory()->raw();
+
+        $resourceUpdated = $this->service->update($resource['id'], $ServiceNameDataUpdate, $userAdmin);
+
+        $this->assertEqualsArrayLeft($ServiceNameDataUpdate, $resourceUpdated);
+    }
+
+    /**
+     * @testdox get - default
+     */
+    public function testGetServiceName()
+    {
+        $userAdmin = Users::factory()->create();
+        $ServiceNameData = ServiceName::factory()->raw();
+
+        $resourceCreated = $this->service->create($ServiceNameData, $userAdmin);
+
+        $resource = $this->service->get($resourceCreated['id'], $userAdmin);
+
+        $this->assertGreaterThanOrEqual(1, $resource['id']);
+        $this->assertEqualsArrayLeft($ServiceNameData, $resource);
+    }
+
+    /**
+     * @testdox search - default
+     */
+    public function testSearchServiceName()
+    {
+        $userAdmin = Users::factory()->create();
+        ServiceName::factory()->count(5)->create();
+
+        $results = $this->service->search([
+            "filters" => [
+                "id" => 1
+            ]
+        ], $userAdmin);
+        $this->assertEquals(1, $results['count']);
+
+    }
+
+    /**
+     * @testdox delete - default
+     */
+    public function testDeleteServiceName()
+    {
+        $userAdmin = Users::factory()->create();
+        $ServiceNameData = ServiceName::factory()->raw();
+
+        $resource = $this->service->create($ServiceNameData, $userAdmin);
+
+        $this->service->delete($resource['id'], $userAdmin);
+
+//        // If softDelete = false
+//        $this->assertNull(ServiceName::query()->find($resource['id']));
+
+        // If softDelete = true
+        $this->assertFalse(!!ServiceName::query()->find($resource['id'])->enabled);
+    }
+}

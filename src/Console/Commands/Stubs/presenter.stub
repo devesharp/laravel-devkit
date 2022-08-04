@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Presenters;
+
+use Devesharp\CRUD\Presenter\Presenter;
+
+class ServicePresenter extends Presenter {
+
+    public function fullName()
+    {
+        return $this->name;
+    }
+}

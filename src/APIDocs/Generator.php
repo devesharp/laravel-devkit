@@ -13,6 +13,7 @@ use Devesharp\Support\Helpers;
 use Illuminate\Console\Command;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\PathItem;
+use Illuminate\Http\File;
 use Illuminate\Support\Arr;
 
 class Generator
@@ -79,6 +80,55 @@ class Generator
     public function setVersion(string $version): void
     {
         $this->openAPIJSON->info->version = $version;
+    }
+
+    public function addBasicAuth(string $name): void
+    {
+        if (!isset($this->openAPIJSON->components->securitySchemes)) {
+            $this->openAPIJSON->components = new \cebe\openapi\spec\Components([
+                'securitySchemes' => [
+                    $name => new \cebe\openapi\spec\SecurityScheme([
+                        'type' => 'http',
+                        'scheme' => 'basic',
+                        'description' => 'Bearer Authentication',
+                    ]),
+                ],
+            ]);
+        } else {
+            $securitySchemes = $this->openAPIJSON->components->securitySchemes;
+            $securitySchemes[$name] = new \cebe\openapi\spec\SecurityScheme([
+                'type' => 'http',
+                'scheme' => 'basic',
+                'description' => 'Bearer Authentication',
+            ]);
+            $this->openAPIJSON->components->securitySchemes = $securitySchemes;
+        }
+    }
+
+    public function addBearerAuth(string $name): void
+    {
+        if (!isset($this->openAPIJSON->components->securitySchemes)) {
+            $this->openAPIJSON->components = new \cebe\openapi\spec\Components([
+                'securitySchemes' => [
+                    $name => new \cebe\openapi\spec\SecurityScheme([
+                        'type' => 'http',
+                        'scheme' => 'basic',
+                        'bearerFormat' => 'Bearer',
+                        'description' => 'Bearer Authentication',
+                    ]),
+                ],
+            ]);
+        } else {
+            $securitySchemes = $this->openAPIJSON->components->securitySchemes;
+            $securitySchemes[$name] = new \cebe\openapi\spec\SecurityScheme([
+                'type' => 'http',
+                'scheme' => 'bearer',
+                'bearerFormat' => 'Bearer',
+                'description' => 'Bearer Authentication',
+            ]);
+            $this->openAPIJSON->components->securitySchemes = $securitySchemes;
+        }
+
     }
 
     public function setTermsOfService(string $termsOfService): void
@@ -153,6 +203,7 @@ class Generator
             'externalDocs' => $route->externalDocs ?? [],
             'parameters' => $route->parameters ?? [],
             'deprecated' => $route->deprecated ?? false,
+            'security' => $route->security ?? [],
             'responses' => new \cebe\openapi\spec\Responses([])
         ]);
 
@@ -167,7 +218,6 @@ class Generator
             ]
         ];
 
-        var_dump($route->bodyRequired);
         if (!empty($route->body)) {
             $path->{$method}->requestBody = [
                 'description' => $route->descriptionResponse,
@@ -184,6 +234,16 @@ class Generator
 
         $schema = [];
         if (is_object($data) || (is_array($data) && Helpers::isArrayAssoc($data))) {
+
+            if (is_object($data)) {
+                if (get_class($data) == \Illuminate\Http\Testing\File::class || get_class($data) == File::class) {
+                    return [
+                        'type' => 'string',
+                        'format' => 'binary',
+                    ];
+                }
+            }
+
             $schema['type'] = 'object';
             $schema['properties'] = [];
 

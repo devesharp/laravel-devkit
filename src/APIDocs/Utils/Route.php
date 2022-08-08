@@ -18,4 +18,5 @@ class Route
     public array $bodyRequired = [];
     public array $response = [];
     public string $descriptionResponse = '';
+    public array $security = [];
 }

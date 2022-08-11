@@ -200,12 +200,15 @@ class Generator
             'tags' => $route->tags ?? [],
             'summary' => $route->summary ?? '',
             'description' => $route->description ?? '',
-            'externalDocs' => $route->externalDocs ?? [],
             'parameters' => $route->parameters ?? [],
             'deprecated' => $route->deprecated ?? false,
             'security' => $route->security ?? [],
             'responses' => new \cebe\openapi\spec\Responses([])
         ]);
+
+        if (!empty($route->externalDocs)) {
+            $path->{$method}->externalDocs = $route->externalDocs;
+        }
 
         $path->{$method}->responses = [
             $route->statusCode => [

@@ -34,7 +34,6 @@ class TestDocsGenerate
 
     public function __construct($load, $method, $url, $testCase)
     {
-        $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
         $this->route = new Route();
         $this->route->method = $method;
         $this->route->path = $url;
@@ -85,12 +84,12 @@ class TestDocsGenerate
         return $this;
     }
 
-    public function addPath($name, $value, $description, $required = false): self
+    public function addPath($name, $value, $description): self
     {
         $this->route->parameters[] = [
             'name' => $name,
             'in' => 'path',
-            'required' => $required,
+            'required' => true,
             'description' => $description,
             'example' => $value,
             'schema' => [
@@ -108,8 +107,9 @@ class TestDocsGenerate
      * @param $name
      * @return $this
      */
-    function addRouteName($name): self {
+    function addRouteName($name, $description = ''): self {
         $this->route->summary = $name;
+        $this->route->description = $description;
         return $this;
     }
 
@@ -140,12 +140,18 @@ class TestDocsGenerate
 
     function run() {
         $path = $this->route->path;
+        $pathFixed = $this->route->path;
 
         $queries = [];
         $headers = [];
+
+        /**
+         * Resgatar path, query e header para a rota
+         */
         foreach ($this->route->parameters as $parameter) {
             if ($parameter['in'] == 'path') {
                 $path = str_replace(':' . $parameter['name'], $parameter['example'], $path);
+                $pathFixed = str_replace(':' . $parameter['name'], '{' . $parameter['name'] . '}', $pathFixed);
             }else if ($parameter['in'] == 'query') {
                 $queries[] = $parameter['name'] . '=' . $parameter['example'];
             }else if ($parameter['in'] == 'header') {
@@ -153,18 +159,40 @@ class TestDocsGenerate
             }
         }
 
+        /**
+         * Converter array de queries em string
+         */
         if (!empty($queries)) {
             $path = $path . '?' . implode('&', $queries);
         }
 
-        if (!empty($this->route->body)) {
-            $request = $this->testCase->{$this->route->method}($path, $this->route->body, $headers);
-        } else {
-            $request = $this->testCase->{$this->route->method}($path, $headers);
+        /**
+         * Chamar metodo da rota
+         */
+        switch ($this->route->method) {
+            case 'post':
+                $request = $this->testCase->post($path, $this->route->body, $headers);
+                break;
+            case 'put':
+                $request = $this->testCase->put($path, $this->route->body, $headers);
+                break;
+            case 'delete':
+                $request = $this->testCase->delete($path, $this->route->body, $headers);
+                break;
+            case 'patch':
+                $request = $this->testCase->patch($path, $this->route->body, $headers);
+                break;
+            default:
+                $request = $this->testCase->get($path, $headers);
+                break;
         }
 
+        $this->route->path = $pathFixed;
         $this->route->statusCode = $request->getStatusCode();
         $this->route->response = $request->json();
+
+        $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
+        $apiDocs->addRoute($this->route);
 
         return $request;
     }

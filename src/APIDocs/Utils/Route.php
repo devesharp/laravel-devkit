@@ -16,6 +16,7 @@ class Route
     public array $parameters = [];
     public array $body = [];
     public array $bodyRequired = [];
+    public array $bodyDescription = [];
     public array $response = [];
     public string $descriptionResponse = '';
     public array $security = [];

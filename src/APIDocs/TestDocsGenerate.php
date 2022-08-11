@@ -121,16 +121,18 @@ class TestDocsGenerate
     /**
      * @param array $data
      * @param Validator $validator
-     * @param string $validatorClass
+     * @param string $validatorName
      * @param bool $all Mostrar apenas valores de $data ou todos os valores permitidos no validator
      * @return $this
      */
-    public function addBody(array $data, string $validatorString = '', string $validatorClass = '', bool $all = false): self
+    public function addBody(array $data, string $validatorString = '', string $validatorName = '', bool $all = false): self
     {
         /** @var ValidatorAPIGenerator $validator */
-        if ($validatorString && $validatorClass) {
+        if ($validatorString && $validatorName) {
             $validator = app($validatorString);
-            $data = $validator->convertValidatorToData($validatorClass, $data, $all);
+            $data = $validator->convertValidatorToData($validatorName, $data, $all);
+            $this->route->bodyRequired = $validator->getRequireds($validatorName);
+            $this->route->bodyDescription = $validator->getDescriptions($validatorName);
         }
 
         $this->route->body = $data;

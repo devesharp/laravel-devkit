@@ -7,7 +7,7 @@ use Devesharp\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tests\Units\APIDocsGenerator\Mocks\ValidatorStubWithGenerator;
+use Tests\Units\TestDocsRoute\Mocks\ValidatorStubWithGenerator;
 
 class TestDocsRouteYmlTest extends \Tests\TestCase
 {
@@ -594,5 +594,149 @@ paths:
                   example: John
 ", $yml);
 
+    }
+
+    /**
+     * @testdox testar criação de rota com validator
+     */
+    public function testSimplePostWithValidatorTest()
+    {
+        $http = $this->withPost('/resource/search')
+            ->addRouteName('Create Post', 'method post')
+            ->addGroups(['resources', 'posts'])
+            ->addBody([
+                'name' => 'John',
+                'age' => 2,
+            ], ValidatorStubWithGenerator::class, 'complex', true)
+            ->run();
+
+        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+
+        $this->assertEquals("openapi: 3.0.2
+info:
+  title: 'API 1.0'
+  description: 'API Example'
+  version: 1.0.0
+servers:
+  -
+    url: 'https://example.com.br'
+    description: 'Prod API'
+paths:
+  /resource/search:
+    post:
+      tags:
+        - resources
+        - posts
+      summary: 'Create Post'
+      description: 'method post'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          example: 1
+                        name:
+                          type: string
+                          example: John
+                        age:
+                          type: string
+                          example: '10'
+                  count:
+                    type: integer
+                    format: int64
+                    example: 1
+      deprecated: false
+      security: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John
+                  description: Nome
+                age:
+                  type: integer
+                  format: int64
+                  example: 2
+                  description: Idade
+                active:
+                  type: string
+                  example: string
+                  description: Ativo
+                pets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: string
+                        description: ID
+                      name:
+                        type: string
+                        example: string
+                        description: 'Nome do Pet'
+                    required:
+                      - id
+                      - name
+                  description: ID
+                owner:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: string
+                      description: 'ID do Dono'
+                    name:
+                      type: string
+                      example: string
+                      description: 'Nome do Dono'
+                    age:
+                      type: string
+                      example: string
+                      description: 'Idade do Dono'
+                item_array_deep:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: string
+                      name:
+                        type: string
+                        example: string
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: string
+                            name:
+                              type: string
+                              example: string
+                    required:
+                      - items
+              required:
+                - pets
+", $yml);
     }
 }

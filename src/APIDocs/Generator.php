@@ -226,7 +226,7 @@ class Generator
                 'description' => $route->descriptionResponse,
                 'content' => [
                     $route->bodyType => [
-                        'schema' => $this->dataToSchema($route->body, true, $route->bodyRequired)
+                        'schema' => $this->dataToSchema($route->body, true, $route->bodyRequired, $route->bodyDescription)
                     ]
                 ]
             ];

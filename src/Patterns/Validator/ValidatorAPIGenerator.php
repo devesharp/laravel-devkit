@@ -73,7 +73,6 @@ trait ValidatorAPIGenerator
                 $currentValue = $value;
                 if (!!preg_match('/'.$keySchema . '/', $key) || $this->additionalProperties)
                 {
-                    var_dump('123');
                     $existKey = true;
                     \Illuminate\Support\Arr::set($newData, $key, $currentValue);
                 }

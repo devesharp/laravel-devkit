@@ -20,14 +20,16 @@ class APIUtilsTest extends \Tests\TestCase
 
         $schema = $apiDocs->dataToSchema([
             'key_string' => 'string',
-        ], true, ['key_string']);
+        ], true, ['key_string'], ['key_string' => 'Example String', '' => 'Example Data']);
 
         $this->assertEquals([
             'type' => 'object',
+            'description' => 'Example Data',
             'properties' => [
                 'key_string' => [
                     'type' => 'string',
                     'example' => 'string',
+                    'description' => 'Example String',
                 ],
             ],
             'required' => ['key_string'],

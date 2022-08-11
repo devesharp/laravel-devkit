@@ -230,7 +230,7 @@ class Generator
         }
     }
 
-    function dataToSchema($data, $addExample = false, $required = []) {
+    function dataToSchema($data, $addExample = false, $required = [], $description = []) {
 
         $schema = [];
         if (is_object($data) || (is_array($data) && Helpers::isArrayAssoc($data))) {
@@ -289,7 +289,12 @@ class Generator
         }
 
         if (!empty($required)) {
-            return $this->addRequiredToSchema($schema, $required);
+            $schema = $this->addRequiredToSchema($schema, $required);
+        }
+
+
+        if (!empty($description)) {
+            $schema = $this->addDescriptionToSchema($schema, $description);
         }
 
         return $schema;
@@ -350,6 +355,46 @@ class Generator
         return $data2->all();
     }
 
+    function addDescriptionToSchema($data, $descriptions = []) {
+        $data2 = new \Adbar\Dot($data);
+
+        $descriptionsFixed = [];
+
+        foreach ($descriptions as $keyOriginal => $value) {
+            $explode = explode('.', $keyOriginal);
+            $string = [];
+
+            foreach ($explode as $key => $item2) {
+                if (is_numeric($item2) || $item2 == '*') {
+                    $string[] = 'items';
+                } else {
+                    $string[] = 'properties';
+
+                    $string[] = $item2;
+                }
+            }
+
+            $descriptionsFixed[implode('.', $string)] = $value;
+        }
+
+        foreach ($descriptionsFixed as $key => $value) {
+            $path = $data2->get($key);
+
+            $keyRequired = '';
+            if (!empty($path)) {
+                $path['description'] = $value;
+                $data2->set($key, $path);
+            }
+
+            // Para key vazia, deve enviar description para root do body
+            if ($key == 'properties.') {
+                $data2->set('description', $value);
+            }
+        }
+
+        return $data2->all();
+    }
+
 
     public function toYml(): string
     {
@@ -368,8 +413,8 @@ class Generator
     public static function getInstance(bool $increment = false): self
     {
         if(self::$instance === null){
-            self::$instance = new self;
-            self::$instance->init($increment);
+            self::$instance = new self($increment);
+//            self::$instance->init($increment);
         }
 
         return self::$instance;

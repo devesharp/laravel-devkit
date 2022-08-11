@@ -3,6 +3,7 @@
 namespace Devesharp\Testing;
 
 use Carbon\Carbon;
+use Devesharp\APIDocs\TestDocsGenerate;
 use Devesharp\Support\Helpers;
 
 trait TestCase
@@ -35,107 +36,20 @@ trait TestCase
         }
     }
 
-    function withPost($args, $ignoreDocs = false) {
-        $args = $this->treatmentHttpArgs($args);
-        $args['method'] = 'post';
-        $args['summary'] = $args['name'];
-        $args['context'] = $args['validatorMethod'] ?? null;
-
-        $name = $args['name'];
-        $uri = $args['uri'];
-        $data = $args['data'] ?? [];
-        $headers = $args['headers'] ?? [];
-        $validator = $args['validatorClass'] ?? null;
-        $validatorMethod = $args['validatorMethod'] ?? null;
-
-        $response = $this->post($args['uriForTest'], $data, $headers);
-        $responseData = json_decode($response->getContent(), true);
-
-
-        $args['response'] = [
-            'status' => $response->getStatusCode(),
-            'body' => $responseData,
-            'description' => $args['response']['description'] ?? '',
-            'bodyRequired' => $args['response']['bodyRequired'] ?? [],
-            'ignoreBody' => $args['response']['ignoreBody'] ?? [],
-        ];
-
-        if (class_exists($validator) && !empty($validatorMethod)) {
-            $args['body'] = app($validator)->convertValidatorToData($validatorMethod, $data);
-            $args['bodyRequired'] = app($validator)->getRequireds($validatorMethod);
-            $args['bodyDescription'] = app($validator)->getDescriptions($validatorMethod);
-        } else {
-            $args['body'] = $data;
-        }
-
-        $apiDocs = \Devesharp\APIDocs\APIDocsCreate::getInstance();
-        $apiDocs->addRoute($args);
-
-        return $response;
+    function withPost($http) {
+        return (new TestDocsGenerate('', 'post', $http, $this));
     }
 
-    function withGet($args, $ignoreDocs = false) {
-        $args = $this->treatmentHttpArgs($args);
-        $args['method'] = 'get';
-        $args['summary'] = $args['name'];
-        $args['context'] = $args['validatorMethod'] ?? null;
-
-        $uri = $args['uri'];
-        $headers = $args['headers'] ?? [];
-        $validator = $args['validatorClass'] ?? null;
-        $validatorMethod = $args['validatorMethod'] ?? null;
-
-        $response = $this->get($args['uriForTest'], $headers);
-        $responseData = json_decode($response->getContent(), true);
-
-
-        $args['response'] = [
-            'status' => $response->getStatusCode(),
-            'body' => $responseData,
-            'description' => $args['response']['description'] ?? '',
-            'bodyRequired' => $args['response']['bodyRequired'] ?? [],
-            'ignoreBody' => $args['response']['ignoreBody'] ?? [],
-        ];
-
-
-        $apiDocs = \Devesharp\APIDocs\APIDocsCreate::getInstance();
-        $apiDocs->addRoute($args);
-
-        return $response;
+    function withGet($http) {
+        return (new TestDocsGenerate('', 'get', $http, $this));
     }
 
-    function withDelete($args, $ignoreDocs = false) {
-        $args = $this->treatmentHttpArgs($args);
-        $args['method'] = 'delete';
-        $args['summary'] = $args['name'];
-        $args['context'] = $args['validatorMethod'] ?? null;
+    function withDelete($path) {
+        return (new TestDocsGenerate('', 'delete', $path, $this));
+    }
 
-        $headers = $args['headers'] ?? [];
-        $data = $args['data'] ?? [];
-        $validator = $args['validatorClass'] ?? null;
-        $validatorMethod = $args['validatorMethod'] ?? null;
-
-        $response = $this->delete($args['uriForTest'], $data, $headers);
-        $responseData = json_decode($response->getContent(), true);
-
-        $args['response'] = [
-            'status' => $response->getStatusCode(),
-            'body' => $responseData,
-            'description' => $args['response']['description'] ?? '',
-            'bodyRequired' => $args['response']['bodyRequired'] ?? [],
-            'ignoreBody' => $args['response']['ignoreBody'] ?? [],
-        ];
-
-        if (class_exists($validator) && !empty($validatorMethod)) {
-            $args['body'] = app($validator)->convertValidatorToData($validatorMethod, $data);
-        } else {
-            $args['body'] = $data;
-        }
-
-        $apiDocs = \Devesharp\APIDocs\APIDocsCreate::getInstance();
-        $apiDocs->addRoute($args);
-
-        return $response;
+    function withPut($path) {
+        return (new TestDocsGenerate('', 'put', $path, $this));
     }
 
     private function treatmentHttpArgs($args) {

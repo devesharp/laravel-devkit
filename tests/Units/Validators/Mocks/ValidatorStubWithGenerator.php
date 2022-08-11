@@ -5,61 +5,31 @@ namespace Tests\Units\Validators\Mocks;
 use Devesharp\Validator\Validator;
 use Devesharp\Validator\ValidatorAPIGenerator;
 
-class ValidatorStubWithGenerator extends Validator
+class ValidatorStubWithGenerator extends \Devesharp\Patterns\Validator\Validator
 {
-    use ValidatorAPIGenerator;
+    use \Devesharp\Patterns\Validator\ValidatorAPIGenerator;
 
     protected array $rules = [
         'create' => [
             'name' => ['string|max:100|required', 'Nome'],
-            'age' => 'numeric|required',
-            'active' => 'boolean',
-        ],
-        'update' => [
-            '_extends' => 'create',
-            'id' => 'numeric',
+            'age' => ['numeric|required', 'Idade'],
+            'active' => ['boolean', 'Ativo' ],
         ],
         'complex' => [
             '_extends' => 'create',
-            'item_array.*.id' => 'numeric',
-            'item_array.*.name' => 'string',
-            'item_object.id' => 'numeric',
-            'item_object.name' => 'string',
+            'pets.*' => ['array|required', 'ID'],
+            'pets.*.id' => ['numeric|required', 'ID'],
+            'pets.*.name' => ['string|required', 'Nome do Pet'],
+            'owner' => ['array|required', 'ID do Dono'],
+            'owner.id' => ['numeric|array', 'ID do Dono'],
+            'owner.name' => ['string', 'Nome do Dono'],
+            'owner.age' => ['string', 'Idade do Dono'],
+            'item_array_deep' => 'array|required',
             'item_array_deep.*.id' => 'numeric',
             'item_array_deep.*.name' => 'string',
-            'item_array_deep.*.items' => 'string',
+            'item_array_deep.*.items' => 'array|required',
             'item_array_deep.*.items.*.id' => 'numeric',
             'item_array_deep.*.items.*.name' => 'string',
         ],
-        // Busca
-        'search' => [
-            'filters.name' => 'string',
-            'filters.full_name' => 'string',
-        ],
     ];
-
-
-    public function create(array $data, $requester = null)
-    {
-        $context = 'create';
-
-        return $this->validate($data, $this->getValidate($context));
-    }
-
-    public function update(array $data, $requester = null)
-    {
-        $context = 'update';
-
-        return $this->validate($data, $this->getValidateWithoutRequired($context));
-    }
-
-    public function search(array $data, $requester = null)
-    {
-        return $this->validate($data, $this->getValidateWithSearch('search'));
-    }
-
-    public function complex(array $data, $requester = null)
-    {
-        return $this->validate($data, $this->getValidateWithSearch('complex'));
-    }
 }

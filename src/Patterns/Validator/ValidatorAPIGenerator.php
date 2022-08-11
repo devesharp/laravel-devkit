@@ -14,11 +14,7 @@ trait ValidatorAPIGenerator
 
         $data = $this->convertValidatorToData($validatorName, $dataOriginal, $showAll);
 
-        var_dump($data);
-
-        return [
-
-        ];
+        return $data;
     }
 
     public function convertArrayToModel($data) {

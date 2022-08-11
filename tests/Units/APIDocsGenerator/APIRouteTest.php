@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tests\Units\APIDocsGenerator\Mocks\ValidatorStubWithGenerator;
 
-class APIGetTest extends \Tests\TestCase
+class APIRouteTest extends \Tests\TestCase
 {
     /**
      * @testdox post - json

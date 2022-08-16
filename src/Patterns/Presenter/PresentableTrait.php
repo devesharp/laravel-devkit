@@ -1,8 +1,8 @@
 <?php
 
-namespace Devesharp\CRUD\Presenter;
+namespace Devesharp\Patterns\Presenter;
 
-use Devesharp\CRUD\Presenter\Exceptions\PresenterException;
+use Devesharp\Patterns\Presenter\Exceptions\PresenterException;
 
 trait PresentableTrait
 {
@@ -25,6 +25,6 @@ trait PresentableTrait
             return $this->presenterInstance = new $this->presenter($this);
         }
 
-        throw new PresenterException('Property $presenter was not set correctly in '.get_class($this));
+        throw new PresenterException('Property $presenter was not set correctly in ' . get_class($this));
     }
 }

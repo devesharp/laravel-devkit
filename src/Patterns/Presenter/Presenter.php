@@ -1,6 +1,6 @@
 <?php
 
-namespace Devesharp\CRUD\Presenter;
+namespace Devesharp\Patterns\Presenter;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;

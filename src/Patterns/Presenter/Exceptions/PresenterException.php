@@ -1,5 +1,5 @@
 <?php
 
-namespace Devesharp\CRUD\Presenter\Exceptions;
+namespace Devesharp\Patterns\Presenter\Exceptions;
 
 class PresenterException extends \Exception {}

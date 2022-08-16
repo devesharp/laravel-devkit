@@ -207,7 +207,7 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
-    public function whereRaw($column)
+    public function whereRaw($column): self
     {
         $this->modelQuery = $this->modelQuery->whereRaw($column);
 
@@ -518,6 +518,41 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
+    public function orWhereDate($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere($column, $value);
+
+        return $this;
+    }
+
+    public function orWhereDateGt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere($column, '>', $value);
+
+        return $this;
+    }
+
+    public function orWhereDateGte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere($column, '>=', $value);
+
+        return $this;
+    }
+
+    public function orWhereDateLt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere($column, '<', $value);
+
+        return $this;
+    }
+
+    public function orWhereDateLte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere($column, '<=', $value);
+
+        return $this;
+    }
+
     public function orWhereInt($column, $value): self
     {
         $this->modelQuery = $this->modelQuery->orWhere($column, intval($value));
@@ -575,6 +610,68 @@ class RepositoryMysql extends RepositoryInterface
             $column,
             '<=',
             intval($value),
+        );
+
+        return $this;
+    }
+
+    public function orWhereNumber($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere($column, $value);
+
+        return $this;
+    }
+
+    public function orWhereNotNumber($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere(
+            $column,
+            '!=',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orWhereNumberGt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere(
+            $column,
+            '>',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orWhereNumberGte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere(
+            $column,
+            '>=',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orWhereNumberLt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere(
+            $column,
+            '<',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orWhereNumberLte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orWhere(
+            $column,
+            '<=',
+            $value,
         );
 
         return $this;
@@ -753,6 +850,41 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
+    public function havingDate($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having($column, $value);
+
+        return $this;
+    }
+
+    public function havingDateGt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having($column, '>', $value);
+
+        return $this;
+    }
+
+    public function havingDateGte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having($column, '>=', $value);
+
+        return $this;
+    }
+
+    public function havingDateLt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having($column, '<', $value);
+
+        return $this;
+    }
+
+    public function havingDateLte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having($column, '<=', $value);
+
+        return $this;
+    }
+
     public function havingEqual($column, $value): self
     {
         $this->modelQuery = $this->modelQuery->having($column, $value);
@@ -760,13 +892,9 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
-    public function havingIntLte($column, $value): self
+    public function havingInt($column, $value): self
     {
-        $this->modelQuery = $this->modelQuery->having(
-            $column,
-            '<=',
-            intval($value),
-        );
+        $this->modelQuery = $this->modelQuery->having($column, intval($value));
 
         return $this;
     }
@@ -782,9 +910,13 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
-    public function havingInt($column, $value): self
+    public function havingIntLte($column, $value): self
     {
-        $this->modelQuery = $this->modelQuery->having($column, intval($value));
+        $this->modelQuery = $this->modelQuery->having(
+            $column,
+            '<=',
+            intval($value),
+        );
 
         return $this;
     }
@@ -817,6 +949,68 @@ class RepositoryMysql extends RepositoryInterface
             $column,
             '<',
             intval($value),
+        );
+
+        return $this;
+    }
+
+    public function havingNumber($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having($column, $value);
+
+        return $this;
+    }
+
+    public function havingNotNumber($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having(
+            $column,
+            '!=',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function havingNumberLte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having(
+            $column,
+            '<=',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function havingNumberGt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having(
+            $column,
+            '>',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function havingNumberGte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having(
+            $column,
+            '>=',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function havingNumberLt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->having(
+            $column,
+            '<',
+            $value,
         );
 
         return $this;
@@ -950,6 +1144,41 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
+    public function orHavingDate($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving($column, $value);
+
+        return $this;
+    }
+
+    public function orHavingDateGt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving($column, '>', $value);
+
+        return $this;
+    }
+
+    public function orHavingDateGte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving($column, '>=', $value);
+
+        return $this;
+    }
+
+    public function orHavingDateLt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving($column, '<', $value);
+
+        return $this;
+    }
+
+    public function orHavingDateLte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving($column, '<=', $value);
+
+        return $this;
+    }
+
     public function orHavingInt($column, $value): self
     {
         $this->modelQuery = $this->modelQuery->orHaving(
@@ -1010,6 +1239,68 @@ class RepositoryMysql extends RepositoryInterface
             $column,
             '<=',
             intval($value),
+        );
+
+        return $this;
+    }
+
+    public function orHavingNumber($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving($column, $value);
+
+        return $this;
+    }
+
+    public function orHavingNotNumber($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving(
+            $column,
+            '!=',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orHavingNumberGt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving(
+            $column,
+            '>',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orHavingNumberGte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving(
+            $column,
+            '>=',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orHavingNumberLt($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving(
+            $column,
+            '<',
+            $value,
+        );
+
+        return $this;
+    }
+
+    public function orHavingNumberLte($column, $value): self
+    {
+        $this->modelQuery = $this->modelQuery->orHaving(
+            $column,
+            '<=',
+            $value,
         );
 
         return $this;

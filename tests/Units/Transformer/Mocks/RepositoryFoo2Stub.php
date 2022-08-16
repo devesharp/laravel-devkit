@@ -2,8 +2,7 @@
 
 namespace Tests\Units\Transformer\Mocks;
 
-use Devesharp\CRUD\Repository\RepositoryMysql;
-use Illuminate\Database\Eloquent\Model;
+use Devesharp\Patterns\Repository\RepositoryMysql;
 
 class RepositoryFoo2Stub extends RepositoryMysql
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Devesharp\CRUD\Repository;
+namespace Devesharp\Patterns\Repository;
 
 abstract class RepositoryInterface
 {

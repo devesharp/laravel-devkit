@@ -1,10 +1,6 @@
 <?php
 
-namespace Devesharp\CRUD;
-
-use Devesharp\Support\Collection;
-use Illuminate\Database\Capsule\Manager;
-use Illuminate\Support\Str;
+namespace Devesharp\Patterns\Service;
 
 class ServiceFilterEnum
 {

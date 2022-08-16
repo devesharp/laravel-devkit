@@ -1,6 +1,6 @@
 <?php
 
-namespace Devesharp\CRUD\Repository;
+namespace Devesharp\Patterns\Repository;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

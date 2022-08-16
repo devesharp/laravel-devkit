@@ -1,19 +1,15 @@
 <?php
 
-namespace Devesharp\CRUD;
+namespace Devesharp\Patterns\Service;
 
-use Devesharp\CRUD\Repository\RepositoryInterface;
+use Devesharp\Exceptions\Exception;
+use Devesharp\Patterns\Repository\RepositoryInterface;
+use Devesharp\Patterns\Transformer\Transformer;
 use Devesharp\Support\Collection;
 use Devesharp\Support\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-/**
- * Class Service.
- *
- * @var RepositoryInterface $repository
- * @var Validator $validator
- */
 class Service
 {
     /**
@@ -240,6 +236,13 @@ class Service
      * Retorna repositorio com recursos a serem resolvidos na ações como:
      * Deletar, favoritar, destacar, etc..
      *
+     * $target pode receber os seguintes itens:
+     *
+     * int $id
+     * array $ids
+     * $filters = []; // Mesmo utilizado em $this->search()
+     *
+     *
      * @param  $target
      * @param  null                $auth
      * @throws Exception
@@ -275,7 +278,9 @@ class Service
                 $query->whereArrayInt('id', $target);
             }
         } elseif (is_object($target) || Helpers::isArrayAssoc($target)) {
-            $target = Collection::make(['filters' => $target]);
+            if (empty($target['filters'])) {
+                $target = Collection::make(['filters' => $target]);
+            }
 
             $query = $this->makeSearch($target, $auth);
         } else {

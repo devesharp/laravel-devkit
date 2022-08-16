@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Units\Transformer\Mocks;
+namespace Tests\Units\Service\Mocks;
 
 use Devesharp\Patterns\Repository\RepositoryMysql;
 

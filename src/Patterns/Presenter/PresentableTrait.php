@@ -2,7 +2,7 @@
 
 namespace Devesharp\Patterns\Presenter;
 
-use Devesharp\Patterns\Presenter\Exceptions\PresenterException;
+use Devesharp\Patterns\Presenter\Exceptions\ServiceException;
 
 trait PresentableTrait
 {
@@ -13,7 +13,7 @@ trait PresentableTrait
 
     /**
      * @return mixed
-     * @throws PresenterException
+     * @throws ServiceException
      */
     public function present()
     {
@@ -25,6 +25,6 @@ trait PresentableTrait
             return $this->presenterInstance = new $this->presenter($this);
         }
 
-        throw new PresenterException('Property $presenter was not set correctly in ' . get_class($this));
+        throw new ServiceException('Property $presenter was not set correctly in ' . get_class($this));
     }
 }

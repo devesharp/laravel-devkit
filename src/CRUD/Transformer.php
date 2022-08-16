@@ -2,9 +2,8 @@
 
 namespace Devesharp\CRUD;
 
-use Devesharp\CRUD\Repository\RepositoryInterface;
+use Devesharp\Patterns\Repository\RepositoryInterface;
 use Devesharp\Support\Helpers;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Transformer

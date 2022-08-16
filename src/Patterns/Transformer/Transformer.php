@@ -1,10 +1,9 @@
 <?php
 
-namespace Devesharp\CRUD;
+namespace Devesharp\Patterns\Transformer;
 
 use Devesharp\CRUD\Repository\RepositoryInterface;
 use Devesharp\Support\Helpers;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Transformer
@@ -16,7 +15,7 @@ class Transformer
      * @param null $requester
      * @return mixed
      */
-    public function transformDefault(
+    public function getDefault(
         $model,
         $requester = null
     ) {
@@ -40,37 +39,29 @@ class Transformer
          * Fazer o pre carregamento de todos os itens que irão ser chamados
          */
 
-        $loads = []; // Resgatar Ids dos loads
-
+        // Resgatar Ids dos loads
+        $loads = [];
         foreach ($models as $model) {
             foreach ($this->loads as $loadName => $load) {
-                $repositoryClassString = $model[0];
-                $localForeignKey = $load[1] ?? $loadName . '_id';
+                if (class_exists($model[0]))
+                    throw new \Exception('Class ' . $model[0] . ' not found for transformer');
 
-                if (class_exists($repositoryClassString)){
-                    throw new \Exception('Class ' . $repositoryClassString . ' not found for transformer');
-                }
+                $foreignKey = $load[1] ?? $loadName . '_id';
 
-                // Adicionar IDs
-                if (isset($model->{$localForeignKey}) && !empty($model->{$localForeignKey})){
-                    $loads[$loadName][] = $model->{$localForeignKey};
-                }
+                // add id for array
+                $loads[$loadName][] = $model->{$foreignKey};
             }
         }
 
-
-        // Fazer Load dos itens
-        foreach ($this->loads as $key => $load) {
-            $name = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::camel($key));
+        // Fazer load
+        foreach ($this->loads as $loadName => $load) {
+            $name = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::camel($loadName));
             // Se classe não estiver definida, faz um load padrão com valores
             if (!method_exists($this, 'load' . $name)) {
-                $repository = $load[0];
-                $foreignKey = $load[2] ?? 'id';
-
-                $this->loadResource($key, app($repository), $loads[$key], $foreignKey);
+                $foreignKey = $load[0];
+                $this->loadResource($loadName, app($foreignKey), $loads[$loadName]);
             } else {
-                // Se classe estiver definida, faz um load usando sua classe
-                $this->{'load' . $name}($loads[$key]);
+                $this->{'load' . $name}($loads[$loadName]);
             }
         }
 
@@ -79,12 +70,10 @@ class Transformer
          */
         if (Helpers::isArrayAssoc($models)) {
             foreach ($models as $key => $model) {
-                $function = 'transform' . ucfirst(Str::camel($context));
+                $function = 'get' . ucfirst(Str::camel($context));
                 $default = [];
-
-                // Se não for o contexto default, faz um load do transformDefault
-                if ($context != 'default') {
-                    $default = $this->transformDefault($model, $requester, []);
+                if ($function != 'getDefault') {
+                    $default = $this->getDefault($model, $requester, []);
                 }
 
                 $transformed[$key] = $this->{$function}(
@@ -95,12 +84,11 @@ class Transformer
             }
         } else {
             foreach ($models as $model) {
-                $function = 'transform' . ucfirst(Str::camel($context));
-                $default = [];
+                $function = 'get' . ucfirst(Str::camel($context));
 
-                // Se não for o contexto default, faz um load do transformDefault
-                if ($context != 'default') {
-                    $default = $this->transformDefault($model, $requester, []);
+                $default = [];
+                if ($function != 'getDefault') {
+                    $default = $this->getDefault($model, $requester, []);
                 }
 
                 $transformed[] = $this->{$function}($model, $requester, $default);
@@ -113,10 +101,10 @@ class Transformer
     /**
      * Carregar recursos e colocar em cache.
      *
-     * @param string              $name         Nome do load
-     * @param RepositoryInterface $repository   Repositorio
-     * @param array               $items        Ids dos itens
-     * @param string              $column       Coluna que será usada para buscar o recurso na tabela relacionada
+     * @param string              $name
+     * @param RepositoryInterface $repository
+     * @param array               $items
+     * @param string              $column
      */
     public function loadResource(
         string $name,
@@ -124,34 +112,29 @@ class Transformer
         array $items,
         $column = 'id'
     ) {
-        // Se não existir cache, inicia
-        if (!isset($this->{'loaded_' .$name})) {
-            $this->{'loaded_' .$name} = [];
+        if (! isset($this->{$name})) {
+            $this->{$name} = [];
         }
 
         $idsNotLoad = [];
 
-        // Só faz load do ID se não existir no cache
         foreach ($items as $id) {
-            if (! isset($this->{'loaded_' .$name}[$id])) {
+            if (! isset($this->{$name}[$id])) {
                 $idsNotLoad[] = $id;
             }
         }
 
-        // Se não existir nenhum item para carregar, retorna
         if (empty($idsNotLoad)) {
             return;
         }
 
-        // Carregar recursos
         $items = $repository
             ->clearQuery()
             ->whereArrayInt($repository->tableName . '.' . $column, $idsNotLoad)
             ->findMany();
 
-        // Colocar em cache no nome do load
         foreach ($items as $item) {
-            $this->{'loaded_' . $name}[$item->{$column}] = $item;
+            $this->{$name}[$item->{$column}] = $item;
         }
     }
 
@@ -170,22 +153,22 @@ class Transformer
         if (0 === strpos($funName, 'get')) {
             $name = str_replace('get', '', $funName);
 
-            if (isset($this->{'loaded_' . lcfirst($name)}[$arguments[0]])) {
-                return $this->{'loaded_' . lcfirst($name)}[$arguments[0]];
+            if (isset($this->{lcfirst($name)}[$arguments[0]])) {
+                return $this->{lcfirst($name)}[$arguments[0]];
             } else {
-                $this->{'loaded_' . lcfirst($name)} = [];
+                $this->{lcfirst($name)} = [];
             }
 
             // Carregar recurso, caso não tenha carregado ainda
             $this->{'load' . $name}([$arguments[0]]);
 
-            return $this->{'loaded_' . lcfirst($name)}[$arguments[0]] ?? null;
+            return $this->{lcfirst($name)}[$arguments[0]] ?? null;
         }
     }
 
     /**
      * @param $model
-     * @param Transformer $transform
+     * @param \Devesharp\CRUD\Transformer $transform
      * @param string      $context
      * @param mixed|null  $requester
      *
@@ -197,19 +180,17 @@ class Transformer
         string $context = 'default',
         $requester = null
     ) {
-        $function = 'transform' . ucfirst(Str::camel($context));
+        $function = 'get' . ucfirst(Str::camel($context));
 
         $default = [];
-        if ($context != 'default') {
-            $default = $transform->transformDefault($model, $requester, []);
+        if ($function != 'getDefault') {
+            $default = $transform->getDefault($model, $requester, []);
         }
 
         return $transform->{$function}($model, $requester, $default);
     }
 
     /**
-     * Transformar array de models
-     *
      * @param $models
      * @param Transformer $transform
      * @param string      $context

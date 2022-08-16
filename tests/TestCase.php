@@ -28,6 +28,15 @@ abstract class TestCase extends Orchestra
             $table->timestampsTz();
         });
 
+        Schema::create('model_stubs2', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->integer('age');
+            $table->integer('user_create')->default(0);
+            $table->integer('user_edit')->default(0);
+            $table->timestampsTz();
+        });
+
         Schema::create('model_repository_stubs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->boolean('enabled')->default(true);

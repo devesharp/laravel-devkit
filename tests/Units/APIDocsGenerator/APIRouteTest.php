@@ -79,9 +79,6 @@ paths:
         - get
       summary: 'Find pets by ID'
       description: 'Returns pets based on ID'
-      externalDocs:
-        description: 'Find more info here'
-        url: 'https://example.com'
       parameters:
         -
           name: platformId
@@ -104,13 +101,16 @@ paths:
                     example: string
       deprecated: true
       security: []
+      externalDocs:
+        description: 'Find more info here'
+        url: 'https://example.com'
 ", $apiDocs->toYml());
     }
 
     /**
      * @testdox post - json
      */
-    public function testDefaultPost()
+    public function testDefaultPost2()
     {
         $apiDocs = new \Devesharp\APIDocs\Generator();
         $apiDocs->setTitle('API 1.0');
@@ -182,9 +182,6 @@ paths:
         - get
       summary: 'Find pets by ID'
       description: 'Returns pets based on ID'
-      externalDocs:
-        description: 'Find more info here'
-        url: 'https://example.com'
       parameters:
         -
           name: platformId
@@ -207,6 +204,9 @@ paths:
                     example: string
       deprecated: true
       security: []
+      externalDocs:
+        description: 'Find more info here'
+        url: 'https://example.com'
       requestBody:
         description: ''
         content:
@@ -293,9 +293,6 @@ paths:
         - get
       summary: 'Find pets by ID'
       description: 'Returns pets based on ID'
-      externalDocs:
-        description: 'Find more info here'
-        url: 'https://example.com'
       parameters:
         -
           name: platformId
@@ -320,6 +317,9 @@ paths:
       security:
         -
           basicAuth: []
+      externalDocs:
+        description: 'Find more info here'
+        url: 'https://example.com'
       requestBody:
         description: ''
         content:

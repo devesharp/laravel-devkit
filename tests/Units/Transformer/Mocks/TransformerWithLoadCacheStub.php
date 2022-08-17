@@ -2,7 +2,7 @@
 
 namespace Tests\Units\Transformer\Mocks;
 
-use Devesharp\CRUD\Transformer;
+use Devesharp\Patterns\Transformer\Transformer;
 
 class TransformerWithLoadCacheStub extends Transformer
 {

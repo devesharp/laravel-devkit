@@ -2,7 +2,7 @@
 
 namespace App\Validators;
 
-use Devesharp\CRUD\Validator;
+use Devesharp\Patterns\Validator\Validator;
 
 class ServiceValidator extends Validator
 {

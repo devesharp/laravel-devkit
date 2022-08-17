@@ -2,7 +2,7 @@
 
 namespace App\Transformers;
 
-use Devesharp\CRUD\Transformer;
+use Devesharp\Patterns\Transformer\Transformer;
 
 class ServiceTransformer extends Transformer
 {

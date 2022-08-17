@@ -18,6 +18,7 @@ use cebe\openapi\spec\PathItem;
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Http\File;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class TestDocsGenerate
 {
@@ -192,6 +193,8 @@ class TestDocsGenerate
         $this->route->path = $pathFixed;
         $this->route->statusCode = $request->getStatusCode();
         $this->route->response = $request->json();
+
+//        if (multipart/form-data)
 
         $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
         $apiDocs->addRoute($this->route);

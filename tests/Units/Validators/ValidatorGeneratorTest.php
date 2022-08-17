@@ -2,7 +2,7 @@
 
 namespace Tests\Units\Validators;
 
-use Devesharp\CRUD\Exception;
+use Devesharp\Exceptions\Exception;
 use Devesharp\Support\Collection;
 use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Tests\Units\Validators\Mocks\ValidatorStub;

@@ -46,8 +46,8 @@ class Validator
         $validator = ValidatorLaravel::make($_data, $rules);
 
         if ($validator->fails()) {
-            throw new \Devesharp\CRUD\Exception(
-                "Error on validate data:\n" . implode("\n", $validator->errors()->all()), \Devesharp\CRUD\Exception::DATA_ERROR,
+            throw new \Devesharp\Exceptions\Exception(
+                "Error on validate data:\n" . implode("\n", $validator->errors()->all()), \Devesharp\Exceptions\Exception::DATA_ERROR,
                 null,
                 $validator->errors()->getMessages());
         }

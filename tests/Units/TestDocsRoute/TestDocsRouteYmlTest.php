@@ -4,6 +4,7 @@ namespace Tests\Units\TestDocsRoute;
 
 use Devesharp\Console\Commands\MakeService;
 use Devesharp\Support\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -16,6 +17,8 @@ class TestDocsRouteYmlTest extends \Tests\TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        \Devesharp\APIDocs\Generator::clear();
 
         $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
         $apiDocs->setTitle('API 1.0');
@@ -586,6 +589,171 @@ paths:
             schema:
               type: object
               properties:
+                name:
+                  type: string
+                  example: John
+                age:
+                  type: string
+                  example: John
+", $yml);
+
+    }
+
+    /**
+     * @testdox testar test de rota como put com arquivo, deve converter request para multipart/form-data
+     */
+    public function testSimplePutWithTestWithFile()
+    {
+        $http = $this->withPut('/resource/:id')
+            ->addBody([
+                'file' => UploadedFile::fake()->image('perfil-100x100.png'),
+                'name' => 'John',
+                'age' => 'John',
+            ])
+            ->addPath('id', 10, 'ID da recurso')
+            ->addQuery('platformId', 4, 'ID da plataforma', true)
+            ->addQuery('userId', 8, 'ID do usuário', true)
+            ->addHeader('X-API', 'Xsd283js9c29', 'API Key', true)
+            ->addRouteName('delete resource')
+            ->addGroups('resources')
+            ->run();
+
+        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+
+        $this->assertEquals("openapi: 3.0.2
+info:
+  title: 'API 1.0'
+  description: 'API Example'
+  version: 1.0.0
+servers:
+  -
+    url: 'https://example.com.br'
+    description: 'Prod API'
+paths:
+  '/resource/{id}':
+    put:
+      tags:
+        - resources
+      summary: 'delete resource'
+      description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID da recurso'
+          required: true
+          schema:
+            type: string
+          example: 10
+        -
+          name: platformId
+          in: query
+          description: 'ID da plataforma'
+          required: true
+          schema:
+            type: string
+          example: 4
+        -
+          name: userId
+          in: query
+          description: 'ID do usuário'
+          required: true
+          schema:
+            type: string
+          example: 8
+        -
+          name: X-API
+          in: header
+          description: 'API Key'
+          required: true
+          schema:
+            type: string
+          example: Xsd283js9c29
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: '10'
+                  name:
+                    type: string
+                    example: John
+                  age:
+                    type: string
+                    example: '10'
+                  path:
+                    type: object
+                    properties:
+                      platformId:
+                        type: string
+                        example: '4'
+                      userId:
+                        type: string
+                        example: '8'
+                  header:
+                    type: object
+                    properties:
+                      host:
+                        type: array
+                        items:
+                          type: string
+                          example: localhost
+                      user-agent:
+                        type: array
+                        items:
+                          type: string
+                          example: Symfony
+                      accept:
+                        type: array
+                        items:
+                          type: string
+                          example: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                      accept-language:
+                        type: array
+                        items:
+                          type: string
+                          example: 'en-us,en;q=0.5'
+                      accept-charset:
+                        type: array
+                        items:
+                          type: string
+                          example: 'ISO-8859-1,utf-8;q=0.7,*;q=0.7'
+                      x-api:
+                        type: array
+                        items:
+                          type: string
+                          example: Xsd283js9c29
+                      content-type:
+                        type: array
+                        items:
+                          type: string
+                          example: application/x-www-form-urlencoded
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: John
+                      age:
+                        type: string
+                        example: John
+      deprecated: false
+      security: []
+      requestBody:
+        description: ''
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
                 name:
                   type: string
                   example: John

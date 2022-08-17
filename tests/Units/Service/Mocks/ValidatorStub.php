@@ -2,7 +2,7 @@
 
 namespace Tests\Units\Service\Mocks;
 
-use Devesharp\CRUD\Validator;
+use Devesharp\Patterns\Validator\Validator;
 
 class ValidatorStub extends Validator
 {

@@ -2,7 +2,7 @@
 
 namespace Tests\Units\Transformer\Mocks;
 
-use Devesharp\CRUD\Transformer;
+use Devesharp\Patterns\Transformer\Transformer;
 
 class TransformerStub extends Transformer
 {

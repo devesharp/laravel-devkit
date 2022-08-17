@@ -15,6 +15,7 @@ use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\PathItem;
 use Illuminate\Http\File;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class Generator
 {
@@ -171,13 +172,13 @@ class Generator
      */
     public function addServers($url, $description = ''): void
     {
-        if ($this->openAPIJSON->servers[0]->url == '/') {
+        if (empty($this->openAPIJSON->servers) || $this->openAPIJSON->servers[0]->url == '/') {
             $servers = [];
         } else {
             $servers = $this->openAPIJSON->servers;
         }
 
-        $servers[] = [
+        $servers[] = (object) [
             'url' => $url,
             'description' => $description,
         ];
@@ -222,11 +223,18 @@ class Generator
         ];
 
         if (!empty($route->body)) {
+
+            $schema = $this->dataToSchema($route->body, true, $route->bodyRequired, $route->bodyDescription);
+
+            if (Str::contains(json_encode($schema), '"format":"binary"')) {
+                $route->bodyType = 'multipart/form-data';
+            }
+
             $path->{$method}->requestBody = [
                 'description' => $route->descriptionResponse,
                 'content' => [
                     $route->bodyType => [
-                        'schema' => $this->dataToSchema($route->body, true, $route->bodyRequired, $route->bodyDescription)
+                        'schema' => $schema
                     ]
                 ]
             ];
@@ -421,5 +429,9 @@ class Generator
         }
 
         return self::$instance;
+    }
+
+    public static function clear() {
+        self::$instance = null;
     }
 }

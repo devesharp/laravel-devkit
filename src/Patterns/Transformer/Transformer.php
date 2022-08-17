@@ -184,7 +184,7 @@ class Transformer
 
     /**
      * @param $model
-     * @param \Devesharp\CRUD\Transformer $transform
+     * @param \Devesharp\Patterns\Transformer\Transformer $transform
      * @param string      $context
      * @param mixed|null  $requester
      *

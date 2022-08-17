@@ -3,8 +3,8 @@
 namespace Tests\Units\Presenter;
 
 use Carbon\Carbon;
-use Devesharp\CRUD\Exception;
-use Devesharp\CRUD\Transformer;
+use Devesharp\Exceptions\Exception;
+use Devesharp\Patterns\Transformer\Transformer;
 use Devesharp\Support\Collection;
 use Tests\Units\Presenter\Mocks\ModelPresenter;
 use Tests\Units\Transformer\Mocks\ModelStub;

@@ -86,7 +86,7 @@ class RepositoryMysql extends RepositoryInterface
      * @param $id
      * @param bool $enabled
      *
-     * @throws \Devesharp\CRUD\Exception
+     * @throws \Devesharp\Exceptions\Exception
      *
      * @return null
      */
@@ -95,7 +95,7 @@ class RepositoryMysql extends RepositoryInterface
         $model = $this->findById($id, $enabled);
 
         if (empty($model)) {
-            \Devesharp\CRUD\Exception::NotFound();
+            \Devesharp\Exceptions\Exception::NotFound();
         }
 
         return $model;

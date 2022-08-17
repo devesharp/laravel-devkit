@@ -151,7 +151,7 @@ class ServiceStub extends Service
      * @param $receiver
      * @param string $context
      * @return mixed
-     * @throws \Devesharp\CRUD\Exception
+     * @throws \Devesharp\Exceptions\Exception
      */
     public function get(int $id, $receiver)
     {
@@ -212,7 +212,7 @@ class ServiceStub extends Service
      * @param $id
      * @param $requester
      * @return bool
-     * @throws \Devesharp\CRUD\Exception
+     * @throws \Devesharp\Exceptions\Exception
      */
     public function delete($id, $requester = null)
     {

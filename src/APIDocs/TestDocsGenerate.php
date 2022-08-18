@@ -141,6 +141,13 @@ class TestDocsGenerate
         return $this;
     }
 
+    public function addBodyExampleOrRef(array $data): self
+    {
+        $this->route->bodyWithRef = $data;
+
+        return $this;
+    }
+
     function run() {
         $path = $this->route->path;
         $pathFixed = $this->route->path;

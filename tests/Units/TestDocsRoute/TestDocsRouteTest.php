@@ -76,8 +76,6 @@ class TestDocsRouteTest extends \Tests\TestCase
             ])
             ->run();
 
-        $responseDocs = \Devesharp\APIDocs\Generator::getInstance()->toYml();
-
         $this->assertEquals($http->getStatusCode(), 200);
         $this->assertEquals(json_decode((string) $http->getContent(), true), [
             'results' => [
@@ -104,8 +102,6 @@ class TestDocsRouteTest extends \Tests\TestCase
             ->addRouteName('Create Get')
             ->addGroups('resources')
             ->run();
-
-        $responseDocs = \Devesharp\APIDocs\Generator::getInstance()->toYml();
 
         $this->assertEquals($http->getStatusCode(), 200);
         $this->assertEquals(json_decode((string) $http->getContent(), true), [

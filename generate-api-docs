@@ -1,0 +1,6 @@
+#!/usr/bin/env php
+<?php
+
+define('API_DOCS_ENABLED', true);
+
+include './vendor/bin/phpunit';

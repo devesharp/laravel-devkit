@@ -8,6 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tests\Units\TestDocsRoute\Mocks\RefTest;
 use Tests\Units\TestDocsRoute\Mocks\ValidatorStubWithGenerator;
 
 class TestDocsRouteYmlTest extends \Tests\TestCase
@@ -905,6 +906,101 @@ paths:
                       - items
               required:
                 - pets
+", $yml);
+    }
+
+    /**
+     * @testdox testar test de rota com ref
+     */
+    public function testRouteWithTestRef()
+    {
+        $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
+        $apiDocs->addRef(RefTest::class);
+
+        $http = $this->withPost('/resource/search')
+            ->addRouteName('Create Post', 'method post')
+            ->addGroups(['resources', 'posts'])
+            ->addBody([
+                'name' => 'John',
+                'age' => 2,
+            ])
+            ->addBodyExampleOrRef([
+                'age' => RefTest::class,
+            ])
+            ->run();
+
+        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+
+        $this->assertEquals("openapi: 3.0.2
+info:
+  title: 'API 1.0'
+  description: 'API Example'
+  version: 1.0.0
+servers:
+  -
+    url: 'https://example.com.br'
+    description: 'Prod API'
+paths:
+  /resource/search:
+    post:
+      tags:
+        - resources
+        - posts
+      summary: 'Create Post'
+      description: 'method post'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          example: 1
+                        name:
+                          type: string
+                          example: John
+                        age:
+                          type: string
+                          example: '10'
+                  count:
+                    type: integer
+                    format: int64
+                    example: 1
+      deprecated: false
+      security: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John
+                age:
+                  type: integer
+                  format: int64
+                  example: 2
+                  \$ref: '#/components/schemas/PropertyType'
+components:
+  schemas:
+    PropertyType:
+      type: string
+      enum:
+        - rent
+        - sale
+      description: 'Tipo de Imóvel'
 ", $yml);
     }
 }

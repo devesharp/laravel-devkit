@@ -19,6 +19,18 @@ class Transformer
         $model,
         $requester = null
     ) {
+        return $model->toArray();
+    }
+
+    /**
+     * @param $model
+     * @param null $requester
+     * @return mixed
+     */
+    public function transformModel(
+        $model,
+        $requester = null
+    ) {
         return $model;
     }
 
@@ -81,8 +93,8 @@ class Transformer
                 $function = 'transform' . ucfirst(Str::camel($context));
                 $default = [];
 
-                // Se não for o contexto default, faz um load do transformDefault
-                if ($context != 'default') {
+                // Se não for o contexto default e model, faz um load do transformDefault
+                if ($context != 'default' && $context != 'model') {
                     $default = $this->transformDefault($model, $requester, []);
                 }
 
@@ -97,8 +109,8 @@ class Transformer
                 $function = 'transform' . ucfirst(Str::camel($context));
                 $default = [];
 
-                // Se não for o contexto default, faz um load do transformDefault
-                if ($context != 'default') {
+                // Se não for o contexto default e model, faz um load do transformDefault
+                if ($context != 'default' && $context != 'model') {
                     $default = $this->transformDefault($model, $requester, []);
                 }
 
@@ -199,7 +211,8 @@ class Transformer
         $function = 'transform' . ucfirst(Str::camel($context));
 
         $default = [];
-        if ($context != 'default') {
+        // Se não for o contexto default e model, faz um load do transformDefault
+        if ($context != 'default' && $context != 'model') {
             $default = $transform->transformDefault($model, $requester, []);
         }
 

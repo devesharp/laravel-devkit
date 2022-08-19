@@ -6,34 +6,21 @@ use Devesharp\Patterns\Validator\Validator;
 
 class ServiceValidator extends Validator
 {
+    use \Devesharp\Patterns\Validator\ValidatorAPIGenerator;
 
     protected array $rules = [
         'create' => [
-            'name' => 'string|max:100|required',
-            'age' => 'numeric|required',
-            'active' => 'boolean',
+            'name' => ['string|max:100|required', 'Name of people'],
+            'age' => ['numeric|required', 'Age of people'],
+            'active' => ['boolean', 'Active'],
         ],
         'update' => [
             '_extends' => 'create',
-            'id' => 'numeric',
         ],
         // Busca
         'search' => [
-            'filters.id' => 'numeric',
-            'filters.name' => 'string',
-        ],
-    ];
-
-    protected array $descriptions = [
-        'create' => [
-            'name' => 'Nome',
-            'age' => 'Idade',
-            'active' => 'Recurso ativo',
-        ],
-        'update' => [],
-        'search' => [
-            'filters.id' => 'Id do item',
-            'filters.name' => 'Nome do item'
+            'filters.id' => ['numeric', 'Id of people'],
+            'filters.name' => ['string', 'Name of people'],
         ],
     ];
 

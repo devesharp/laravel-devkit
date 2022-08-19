@@ -1,20 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
+namespace Devesharp\Patterns\Controller\ControllerBase;
 
-class ServiceNameController
+class ServiceNameController extends ControllerBase
 {
-    protected $auth;
-
     public function __construct(
         protected \App\Services\ServiceNameService $service
     ) {
-        $this->auth = function_exists('auth') ? auth()->user() : null;
+        parent::__construct();
     }
 
     public function search()
     {
-        return $this->service->search(request()->all(), $this->auth);
+        return $this->service->search(request()->all(), $this->auth, 'default');
     }
 
     public function get($id)
@@ -24,12 +23,12 @@ class ServiceNameController
 
     public function update($id)
     {
-        return $this->service->update($id, request()->all(), $this->auth);
+        return $this->service->update($id, request()->all(), $this->auth, 'default');
     }
 
     public function create()
     {
-        return $this->service->create(request()->all(), $this->auth);
+        return $this->service->create(request()->all(), $this->auth, 'default');
     }
 
     public function delete($id)

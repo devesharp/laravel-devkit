@@ -32,6 +32,10 @@ class MakeProvider extends ServiceProvider
          * Register makes
          */
         if ($this->app->runningInConsole()) {
+            $path = realpath(__DIR__ . '/../../config/config.php');
+            $this->publishes([$path => config_path('devesharp.php')], 'config');
+            $this->mergeConfigFrom($path, 'devesharp');
+
             $this->commands([
                 MakeAll::class,
                 MakeModel::class,

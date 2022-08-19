@@ -1,6 +1,6 @@
 <?php
 
-namespace Devesharp\CRUD;
+namespace Devesharp\Patterns\Controller;
 
 class ControllerBase
 {

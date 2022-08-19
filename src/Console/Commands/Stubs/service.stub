@@ -224,7 +224,6 @@ class ServiceNameService extends Service
             $this->policy->delete($requester, $model);
 
             $this->repository->updateById($id, ['enabled' => false]);
-//            $this->repository->deleteById($id, $requester);
 
             DB::commit();
 

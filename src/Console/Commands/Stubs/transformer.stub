@@ -6,7 +6,7 @@ use Devesharp\Patterns\Transformer\Transformer;
 
 class ServiceTransformer extends Transformer
 {
-    public $model = \App\Models\Service::class;
+    public \App\Models\Service $model = \App\Models\Service::class;
 
     /**
      * @param $model
@@ -15,21 +15,13 @@ class ServiceTransformer extends Transformer
      * @return mixed
      * @throws \Exception
      */
-    public function transform(
+    public function transformDefault(
         $model,
-        string $context = 'default',
         $requester = null
     ) {
         if (! $model instanceof $this->model) {
             throw new \Exception('invalid model transform');
         }
-
-        if ($context === 'model')
-            return $model;
-
-//        // Cache Repository
-//        $this->loadFoo([1]);
-//        $foo = $this->transformer->getFoo(1);
 
         $transform = $model->toArray();
 
@@ -38,10 +30,4 @@ class ServiceTransformer extends Transformer
 
         return $transform;
     }
-
-//    // Repository Mock
-//    public function loadFoo(array $users)
-//    {
-//        $this->loadResource('foo', app(RepositoryFooStub::class), $users);
-//    }
 }

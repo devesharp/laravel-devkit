@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'commands' => [
+        'snippets' => [
+            'unit-tests' => [
+                'header' => '$userAdmin = Users::factory()->create();',
+            ]
+        ]
+    ],
     'APIDocs' => [
         'version' => "1.0",
         'name' => "API " . env('name'),

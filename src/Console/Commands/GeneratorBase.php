@@ -7,28 +7,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
-class MakeDictionary extends GeneratorCommand
+class GeneratorBase extends GeneratorCommand
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $name = 'ds:dictionary';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new dictionary';
-
-    /**
-     * The type of class being generated.
-     *
-     * @var string
-     */
-    protected $type = 'Dictionary';
+    protected string $folder = '';
 
     /**
      * Replace the class name for the given stub.
@@ -41,23 +22,17 @@ class MakeDictionary extends GeneratorCommand
     {
         $stub = parent::replaceClass($stub, $name);
 
-        return str_replace('Service', Str::studly($this->argument('name')), $stub);
+        $view = str_replace('ServiceName', Str::studly($this->argument('name') ?? $this->argument('module')), $stub);
+        $view = str_replace('ModuleName', Str::studly($this->argument('module')), $view);
+        $view = str_replace('$namespace', $this->getDefaultNamespace('App'), $view);
+
+        return $view;
     }
 
     protected function getPath($name)
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'Dictionary.php';
-    }
-
-    /**
-     * Get the stub file for the generator.
-     *
-     * @return string
-     */
-    protected function getStub()
-    {
-        return  __DIR__ . '/Stubs/dictionary.stub';
+        return $this->laravel['path'].'/'.str_replace('\\', '/', $name). $this->type . '.php';
     }
 
     /**
@@ -68,7 +43,8 @@ class MakeDictionary extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Dictionaries';
+        $nameService = Str::studly($this->argument('module'));
+        return $rootNamespace . '\Modules\\' . $nameService. '\\' . $this->folder;
     }
 
     /**
@@ -79,7 +55,13 @@ class MakeDictionary extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the dictionary.'],
+            ['module', InputArgument::REQUIRED, 'The name of the module'],
+            ['name', InputArgument::OPTIONAL, 'The name of the controller'],
         ];
+    }
+
+    protected function getStub()
+    {
+        return '';
     }
 }

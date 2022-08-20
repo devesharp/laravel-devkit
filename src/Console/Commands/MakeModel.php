@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class MakeModel extends GeneratorCommand
+class MakeModel extends GeneratorBase
 {
     /**
      * The name and signature of the console command.
@@ -29,21 +29,7 @@ class MakeModel extends GeneratorCommand
      *
      * @var string
      */
-    protected $type = 'Validator';
-
-    /**
-     * Replace the class name for the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $name
-     * @return string
-     */
-    protected function replaceClass($stub, $name)
-    {
-        $stub = parent::replaceClass($stub, $name);
-
-        return str_replace('ServiceName', Str::studly($this->argument('name')), $stub);
-    }
+    protected $type = 'Model';
 
     /**
      * Get the stub file for the generator.
@@ -69,7 +55,8 @@ class MakeModel extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Models';
+        $nameService = Str::studly($this->argument('module'));
+        return $rootNamespace . '\Modules\\' . $nameService. '\Models';
     }
 
     /**
@@ -81,7 +68,8 @@ class MakeModel extends GeneratorCommand
     {
 //        CreateFlightsTable
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the model']
+            ['module', InputArgument::REQUIRED, 'The name of the module'],
+            ['name', InputArgument::OPTIONAL, 'The name of the model'],
         ];
     }
 

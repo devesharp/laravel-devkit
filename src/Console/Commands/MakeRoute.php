@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
-class MakeRoute extends Command
+class MakeRoute extends GeneratorBase
 {
     /**
      * The name and signature of the console command.
@@ -31,19 +31,20 @@ class MakeRoute extends Command
      */
     protected $type = 'RoutesCrud';
 
-    private $files;
+    protected $files;
 
     public function __construct(Filesystem $files)
     {
-        parent::__construct();
+        parent::__construct($files);
         $this->files = $files;
     }
 
     public function handle()
     {
-        $name = $this->argument('name');
+        $name = $this->argument('name') ?? $this->argument('module');
+        $module = $this->argument('module');
 
-        $study = Str::studly($name).'Controller';
+        $study = '\App\Modules\\'. Str::studly($module) . '\Controllers\\' . Str::studly($name).'Controller';
         $slug = Str::slug(Str::snake($name));
 
         $newRoute = $this->files->get(__DIR__ . '/Stubs/routes.stub');
@@ -63,17 +64,5 @@ class MakeRoute extends Command
 
             return false;
         }
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['name', InputArgument::REQUIRED, 'The name of the routes'],
-        ];
     }
 }

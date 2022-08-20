@@ -2,6 +2,7 @@
 
 return [
     'commands' => [
+        'group_by_name' => true, // Agrupar arquivos por nome
         'snippets' => [
             'unit-tests' => [
                 'header' => '$userAdmin = Users::factory()->create();',

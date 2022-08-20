@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Transformers;
+namespace $name;
 
 use Devesharp\Patterns\Transformer\Transformer;
+use \App\Modules\ModuleName\Models\ServiceName;
 
-class ServiceTransformer extends Transformer
+class ServiceNameTransformer extends Transformer
 {
-    public \App\Models\Service $model = \App\Models\Service::class;
+    public ServiceName $model = ServiceName::class;
+
+    protected array $loads = [];
 
     /**
      * @param $model

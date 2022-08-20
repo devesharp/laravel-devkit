@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Presenters;
+namespace $namespace;
 
-use Devesharp\CRUD\Presenter\Presenter;
+use Devesharp\Patterns\Presenter\Presenter;
 
-class ServicePresenter extends Presenter {
+class ServiceNamePresenter extends Presenter {
 
     public function fullName()
     {

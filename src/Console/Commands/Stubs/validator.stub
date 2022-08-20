@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Validators;
+namespace $namespace;
 
 use Devesharp\Patterns\Validator\Validator;
 
-class ServiceValidator extends Validator
+class ServiceNameValidator extends Validator
 {
     use \Devesharp\Patterns\Validator\ValidatorAPIGenerator;
 

@@ -49,7 +49,6 @@ class MakeProvider extends ServiceProvider
                 MakeValidator::class,
                 MakeFactoryService::class,
                 MakeController::class,
-                MakeDictionary::class,
                 MakePolicy::class,
             ]);
         }

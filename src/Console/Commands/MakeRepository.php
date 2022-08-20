@@ -8,80 +8,19 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class MakeRepository extends GeneratorCommand
+class MakeRepository extends GeneratorBase
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $name = 'ds:repository';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Create a new repository';
 
-    /**
-     * The type of class being generated.
-     *
-     * @var string
-     */
     protected $type = 'Repository';
 
-    /**
-     * Replace the class name for the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $name
-     * @return string
-     */
-    protected function replaceClass($stub, $name)
-    {
-        $stub = parent::replaceClass($stub, $name);
+    protected string $folder = 'Repositories';
 
-        return str_replace('Service', Str::studly($this->argument('name')), $stub);
-    }
-
-    /**
-     * Get the stub file for the generator.
-     *
-     * @return string
-     */
     protected function getStub()
     {
         return  __DIR__ . '/Stubs/repository.stub';
-    }
-
-    protected function getPath($name)
-    {
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'Repository.php';
-    }
-
-    /**
-     * Get the default namespace for the class.
-     *
-     * @param  string  $rootNamespace
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace . '\Repositories';
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['name', InputArgument::REQUIRED, 'The name of the repository.'],
-        ];
     }
 
     public function handle()
@@ -89,6 +28,7 @@ class MakeRepository extends GeneratorCommand
         try {
             if ($this->option('model') || $this->option('all')) {
                 $this->callSilent('ds:model', [
+                    'module' => Str::studly($this->argument('module')),
                     'name' => Str::studly($this->argument('name')),
                     '--migration' => $this->option('migration') || $this->option('all')
                 ]);
@@ -98,7 +38,8 @@ class MakeRepository extends GeneratorCommand
         try {
             if ($this->option('factory') || $this->option('all')) {
                 $this->callSilent('ds:factory', [
-                    'name' => Str::studly($this->argument('name'))
+                    'module' => Str::studly($this->argument('module')),
+                    'name' => Str::studly($this->argument('name')),
                 ]);
             }
         } catch (\Exception $e) {}

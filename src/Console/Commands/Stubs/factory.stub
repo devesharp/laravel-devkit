@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace $namespace;
 
-use App\Models\ServiceName;
+use App\Modules\ModuleName\Models\ServiceName;
 use Devesharp\Support\Factory;
 
 class ServiceNameFactory extends Factory

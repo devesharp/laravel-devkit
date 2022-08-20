@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace $namespace;
 
-use App\Patters\Presenters\ServiceNamePresenter;
-use Devesharp\CRUD\Presenter\PresentableTrait;
+use App\Modules\ModuleName\Presenters\ServiceNamePresenter;
+use App\Modules\ModuleName\Factories\ServiceNameFactory;
+use Devesharp\Patterns\Presenter\PresentableTrait;
 use Devesharp\Support\ModelGetTable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +13,16 @@ class ServiceName extends Model
 {
     use HasFactory, ModelGetTable, PresentableTrait;
 
-    protected $presenter = ServiceNamePresenter::class;
+    protected string $presenter = ServiceNamePresenter::class;
 
     protected $guarded = [];
 
     protected $casts = [
         'enabled' => 'bool'
     ];
+
+    protected static function newFactory()
+    {
+        return ServiceNameFactory::new();
+    }
 }

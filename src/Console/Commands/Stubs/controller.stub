@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
-namespace Devesharp\Patterns\Controller\ControllerBase;
+namespace $namespace;
+
+use Devesharp\Patterns\Controller\ControllerBase;
 
 class ServiceNameController extends ControllerBase
 {
     public function __construct(
-        protected \App\Services\ServiceNameService $service
+        protected \App\Modules\ModuleName\Services\ServiceNameService $service
     ) {
         parent::__construct();
     }

@@ -42,6 +42,7 @@ class MakeUnitTestService extends GeneratorCommand
         $stub = parent::replaceClass($stub, $name);
 
         $view = str_replace('ServiceName', Str::studly($this->argument('name')), $stub);
+        $view = str_replace('ModuleName', Str::studly($this->argument('module') ?? $this->argument('name')), $view);
         $view = str_replace('{{header_tests}}', config('devesharp.commands.snippets.unit-tests.header', 'API Docs'), $view);
         return $view;
     }

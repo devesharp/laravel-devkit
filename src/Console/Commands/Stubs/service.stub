@@ -1,23 +1,43 @@
 <?php
 
-namespace App\Services;
+namespace $namespace;
 
-use Devesharp\CRUD\Service;
-use Devesharp\CRUD\ServiceFilterEnum;
+use Devesharp\Patterns\Service\Service;
+use Devesharp\Patterns\Service\ServiceFilterEnum;
 use Devesharp\Patterns\Transformer\Transformer;
 use Devesharp\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ServiceNameService extends Service
 {
+
+    /**
+     * Sorts permitidas.
+     */
     public array $sort = [
         'id' => [
             'column' => 'id',
         ],
     ];
 
+    /**
+     * @var string Sort padrão
+     */
     public string $sort_default = '-id';
 
+    /**
+     * @var int limit de resultados
+     */
+    public int $limitMax = 20;
+
+    /**
+     * @var int limit padrão
+     */
+    public int $limitDefault = 20;
+
+    /**
+     * @var array Filtros rápidos
+     */
     public array $filters = [
         // Filter default
         'id' => [
@@ -36,10 +56,10 @@ class ServiceNameService extends Service
     ];
 
     public function __construct(
-        protected \App\Validators\ServiceNameValidator $validator,
-        protected \App\Transformers\ServiceNameTransformer $transformer,
-        protected \App\Repositories\ServiceNameRepository $repository,
-        protected \App\Policies\ServiceNamePolicy $policy
+        protected \App\Modules\ModuleName\Validators\ServiceNameValidator $validator,
+        protected \App\Modules\ModuleName\Transformers\ServiceNameTransformer $transformer,
+        protected \App\Modules\ModuleName\Repositories\ServiceNameRepository $repository,
+        protected \App\Modules\ModuleName\Policies\ServiceNamePolicy $policy
     ) {
     }
 
@@ -54,13 +74,15 @@ class ServiceNameService extends Service
     public function create(array $originalData, $requester = null, $context = 'model')
     {
         try {
-            DB::beginTransaction();
 
             // Authorization
             $this->policy->create($requester);
 
             // Data validation
             $data = $this->validator->create($originalData, $requester);
+
+            // Iniciar transação
+            DB::beginTransaction();
 
             // Treatment data
             $resourceData = $this->treatment($requester, $data, null, 'create');
@@ -91,12 +113,13 @@ class ServiceNameService extends Service
         $context = 'model'
     ) {
         try {
-            DB::beginTransaction();
-
             $model = $this->repository->findIdOrFail($id);
 
             // Authorization
             $this->policy->update($requester, $model);
+
+            // Iniciar transação
+            DB::beginTransaction();
 
             // Data validation
             $data = $this->validator->update($originalData, $requester);
@@ -153,7 +176,7 @@ class ServiceNameService extends Service
             ->findOne();
 
         if (empty($model)) {
-            \Devesharp\Exceptions\Exception::NotFound(\App\Models\ServiceName::class);
+            \Devesharp\Exceptions\Exception::NotFound(\App\Modules\ModuleName\Models\ServiceName::class);
         }
 
         if ($context != 'model')
@@ -194,11 +217,11 @@ class ServiceNameService extends Service
     /**
      * @param $data
      * @param null $requester
-     * @return \Devesharp\CRUD\RepositoryInterface|\App\Repositories\ServiceNameRepository
+     * @return \Devesharp\Pattners\Repository\RepositoryInterface|\App\Modules\ModuleName\Repositories\ServiceNameRepository
      */
     protected function makeSearch(&$data, $requester = null)
     {
-        /** @var \App\Repositories\ServiceNameRepository $query */
+        /** @var \App\Modules\ModuleName\Repositories\ServiceNameRepository $query */
         $query = parent::makeSearch($data, $requester);
 
 //        // Example Query
@@ -216,18 +239,22 @@ class ServiceNameService extends Service
     public function delete($id, $requester = null)
     {
         try {
-            DB::beginTransaction();
-
             $model = $this->repository->findIdOrFail($id);
 
             // Authorization
             $this->policy->delete($requester, $model);
 
+            // Iniciar transação
+            DB::beginTransaction();
+
             $this->repository->updateById($id, ['enabled' => false]);
 
             DB::commit();
 
-            return true;
+            return [
+                'id' => $id,
+                'deleted' => true,
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;

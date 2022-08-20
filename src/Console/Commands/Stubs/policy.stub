@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Policies;
+namespace $namespace;
 
-class ServicePolicy
+class ServiceNamePolicy
 {
     function create($request) {
         // \Devesharp\Exceptions\Exception::Unauthorized();

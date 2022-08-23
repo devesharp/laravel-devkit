@@ -25,8 +25,7 @@ class ServiceTest extends TestCase
     {
         $model = $this->service->create([
             'name' => 'John',
-            'age' => 10,
-            'extends' => true
+            'age' => 10
         ]);
 
         $this->assertEquals(Helpers::arrayExclude($model, ['created_at', 'updated_at']), [
@@ -44,14 +43,12 @@ class ServiceTest extends TestCase
     {
         $model = $this->service->create([
             'name' => 'John',
-            'age' => 10,
-            'extends' => true
+            'age' => 10
         ]);
 
         $model = $this->service->update($model['id'], [
             'name' => 'John Wick',
-            'age' => 11,
-            'extends' => true
+            'age' => 11
         ]);
 
         $this->assertEquals(Helpers::arrayExclude($model, ['created_at', 'updated_at']), [
@@ -69,23 +66,19 @@ class ServiceTest extends TestCase
     {
         $this->service->create([
             'name' => 'John',
-            'age' => 10,
-            'extends' => true
+            'age' => 10
         ]);
         $this->service->create([
             'name' => 'Veronica',
-            'age' => 12,
-            'extends' => true
+            'age' => 12
         ]);
         $this->service->create([
             'name' => 'Woo Lipters',
-            'age' => 80,
-            'extends' => true
+            'age' => 80
         ]);
         $this->service->create([
             'name' => 'Willy John',
-            'age' => 21,
-            'extends' => true
+            'age' => 21
         ]);
 
         /**
@@ -119,8 +112,7 @@ class ServiceTest extends TestCase
     {
         $model = $this->service->create([
             'name' => 'John',
-            'age' => 10,
-            'extends' => true
+            'age' => 10
         ]);
 
         /**

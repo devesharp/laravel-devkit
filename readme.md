@@ -24,6 +24,28 @@ php artisan ds:policy
 php artisan ds:transfomer 
 ```
 
+## Resumo 
+
+Essa biblioteca serve como um pattern para criação de novos projetos. É utilizado pela Devesharp para manter o ecosistema de projetos sempre de fácil manutenção para qualquer membro da equipe.
+
+Com base na clean arquitetura, decidimos dividir o projeto em camadas, para ser de fácil manutenção e reutilização.
+As camadas são dividas em:
+
+*Controller*: Classe que define o que deve ser feito quando o usuário acessa uma rota e prepara os DataRequests.
+
+*Services*: Classe que contém toda a lógica e regra de negócio da aplicação
+
+*Repositories*: Classe que interaje com o banco de dados (Assim fica de fácil manutenção caso seja necessário trocar o banco de dados).
+
+*Models*: Classe que representa a tabela do banco de dados.
+
+*Transformers*: Classe responsável por tratar os dados para serem enviados para os retornos das rotas.
+
+*Presenters*: Classe responsável por transformar valores de um Model.
+
+*Policies*: Classe responsável por autorizar se um usuário deve ou não fazer a ação.
+
+*DTOs*: Classe responsáveis por validar dados de objetos.
 
 ## Validators
 

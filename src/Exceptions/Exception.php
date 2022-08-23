@@ -9,11 +9,12 @@ class Exception extends \Exception
     const SERVER_ERROR = 1; // Erro interno
     const UNAUTHORIZED = 2; // Não autorizado
     const TOKEN_INVALID = 3; // Token não encontrado ou vencido
+    const LOGIN_INCORRECT = 4; // Login ou senha incorretos
 
-    const DATA_ERROR = 2000;
-    const DATA_ERROR_GENERAL = 2001;
+    const DATA_ERROR = 200;
+    const DATA_ERROR_GENERAL = 201;
 
-    const NOT_FOUND_RESOURCE = 3000; // Recurso não encontrado
+    const NOT_FOUND_RESOURCE = 300; // Recurso não encontrado
 
     public $body;
 
@@ -34,6 +35,8 @@ class Exception extends \Exception
 
     public static function getString($value, $bodyOrString = null): string
     {
+        if (is_string($bodyOrString)) return $bodyOrString;
+
         switch ($value) {
             case static::SERVER_ERROR:
                 return 'Houve um erro ao executar a ação, favor entrar em contato conosco';
@@ -42,6 +45,10 @@ class Exception extends \Exception
             case static::UNAUTHORIZED:
             case static::TOKEN_INVALID:
                 return 'Não Autorizado';
+                break;
+
+            case static::LOGIN_INCORRECT:
+                return 'Login ou senha incorretos';
                 break;
 
             case static::DATA_ERROR:

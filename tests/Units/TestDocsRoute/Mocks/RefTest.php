@@ -8,8 +8,7 @@ class RefTest extends Ref
 {
     public $name = 'PropertyType';
 
-    public function __construct()
-    {
+    protected function configure(): void {
         $this->setEnum('type', ['rent', 'sale'], 'Tipo de Imóvel');
     }
 }

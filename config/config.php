@@ -5,7 +5,8 @@ return [
         'group_by_name' => true, // Agrupar arquivos por nome
         'snippets' => [
             'unit-tests' => [
-                'header' => '$userAdmin = Users::factory()->create();',
+                'header-test' => '$userAdmin = Users::factory()->create();',
+                'header-namespaces' => 'use \App\Modules\ModuleName\Models\ServiceName;'
             ]
         ]
     ],

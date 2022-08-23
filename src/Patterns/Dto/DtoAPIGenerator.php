@@ -1,15 +1,14 @@
 <?php
 
-namespace Devesharp\Patterns\Validator;
+namespace Devesharp\Patterns\Dto;
 
 use Devesharp\Support\Collection;
 use Devesharp\Support\Helpers;
 use Illuminate\Support\Facades\Validator as ValidatorLaravel;
 use PHPUnit\TextUI\Help;
 
-trait ValidatorAPIGenerator
+trait DtoAPIGenerator
 {
-
     public function getDataModel(string $validatorName, $dataOriginal = [], $showAll = false) {
 
         $data = $this->convertValidatorToData($validatorName, $dataOriginal, $showAll);
@@ -42,26 +41,22 @@ trait ValidatorAPIGenerator
      * @param $data
      * @return array|mixed
      */
-    public function convertValidatorToData(string $validatorName, $dataOriginal = [], $showAll = false) {
-        if (!isset($this->rules[$validatorName])) {
-            return $dataOriginal;
-        }
+    public function convertValidatorToData($showAll = false) {
 
-        $data = $this->validate($dataOriginal, $this->getValidateWithoutRequired($validatorName))->toArray();
-        $data = \Illuminate\Support\Arr::dot($data);
+        $data = \Illuminate\Support\Arr::dot($this->all());
 
         $newData = [];
 
-        if ($validatorName === 'search') {
-//            \Illuminate\Support\Arr::set($data, 'query.offset', 0);
-            $data["query.offset"] =  0;
-//            \Illuminate\Support\Arr::set($data, 'query.limit', 20);
-            $data["query.limit"] =  20;
-//            \Illuminate\Support\Arr::set($data, 'query.sort', '');
-            $data["query.sort"] =  '';
-        }
+//        if ($validatorName === 'search') {
+////            \Illuminate\Support\Arr::set($data, 'query.offset', 0);
+//            $data["query.offset"] =  0;
+////            \Illuminate\Support\Arr::set($data, 'query.limit', 20);
+//            $data["query.limit"] =  20;
+////            \Illuminate\Support\Arr::set($data, 'query.sort', '');
+//            $data["query.sort"] =  '';
+//        }
 
-        $schema = array_merge_recursive($this->getValidateWithoutRequired($validatorName), $data);
+        $schema = array_merge_recursive($this->getValidateRules(), $data);
 
         foreach ($schema as $keySchemaOriginal => $valueSchema) {
             if ($keySchemaOriginal == '_extends') continue;
@@ -82,7 +77,7 @@ trait ValidatorAPIGenerator
                 $key = preg_replace('/\*/', '0', $keySchemaOriginal);
                 $value = is_array($valueSchema) ? $valueSchema[0] : $valueSchema;
 
-                if (in_array([
+                if (Helpers::inArrayAny([
                     'alpha',
                     'alpha_dash',
                     'alpha_num',
@@ -109,13 +104,13 @@ trait ValidatorAPIGenerator
                     'iuud'
                 ], explode('|', $value))) {
                     $value = 'string';
-                }else if (in_array(['boolean'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['boolean'], explode('|', $value))) {
                     $value = false;
-                }else if (in_array(['integer', 'numeric'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['integer', 'numeric'], explode('|', $value))) {
                     $value = 1;
-                }else if (in_array(['nullable'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['nullable'], explode('|', $value))) {
                     $value = null;
-                }else if (in_array(['array'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['array'], explode('|', $value))) {
                     $value = [];
                 } else {
                     $value = 'string';
@@ -158,10 +153,10 @@ trait ValidatorAPIGenerator
      * @param string $validatorName
      * @return array|mixed
      */
-    public function getRequireds(string $validatorName) {
+    public function getRequireds() {
         $data = [];
 
-        foreach ($this->rules[$validatorName] as $key => $value) {
+        foreach ($this->getValidateRules() as $key => $value) {
             $key = str_replace('*', '0', $key);
 
             if (in_array('required', explode('|', is_array($value) ? $value[0] : $value))) {
@@ -178,9 +173,9 @@ trait ValidatorAPIGenerator
      * @param string $validatorName
      * @return array|mixed
      */
-    public function getDescriptions(string $validatorName) {
+    public function getDescriptions() {
 
-        $rules = $this->getValidate($validatorName);
+        $rules = $this->getValidateRules(true);
 
         $descriptions = [];
 

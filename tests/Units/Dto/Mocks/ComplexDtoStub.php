@@ -1,22 +1,17 @@
 <?php
 
-namespace Tests\Units\Validators\Mocks;
+namespace Tests\Units\Dto\Mocks;
 
-use Devesharp\Validator\Validator;
-use Devesharp\Validator\ValidatorAPIGenerator;
+use Devesharp\Patterns\Dto\AbstractDto;
 
-class ValidatorStubWithGenerator extends \Devesharp\Patterns\Validator\Validator
+class ComplexDtoStub extends AbstractDto
 {
-    use \Devesharp\Patterns\Validator\ValidatorAPIGenerator;
-
-    protected array $rules = [
-        'create' => [
+    protected function configureValidatorRules(): array
+    {
+        return [
             'name' => ['string|max:100|required', 'Nome'],
             'age' => ['numeric|required', 'Idade'],
-            'active' => ['boolean', 'Ativo' ],
-        ],
-        'complex' => [
-            '_extends' => 'create',
+            'active' => ['boolean', 'Ativo'],
             'pets.*' => ['array|required', 'ID'],
             'pets.*.id' => ['numeric|required', 'ID'],
             'pets.*.name' => ['string|required', 'Nome do Pet'],
@@ -30,6 +25,6 @@ class ValidatorStubWithGenerator extends \Devesharp\Patterns\Validator\Validator
             'item_array_deep.*.items' => 'array|required',
             'item_array_deep.*.items.*.id' => 'numeric',
             'item_array_deep.*.items.*.name' => 'string',
-        ],
-    ];
+        ];
+    }
 }

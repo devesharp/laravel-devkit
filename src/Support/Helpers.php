@@ -18,6 +18,17 @@ class Helpers {
         return $string;
     }
 
+    /**
+     * Verificar se algum dos itens existe na array
+     *
+     * @param $needles
+     * @param $haystack
+     * @return bool
+     */
+    static public function inArrayAny($needles, $haystack) {
+        return !empty(array_intersect($needles, $haystack));
+    }
+
 
     /**
      * Normaliza string

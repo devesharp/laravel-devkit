@@ -8,6 +8,8 @@ class ControllerBase
 
     public function __construct()
     {
-        $this->auth = function_exists('auth') ? auth() : null;
+        if (function_exists('auth') && auth()->user()) {
+            $this->auth = auth()->user();
+        }
     }
 }

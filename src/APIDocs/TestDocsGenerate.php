@@ -9,6 +9,7 @@ use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\License;
 use Devesharp\APIDocs\Utils\Get;
 use Devesharp\APIDocs\Utils\Route;
+use Devesharp\Patterns\Dto\AbstractDto;
 use Devesharp\Patterns\Validator\Validator;
 use Devesharp\Patterns\Validator\ValidatorAPIGenerator;
 use Devesharp\Support\Helpers;
@@ -126,19 +127,34 @@ class TestDocsGenerate
      * @param bool $all Mostrar apenas valores de $data ou todos os valores permitidos no validator
      * @return $this
      */
-    public function addBody(array $data, string $validatorString = '', string $validatorName = '', bool $all = false): self
+    public function addBody($data, string $DtoClass = null): self
     {
         /** @var ValidatorAPIGenerator $validator */
-        if ($validatorString && $validatorName) {
-            $validator = app($validatorString);
-            $data = $validator->convertValidatorToData($validatorName, $data, $all);
-            $this->route->bodyRequired = $validator->getRequireds($validatorName);
-            $this->route->bodyDescription = $validator->getDescriptions($validatorName);
+        if (!empty($DtoClass)) {
+            $data = new $DtoClass($data);
+            $this->route->bodyRequired = $data->getRequireds();
+            $this->route->bodyDescription = $data->getDescriptions();
+            $this->route->body = $data->getDataModel(true);
+        }else {
+            $this->route->body = $data;
         }
 
-        $this->route->body = $data;
-
         return $this;
+    }
+
+    public function treatmentData($data) {
+        $dot = Arr::dot($data);
+        $newData = [];
+
+        foreach ($dot as $key => $value) {
+            if ($value instanceof Ref) {
+                Arr::set($newData, $key, $value->getValue());
+            } else {
+                Arr::set($newData, $key, $value);
+            }
+        }
+
+        return $newData;
     }
 
     public function addBodyExampleOrRef(array $data): self
@@ -181,16 +197,16 @@ class TestDocsGenerate
          */
         switch ($this->route->method) {
             case 'post':
-                $request = $this->testCase->post($path, $this->route->body, $headers);
+                $request = $this->testCase->post($path, $this->treatmentData($this->route->body), $headers);
                 break;
             case 'put':
-                $request = $this->testCase->put($path, $this->route->body, $headers);
+                $request = $this->testCase->put($path, $this->treatmentData($this->route->body), $headers);
                 break;
             case 'delete':
-                $request = $this->testCase->delete($path, $this->route->body, $headers);
+                $request = $this->testCase->delete($path, $this->treatmentData($this->route->body), $headers);
                 break;
             case 'patch':
-                $request = $this->testCase->patch($path, $this->route->body, $headers);
+                $request = $this->testCase->patch($path, $this->treatmentData($this->route->body), $headers);
                 break;
             default:
                 $request = $this->testCase->get($path, $headers);

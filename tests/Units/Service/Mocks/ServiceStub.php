@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class ServiceStub extends Service
 {
-    protected ValidatorStub $validator;
     protected TransformerStub $transformer;
     protected RepositoryStub $repository;
     protected PolicyStub $policy;
@@ -41,12 +40,10 @@ class ServiceStub extends Service
     ];
 
     public function __construct(
-        ValidatorStub $validator,
         TransformerStub $transformer,
         RepositoryStub $repository,
         PolicyStub $policy
     ) {
-        $this->validator = $validator;
         $this->transformer = $transformer;
         $this->repository = $repository;
         $this->policy = $policy;
@@ -69,7 +66,7 @@ class ServiceStub extends Service
             $this->policy->create($requester);
 
             // Data validation
-            $data = $this->validator->create($originalData, $requester);
+            $data = Collection::make($originalData);
 
             // Treatment data
             $resourceData = $this->treatment($requester, $data, null, 'create');
@@ -107,7 +104,7 @@ class ServiceStub extends Service
             $this->policy->update($requester, $model);
 
             // Data validation
-            $data = $this->validator->update($originalData, $requester);
+            $data = Collection::make($originalData);
 
             // Treatment data
             $resourceData = $this->treatment($requester, $data, $model, 'update');
@@ -179,7 +176,7 @@ class ServiceStub extends Service
         $this->policy->search($requester);
 
         // Validate data
-        $data = $this->validator->search($originalData, $requester);
+        $data = Collection::make($originalData);
 
         // Make query
         $query = $this->makeSearch($data, $requester);

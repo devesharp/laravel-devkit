@@ -163,7 +163,7 @@ class Generator
             ];
         }
 
-        $class = app($name);
+        $class = new $name(1);
         $components->schemas[$class->name] = $class->getData();
 
         $this->openAPIJSON->components = $components;
@@ -241,13 +241,6 @@ class Generator
 
             $schema = $this->dataToSchema($route->body, true, $route->bodyRequired, $route->bodyDescription);
 
-            if (!empty($route->bodyWithRef)) {
-                $schemaWithRef = $this->dataToSchema($route->bodyWithRef);
-                $schemaDot = new \Adbar\Dot($schema);
-                $schemaDot->mergeRecursiveDistinct($schemaWithRef);
-                $schema = $schemaDot->all();
-            }
-
             if (Str::contains(json_encode($schema), '"format":"binary"')) {
                 $route->bodyType = 'multipart/form-data';
             }
@@ -274,6 +267,14 @@ class Generator
                         'type' => 'string',
                         'format' => 'binary',
                     ];
+                }else {
+                    if (get_parent_class($data) == Ref::class) {
+                        $this->addRef(get_class($data));
+
+                        return [
+                            '$ref' => '#/components/schemas/' . $data->name
+                        ];
+                    }
                 }
             }
 
@@ -349,6 +350,10 @@ class Generator
             $explode = explode('.', $item);
             $string = [];
 
+            if ($explode[count($explode) - 1] == '0') {
+                array_pop($explode);
+            }
+
             foreach ($explode as $key => $item2) {
                 if (is_numeric($item2) || $item2 == '*') {
                     $string[] = 'items';
@@ -403,6 +408,10 @@ class Generator
         foreach ($descriptions as $keyOriginal => $value) {
             $explode = explode('.', $keyOriginal);
             $string = [];
+
+            if ($explode[count($explode) - 1] == '*') {
+                array_pop($explode);
+            }
 
             foreach ($explode as $key => $item2) {
                 if (is_numeric($item2) || $item2 == '*') {

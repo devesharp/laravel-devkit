@@ -28,7 +28,7 @@ class MakeUnitTestService extends GeneratorCommand
      *
      * @var string
      */
-    protected $type = 'Validator';
+    protected $type = 'Unit Test';
 
     /**
      * Replace the class name for the given stub.
@@ -37,13 +37,15 @@ class MakeUnitTestService extends GeneratorCommand
      * @param  string  $name
      * @return string
      */
-    protected function replaceClass($stub, $name)
+    protected function replaceClass($view, $name)
     {
-        $stub = parent::replaceClass($stub, $name);
+        $view = parent::replaceClass($view, $name);
 
-        $view = str_replace('ServiceName', Str::studly($this->argument('name')), $stub);
+        $view = str_replace('{{header_tests}}', config('devesharp.commands.snippets.unit-tests.header-test', 'API Docs'), $view);
+        $view = str_replace('{{use_namespace}}', config('devesharp.commands.snippets.unit-tests.header-namespaces', 'API Docs'), $view);
+        $view = str_replace('ServiceName', Str::studly($this->argument('name')), $view);
         $view = str_replace('ModuleName', Str::studly($this->argument('module') ?? $this->argument('name')), $view);
-        $view = str_replace('{{header_tests}}', config('devesharp.commands.snippets.unit-tests.header', 'API Docs'), $view);
+
         return $view;
     }
 
@@ -83,7 +85,8 @@ class MakeUnitTestService extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the service'],
+            ['module', InputArgument::REQUIRED, 'The module of the service'],
+            ['name', InputArgument::OPTIONAL, 'The name of the service'],
         ];
     }
 }

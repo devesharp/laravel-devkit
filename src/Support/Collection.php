@@ -36,7 +36,7 @@ class Collection extends \Illuminate\Support\Collection
         return Arr::has($this->items, $name);
     }
 
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         // Dot notation support.
         if (Str::contains($key, '.') && Arr::has($this->items, $key)) {
@@ -46,12 +46,12 @@ class Collection extends \Illuminate\Support\Collection
         return $this->items[$key];
     }
 
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return Arr::has($this->items, $key);
     }
 
-    public function offsetUnset($name)
+    public function offsetUnset($name): void
     {
         if (Str::contains($name, '.')) {
             $this->items = Helpers::arrayExclude($this->items, $name);
@@ -60,9 +60,9 @@ class Collection extends \Illuminate\Support\Collection
         }
     }
 
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
-        return Arr::set($this->items, $key, $value);
+        Arr::set($this->items, $key, $value);
     }
 
     public function toArray()

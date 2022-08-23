@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\ServiceName;
 
-use App\Models\Users;
-use App\Models\ServiceName;
+{{use_namespace}}
+use \App\Modules\Users\Models\Users;
+use \App\Modules\ModuleName\Services\ServiceNameService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -11,13 +12,13 @@ use Tests\TestCase;
 class ServiceNameTest extends TestCase
 {
 
-    public \App\Services\ServiceNameService $service;
+    public ServiceNameService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->service = app(\App\Services\ServiceNameService::class);
+        $this->service = app(ServiceNameService::class);
     }
 
     /**

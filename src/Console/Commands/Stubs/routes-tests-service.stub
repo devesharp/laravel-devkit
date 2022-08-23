@@ -5,7 +5,7 @@ namespace Tests\Routes\ServiceName;
 use App\Models\Users;
 use App\Models\ServiceName;
 use Tests\TestCase;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class ServiceNameRouteTest extends TestCase
 {

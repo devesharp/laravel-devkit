@@ -103,7 +103,7 @@ class MakeModel extends GeneratorBase
      */
     protected function createMigration()
     {
-        $table = Str::snake(class_basename($this->argument('name')));
+        $table = Str::snake(class_basename($this->argument('name') ?? $this->argument('module')));
 
         $this->call('make:migration', [
             'name' => "create_{$table}_table",

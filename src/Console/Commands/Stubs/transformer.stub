@@ -1,13 +1,13 @@
 <?php
 
-namespace $name;
+namespace $namespace;
 
 use Devesharp\Patterns\Transformer\Transformer;
 use \App\Modules\ModuleName\Models\ServiceName;
 
 class ServiceNameTransformer extends Transformer
 {
-    public ServiceName $model = ServiceName::class;
+    public $model = ServiceName::class;
 
     protected array $loads = [];
 
@@ -26,7 +26,7 @@ class ServiceNameTransformer extends Transformer
             throw new \Exception('invalid model transform');
         }
 
-        $transform = $model->toArray();
+        $transform = [];
 
         $transform['updated_at'] = (string) $model->updated_at;
         $transform['created_at'] = (string) $model->created_at;

@@ -8,6 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tests\Units\TestDocsRoute\Mocks\ComplexDtoStub;
 use Tests\Units\TestDocsRoute\Mocks\RefTest;
 use Tests\Units\TestDocsRoute\Mocks\ValidatorStubWithGenerator;
 
@@ -776,7 +777,28 @@ paths:
             ->addBody([
                 'name' => 'John',
                 'age' => 2,
-            ], ValidatorStubWithGenerator::class, 'complex', true)
+                'pets' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Dog'
+                    ]
+                ],
+                'owner' => [
+                    'id' => 1,
+                    'name' => 'Master Dog'
+                ],
+                'item_array_deep' => [
+                    [
+                        'id' => 1,
+                        'items' => [
+                            [
+                                'id' => 1,
+                                'name' => 'Dog'
+                            ]
+                        ]
+                    ]
+                ]
+            ], ComplexDtoStub::class)
             ->run();
 
         $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
@@ -835,77 +857,71 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
-                  example: John
-                  description: Nome
-                age:
-                  type: integer
-                  format: int64
-                  example: 2
-                  description: Idade
-                active:
-                  type: string
-                  example: string
-                  description: Ativo
                 pets:
                   type: array
                   items:
                     type: object
                     properties:
                       id:
-                        type: string
-                        example: string
+                        type: integer
+                        format: int64
+                        example: 1
                         description: ID
                       name:
                         type: string
-                        example: string
+                        example: Dog
                         description: 'Nome do Pet'
                     required:
                       - id
                       - name
-                  description: ID
+                  description: 'Animais do usuário'
                 owner:
                   type: object
                   properties:
                     id:
-                      type: string
-                      example: string
+                      type: integer
+                      format: int64
+                      example: 1
                       description: 'ID do Dono'
                     name:
                       type: string
-                      example: string
+                      example: 'Master Dog'
                       description: 'Nome do Dono'
                     age:
                       type: string
                       example: string
                       description: 'Idade do Dono'
+                  description: 'Dados do Dono'
                 item_array_deep:
                   type: array
                   items:
                     type: object
                     properties:
                       id:
-                        type: string
-                        example: string
-                      name:
-                        type: string
-                        example: string
+                        type: integer
+                        format: int64
+                        example: 1
                       items:
                         type: array
                         items:
                           type: object
                           properties:
                             id:
-                              type: string
-                              example: string
+                              type: integer
+                              format: int64
+                              example: 1
                             name:
                               type: string
-                              example: string
+                              example: Dog
+                      name:
+                        type: string
+                        example: string
                     required:
                       - items
               required:
                 - pets
+                - owner
+                - item_array_deep
 ", $yml);
     }
 
@@ -915,19 +931,16 @@ paths:
     public function testRouteWithTestRef()
     {
         $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
-        $apiDocs->addRef(RefTest::class);
 
         $http = $this->withPost('/resource/search')
             ->addRouteName('Create Post', 'method post')
             ->addGroups(['resources', 'posts'])
             ->addBody([
                 'name' => 'John',
-                'age' => 2,
-            ])
-            ->addBodyExampleOrRef([
-                'age' => RefTest::class,
+                'property_type' => new RefTest('rent'),
             ])
             ->run();
+
 
         $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
 
@@ -988,10 +1001,7 @@ paths:
                 name:
                   type: string
                   example: John
-                age:
-                  type: integer
-                  format: int64
-                  example: 2
+                property_type:
                   \$ref: '#/components/schemas/PropertyType'
 components:
   schemas:

@@ -1,139 +1,110 @@
 <?php
 
-namespace Tests\Routes\ServiceName;
+namespace Tests\Routes\ModuleName;
 
-use App\Models\Users;
-use App\Models\ServiceName;
+use App\Modules\ModuleName\Docs\ServiceNameRouteDoc;
+use App\Modules\ModuleName\Dto\CreateServiceNameDto;
+use App\Modules\ModuleName\Dto\SearchServiceNameDto;
+use App\Modules\ModuleName\Dto\UpdateServiceNameDto;
+use App\Modules\ModuleName\Models\ServiceName;
+use App\Modules\Users\Models\Users;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class ServiceNameRouteTest extends TestCase
 {
     /**
-     * @testdox [POST]  api/{{route}}
+     * @testdox [POST] /v1/{{route}}
      */
     public function testRouteServiceNameCreate()
     {
-        $user = Users::factory()->create();
-        $user->access_token = JWTAuth::fromUser($user);
+        {{header_tests}}
+        $userAdmin->access_token = JWTAuth::fromUser($userAdmin);
         $ServiceNameData = ServiceName::factory()->raw();
 
-        $response = $this->withPost([
-            'name' => 'Criar ServiceName',
-            'group' => ['ServiceName'],
-            'uri' => 'api/{{route}}',
-            'data' => $ServiceNameData,
-            'headers' => [
-                'Authorization' => 'Bearer ' . $user->access_token
-            ],
-            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
-            'validatorClass' => \App\Validators\ServiceNameValidator::class,
-            'validatorMethod' => 'create'
-        ]);
+        $response = $this->withPost('/v1/{{route}}')
+            ->setRouteInfo('CreateServiceName', ServiceNameRouteDoc::class)
+            ->addHeader('Authorization', 'Bearer ' . $userAdmin->access_token, 'Authorization')
+            ->addGroups(['NamePtBr'])
+            ->addBody($ServiceNameData, CreateServiceNameDto::class)
+            ->run();
 
         $responseData = json_decode($response->getContent(), true);
 
         $response->assertStatus(200);
         $this->assertTrue($responseData['success']);
-        $this->assertEqualsArrayLeft($ServiceNameData, $responseData['data']);
+        $this->assertEqualsArrayLeft($ServiceNameData, $responseData['data'], ['password']);
     }
 
     /**
-     * @testdox [POST]  api/{{route}}/:id
+     * @testdox [POST] /v1/{{route}}/:id
      */
     public function testRouteServiceNameUpdate()
     {
-        $user = Users::factory()->create();
-        $user->access_token = JWTAuth::fromUser($user);
+        {{header_tests}}
+        $userAdmin->access_token = JWTAuth::fromUser($userAdmin);
         $ServiceNameData = ServiceName::factory()->raw();
         $resource = ServiceName::factory()->create();
 
-        $response = $this->withPost([
-            'name' => 'Atualizar ServiceName',
-            'group' => ['ServiceName'],
-            'uri' => 'api/{{route}}/:id',
-            'params' => [
-                [
-                    'name' => 'id',
-                    'value' => $resource->id,
-                    'description' => 'ID ServiceName',
-                ]
-            ],
-            'data' => $ServiceNameData,
-            'headers' => [
-                'Authorization' => 'Bearer ' . $user->access_token
-            ],
-            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
-            'validatorClass' => \App\Validators\ServiceNameValidator::class,
-            'validatorMethod' => 'update'
-        ]);
+        $response = $this->withPost('/v1/{{route}}/:id')
+            ->addPath('id', $resource->id, 'ID do NamePtBr')
+            ->setRouteInfo('UpdateServiceName', ServiceNameRouteDoc::class)
+            ->addHeader('Authorization', 'Bearer ' . $userAdmin->access_token, 'Authorization')
+            ->addGroups(['NamePtBr'])
+            ->addBody($ServiceNameData, UpdateServiceNameDto::class)
+            ->run();
 
         $responseData = json_decode($response->getContent(), true);
 
         $response->assertStatus(200);
         $this->assertTrue($responseData['success']);
-        $this->assertEqualsArrayLeft($ServiceNameData, $responseData['data']);
+        $this->assertEqualsArrayLeft($ServiceNameData, $responseData['data'], ['password']);
     }
 
     /**
-     * @testdox [GET]   api/{{route}}/:id
+     * @testdox [GET] /v1/{{route}}/:id
      */
     public function testRouteServiceNameGet()
     {
-        $user = Users::factory()->create();
-        $user->access_token = JWTAuth::fromUser($user);
+        {{header_tests}}
+        $userAdmin->access_token = JWTAuth::fromUser($userAdmin);
 
         $resource = ServiceName::factory()->create();
 
-        $response = $this->withGet([
-            'name' => 'Resgatar ServiceName',
-            'group' => ['ServiceName'],
-            'uri' => 'api/{{route}}/:id',
-            'params' => [
-                [
-                    'name' => 'id',
-                    'value' => $resource->id,
-                    'description' => 'ID ServiceName',
-                ]
-            ],
-            'headers' => [
-                'Authorization' => 'Bearer ' . $user->access_token
-            ],
-            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
-            'validatorClass' => \App\Validators\ServiceNameValidator::class,
-            'validatorMethod' => 'get'
-        ]);
+        $response = $this->withGet('/v1/{{route}}/:id')
+            ->addPath('id', $resource->id, 'ID do NamePtBr')
+            ->setRouteInfo('GetServiceName', ServiceNameRouteDoc::class)
+            ->addHeader('Authorization', 'Bearer ' . $userAdmin->access_token, 'Authorization')
+            ->addGroups(['NamePtBr'])
+            ->run();
 
         $responseData = json_decode($response->getContent(), true);
 
         $response->assertStatus(200);
         $this->assertTrue($responseData['success']);
-        $this->assertEqualsArrayLeft($resource->getAttributes(), $responseData['data']);
+        $this->assertEqualsArrayLeft($resource->getAttributes(), $responseData['data'], ['password']);
     }
 
     /**
-     * @testdox [POST]  api/{{route}}/search
+     * @testdox [POST] /v1/{{route}}/search
      */
     public function testRouteServiceNameSearch()
     {
-        $user = Users::factory()->create();
-        $user->access_token = JWTAuth::fromUser($user);
-        $resource = ServiceName::factory()->create();
+        {{header_tests}}
+        $userAdmin->access_token = JWTAuth::fromUser($userAdmin);
+        ServiceName::factory()->count(3)->create();
 
-        $response = $this->withPost([
-            'name' => 'Buscar ServiceName',
-            'group' => ['ServiceName'],
-            'uri' => 'api/{{route}}/search',
-            'data' => [
-                'filters' => []
-            ],
-            'headers' => [
-                'Authorization' => 'Bearer ' . $user->access_token
-            ],
-            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
-            'validatorClass' => \App\Validators\ServiceNameValidator::class,
-            'validatorMethod' => 'search'
-        ]);
+        $response = $this->withPost('/v1/{{route}}/search')
+            ->setRouteInfo('SearchServiceName', ServiceNameRouteDoc::class)
+            ->addHeader('Authorization', 'Bearer ' . $userAdmin->access_token, 'Authorization')
+            ->addGroups(['NamePtBr'])
+            ->addBody([
+                'filters' => [
+                    'id' => 1
+                ]
+            ], SearchServiceNameDto::class)
+            ->run();
 
         $responseData = json_decode($response->getContent(), true);
 
@@ -143,34 +114,21 @@ class ServiceNameRouteTest extends TestCase
     }
 
     /**
-     * @testdox [DELETE] api/{{route}}/:id
+     * @testdox [DELETE] /v1/{{route}}/:id
      */
     public function testRouteServiceNameDelete()
     {
-        $user = Users::factory()->create();
-        $user->access_token = JWTAuth::fromUser($user);
+        {{header_tests}}
+        $userAdmin->access_token = JWTAuth::fromUser($userAdmin);
 
         $resource = ServiceName::factory()->create();
 
-        $response = $this->withDelete([
-            'name' => 'Deletar ServiceName',
-            'group' => ['ServiceName'],
-            'uri' => 'api/{{route}}/:id',
-            'params' => [
-                [
-                    'name' => 'id',
-                    'value' => $resource->id,
-                    'description' => 'ID ServiceName',
-                ]
-            ],
-            'data' => [],
-            'headers' => [
-                'Authorization' => 'Bearer ' . $user->access_token
-            ],
-            'dicClass' => \App\Dictionaries\ServiceNameDictionary::class,
-            'validatorClass' => \App\Validators\ServiceNameValidator::class,
-            'validatorMethod' => 'delete'
-        ]);
+        $response = $this->withDelete('/v1/{{route}}/:id')
+            ->addPath('id', $resource->id, 'Id do NamePtBr')
+            ->setRouteInfo('GetServiceName', ServiceNameRouteDoc::class)
+            ->addHeader('Authorization', 'Bearer ' . $userAdmin->access_token, 'Authorization')
+            ->addGroups(['NamePtBr'])
+            ->run();
 
         $responseData = json_decode($response->getContent(), true);
 

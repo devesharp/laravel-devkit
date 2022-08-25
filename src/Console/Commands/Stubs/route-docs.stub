@@ -1,0 +1,19 @@
+<?php
+
+namespace $namespace;
+
+use Devesharp\APIDocs\RoutesDocAbstract;
+use Devesharp\APIDocs\RoutesDocInfo;
+
+class ServiceNameRouteDoc extends RoutesDocAbstract
+{
+    public function getRouteInfo(string $name): RoutesDocInfo {
+        return match ($name) {
+            "CreateServiceName" => new RoutesDocInfo("Criar NamePtBr", "Criar NamePtBr"),
+            "UpdateServiceName" => new RoutesDocInfo("Atualizar NamePtBr", "Atualizar NamePtBr"),
+            "SearchServiceName" => new RoutesDocInfo("Buscar NamePtBr", "Buscar NamePtBr"),
+            "DeleteServiceName" => new RoutesDocInfo("Deletar NamePtBr", "Deletar NamePtBr"),
+            default => new RoutesDocInfo("", ""),
+        };
+    }
+}

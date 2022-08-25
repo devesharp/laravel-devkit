@@ -74,7 +74,7 @@ class MakeUnitTestService extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Unit\\' . Str::studly($this->argument('name'));
+        return $rootNamespace.'\Unit\\' . Str::studly($this->argument('module') ?? $this->argument('name'));
     }
 
     /**

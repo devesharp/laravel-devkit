@@ -15,6 +15,7 @@ class Route
     public bool $deprecated = false;
     public array $parameters = [];
     public array $body = [];
+    public array $bodyComplete = [];
     public array $bodyRequired = [];
     public array $bodyDescription = [];
     public array $response = [];

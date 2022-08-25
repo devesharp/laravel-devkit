@@ -13,6 +13,8 @@ class ServiceName extends Model
 {
     use HasFactory, ModelGetTable, PresentableTrait;
 
+    protected $table = '{{table}}';
+
     protected string $presenter = ServiceNamePresenter::class;
 
     protected $guarded = [];

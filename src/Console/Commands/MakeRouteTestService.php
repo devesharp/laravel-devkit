@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
-class MakeRouteTestService extends GeneratorCommand
+class MakeRouteTestService extends GeneratorBase
 {
     /**
      * The name and signature of the console command.
@@ -41,10 +41,14 @@ class MakeRouteTestService extends GeneratorCommand
     {
         $stub = parent::replaceClass($stub, $name);
 
-        $file = str_replace('ServiceName', Str::studly($this->argument('name')), $stub);
-        $file = str_replace('{{route}}', Str::kebab($this->argument('name')), $file);
+        $view = str_replace('ServiceName', Str::studly($this->argument('name')), $stub);
+        $view = str_replace('{{route}}', Str::kebab($this->argument('name')), $view);
+        $view = str_replace('{{header_tests}}', config('devesharp.commands.snippets.unit-tests.header-test', 'API Docs'), $view);
+        $view = str_replace('{{use_namespace}}', config('devesharp.commands.snippets.unit-tests.header-namespaces', 'API Docs'), $view);
+        $view = str_replace('ServiceName', Str::studly($this->argument('name')), $view);
+        $view = str_replace('ModuleName', Str::studly($this->argument('module') ?? $this->argument('name')), $view);
 
-        return $file;
+        return $view;
     }
 
 
@@ -73,18 +77,7 @@ class MakeRouteTestService extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Routes\\' . Str::studly($this->argument('name'));
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['name', InputArgument::REQUIRED, 'The name of the routes test'],
-        ];
+        $nameService = Str::studly($this->argument('module'));
+        return $rootNamespace.'\Routes\\' . $nameService;
     }
 }

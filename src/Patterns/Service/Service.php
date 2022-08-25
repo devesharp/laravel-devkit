@@ -44,7 +44,7 @@ class Service
     private bool $__getOnlyCount__ = false;
 
     /**
-     * @param  $data
+     * @param  array $data valor é passado por referência, pois algumas operações podem alterar o valor
      * @param  null                $auth
      * @return RepositoryInterface
      */
@@ -73,38 +73,45 @@ class Service
         $context,
         $auth = null
     ) {
-
-        if ($this->__getOnlyResults__) {
-            $this->__getOnlyResults__ = false;
-
-            return Transformer::collection(
-                (clone $repository)->findMany(),
-                $transformer,
-                $context,
-                $auth,
-            );
-        }
-
-        if ($this->__getOnlyCount__) {
-            $this->__getOnlyCount__ = false;
-            return (clone $repository)
-                ->limit(PHP_INT_MAX)
-                ->offset(0)
-                ->count();
-        }
-
         return [
-            'results' => Transformer::collection(
-                (clone $repository)->findMany(),
-                $transformer,
-                $context,
-                $auth,
-            ),
-            'count' => (clone $repository)
-                ->limit(PHP_INT_MAX)
-                ->offset(0)
-                ->count(),
+            'count' => $this->getSearchCount($repository),
+            'results' => $this->getSearchResults($repository, $transformer, $context, $auth = null),
         ];
+    }
+
+    /**
+     * Get count of search
+     *
+     * @param $repository
+     * @return mixed
+     */
+    function getSearchCount($repository): int
+    {
+        return (clone $repository)
+            ->limit(PHP_INT_MAX)
+            ->offset(0)
+            ->count();
+    }
+
+    /**
+     * Get results of search
+     *
+     * @param $repository
+     * @return mixed
+     */
+    function getSearchResults(
+        $repository,
+        $transformer,
+        $context,
+        $auth = null
+    ): array
+    {
+        return Transformer::collection(
+            (clone $repository)->findMany(),
+            $transformer,
+            $context,
+            $auth,
+        );
     }
 
     /**
@@ -257,29 +264,29 @@ class Service
         /*
          * Verifica se é ID unico, Array de Ids ou um determinado filtro
          */
-        if (is_numeric($target) || is_string($target)) {
+        if (!empty($target['id'])) {
             $query = $this->makeSearch($data, $auth);
             if ($query instanceof RepositoryInterface) {
-                $query->whereInt($query->tableName . '.id', $target);
+                $query->whereInt($query->tableName . '.id', $target['id']);
             } else {
-                $query->whereInt('id', $target);
+                $query->whereInt('id', $target['id']);
             }
-        } elseif (is_array($target) && ! Helpers::isArrayAssoc($target)) {
+        } elseif (!empty($target['ids'])) {
             $query = $this->makeSearch($data, $auth);
 
             // Deve ser array numerica ou string
-            if (! Helpers::isArrayNumber($target) && ! Helpers::isArrayString($target)) {
+            if (! Helpers::isArrayNumber($target['ids']) && ! Helpers::isArrayString($target['ids'])) {
                 throw new Exception('Dado precisa ser uma array', Exception::DATA_ERROR_GENERAL);
             }
 
             if ($query instanceof RepositoryInterface) {
-                $query->whereArrayInt($query->tableName . '.id', $target);
+                $query->whereArrayInt($query->tableName . '.id', $target['ids']);
             } else {
-                $query->whereArrayInt('id', $target);
+                $query->whereArrayInt('id', $target['ids']);
             }
         } elseif (is_object($target) || Helpers::isArrayAssoc($target)) {
-            if (empty($target['filters'])) {
-                $target = Collection::make(['filters' => $target]);
+            if (empty($target['filters']) && empty($target['enable_select_all'])) {
+                Exception::Exception(Exception::SEARCH_FILTERS_EMPTY);
             }
 
             $query = $this->makeSearch($target, $auth);

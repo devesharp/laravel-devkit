@@ -2,6 +2,8 @@
 
 namespace Tests\Units\Service;
 
+use Devesharp\Exceptions\Exception;
+use Devesharp\Support\Collection;
 use Devesharp\Support\Helpers;
 use Illuminate\Support\Arr;
 use Tests\Units\Service\Mocks\ModelStub;
@@ -123,6 +125,153 @@ class ServiceTest extends TestCase
         $this->assertEquals(true, $result);
 
         $this->assertEquals(null, ModelStub::query()->first());
+    }
+
+    /**
+     * @testdox Service - delete with one Id
+     */
+    public function testDeleteServiceMany()
+    {
+        $model = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model2 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+
+        /**
+         * Buscar name
+         */
+        $result = $this->service->deleteMany([
+            'id' => $model['id'],
+        ]);
+
+        $this->assertEquals(true, $result);
+
+        $this->assertNull(ModelStub::find($model['id']));
+        $this->assertNotNull(ModelStub::find($model2['id']));
+    }
+
+    /**
+     * @testdox Service - delete with one Ids
+     */
+    public function testDeleteServiceManyIds()
+    {
+        $model = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model2 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model3 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+
+        /**
+         * Buscar name
+         */
+        $result = $this->service->deleteMany([
+            'ids' => [
+                $model['id'],
+                $model3['id'],
+            ],
+        ]);
+
+        $this->assertEquals(true, $result);
+
+        $this->assertNull(ModelStub::find($model['id']));
+        $this->assertNotNull(ModelStub::find($model2['id']));
+        $this->assertNull(ModelStub::find($model3['id']));
+    }
+
+    /**
+     * @testdox Service - delete with filters
+     */
+    public function testDeleteServiceManyFilters()
+    {
+        $model = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model2 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model3 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+
+        $result = $this->service->deleteMany([
+            'filters' => [
+                'id' => $model['id'],
+            ],
+        ]);
+
+        $this->assertEquals(true, $result);
+
+        $this->assertNull(ModelStub::find($model['id']));
+        $this->assertNotNull(ModelStub::find($model2['id']));
+        $this->assertNotNull(ModelStub::find($model3['id']));
+    }
+
+    /**
+     * @testdox Service - delete with filters not be empty
+     */
+    public function testDeleteServiceManyFiltersNotEmpty()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(Exception::SEARCH_FILTERS_EMPTY);
+
+        $model = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model2 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model3 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+
+        $result = $this->service->deleteMany(new Collection([
+            'filters' => [],
+        ]));
+    }
+
+    /**
+     * @testdox Service - delete all resource with filters,
+     */
+    public function testDeleteServiceManyFiltersNotEmptyActionAll()
+    {
+        $model = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model2 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+        $model3 = $this->service->create([
+            'name' => 'John',
+            'age' => 10
+        ]);
+
+        $result = $this->service->deleteMany(new Collection([
+            'filters' => [],
+            'enable_select_all' => true,
+        ]));
+
+        $this->assertNull(ModelStub::find($model['id']));
+        $this->assertNull(ModelStub::find($model2['id']));
+        $this->assertNull(ModelStub::find($model3['id']));
     }
 
     /**
@@ -289,7 +438,9 @@ class ServiceTest extends TestCase
      */
     public function testMakeSelectInt()
     {
-        $model = $this->service->makeSelectActions(1);
+        $model = $this->service->makeSelectActions([
+            'id' => 1
+        ]);
 
         $this->assertEquals('select * from "model_stubs" where "model_stubs"."id" = ? order by "id" asc limit 20', $model->getBuilder()->toSql());
     }
@@ -299,7 +450,9 @@ class ServiceTest extends TestCase
      */
     public function testMakeSelectArray()
     {
-        $model = $this->service->makeSelectActions([1,2,3]);
+        $model = $this->service->makeSelectActions([
+            'ids' => [1,2,3]
+        ]);
 
         $this->assertEquals('select * from "model_stubs" where "model_stubs"."id" in (?, ?, ?) order by "id" asc limit 20', $model->getBuilder()->toSql());
     }
@@ -310,8 +463,10 @@ class ServiceTest extends TestCase
     public function testMakeSelectFilter()
     {
         $model = $this->service->makeSelectActions([
-            'id' => 30,
-            'full_name' => 'sdsd'
+            'filters' => [
+                'id' => 30,
+                'full_name' => 'sdsd'
+            ]
         ]);
 
         $this->assertEquals('select * from "model_stubs" where "id" = ? and (name || \' \' || age) LIKE ? order by "id" asc limit 20', $model->getBuilder()->toSql());

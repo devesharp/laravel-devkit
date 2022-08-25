@@ -237,9 +237,13 @@ class Generator
             ]
         ];
 
-        if (!empty($route->body)) {
+        if (empty($route->bodyComplete)) {
+            $route->bodyComplete = $route->body;
+        }
 
-            $schema = $this->dataToSchema($route->body, true, $route->bodyRequired, $route->bodyDescription);
+        if (!empty($route->bodyComplete)) {
+
+            $schema = $this->dataToSchema($route->bodyComplete, true, $route->bodyRequired, $route->bodyDescription);
 
             if (Str::contains(json_encode($schema), '"format":"binary"')) {
                 $route->bodyType = 'multipart/form-data';

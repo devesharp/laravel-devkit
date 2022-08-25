@@ -1,0 +1,17 @@
+<?php
+
+namespace $namespace;
+
+use Devesharp\Patterns\Dto\AbstractDto;
+
+class ServiceNameDto extends AbstractDto
+{
+    protected function configureValidatorRules(): array
+    {
+        return [
+            'name' => ['string|max:100|required', 'Nome'],
+            'age' => ['numeric|required', 'Idade'],
+            'active' => ['boolean', 'Ativo' ],
+        ];
+    }
+}

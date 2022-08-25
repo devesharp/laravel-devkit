@@ -115,6 +115,20 @@ class TestDocsGenerate
         return $this;
     }
 
+    /**
+     * @param $name
+     * @param string $routeDoc
+     * @return $this
+     */
+    function setRouteInfo($name, string $routeDoc = ''): self {
+        if (class_exists($routeDoc)) {
+            $routeInfo = (new $routeDoc())->getRouteInfo($name);
+            $this->addRouteName($routeInfo->name, $routeInfo->description);
+        }
+
+        return $this;
+    }
+
     function addGroups($tags): self {
         $this->route->tags = (array) $tags;
         return $this;
@@ -134,9 +148,11 @@ class TestDocsGenerate
             $data = new $DtoClass($data);
             $this->route->bodyRequired = $data->getRequireds();
             $this->route->bodyDescription = $data->getDescriptions();
-            $this->route->body = $data->getDataModel(true);
+            $this->route->body = $data->toArray();
+            $this->route->bodyComplete = $data->getDataModel(true);
         }else {
             $this->route->body = $data;
+            $this->route->bodyComplete = $data;
         }
 
         return $this;
@@ -155,13 +171,6 @@ class TestDocsGenerate
         }
 
         return $newData;
-    }
-
-    public function addBodyExampleOrRef(array $data): self
-    {
-        $this->route->bodyWithRef = $data;
-
-        return $this;
     }
 
     function run() {

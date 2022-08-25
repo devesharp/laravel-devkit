@@ -24,7 +24,8 @@ class ServiceNameFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'john'
+            'name' => 'john',
+            'age' => '18',
         ];
     }
 }

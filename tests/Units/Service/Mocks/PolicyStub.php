@@ -20,7 +20,7 @@ class PolicyStub
         // \Devesharp\Exceptions\Exception::Unauthorized();
     }
 
-    function delete($request, $model) {
+    function delete($request, $model = null) {
         // \Devesharp\Exceptions\Exception::Unauthorized();
     }
 }

@@ -24,6 +24,7 @@ class GeneratorBase extends GeneratorCommand
 
         $view = str_replace('ServiceName', Str::studly($this->argument('name') ?? $this->argument('module')), $stub);
         $view = str_replace('ModuleName', Str::studly($this->argument('module')), $view);
+//        $view = str_replace('NamePtBr', @$this->option('namePtBr') ?? Str::studly($this->argument('module')), $view);
         $view = str_replace('$namespace', $this->getDefaultNamespace('App'), $view);
 
         return $view;
@@ -33,6 +34,11 @@ class GeneratorBase extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
         return $this->laravel['path'].'/'.str_replace('\\', '/', $name). $this->type . '.php';
+    }
+
+    protected function getNameInput()
+    {
+        return trim($this->argument('name') ?? $this->argument('module'));
     }
 
     /**
@@ -56,7 +62,14 @@ class GeneratorBase extends GeneratorCommand
     {
         return [
             ['module', InputArgument::REQUIRED, 'The name of the module'],
-            ['name', InputArgument::OPTIONAL, 'The name of the controller'],
+            ['name', InputArgument::OPTIONAL, 'The name of the resource'],
+        ];
+    }
+
+    protected function getOptions()
+    {
+        return [
+            ['namePtBr', 'a', \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'Name in portuguese'],
         ];
     }
 

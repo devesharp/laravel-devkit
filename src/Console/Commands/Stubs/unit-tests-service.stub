@@ -1,8 +1,11 @@
 <?php
 
-namespace Tests\Unit\ServiceName;
+namespace Tests\Unit\ModuleName;
 
 {{use_namespace}}
+use App\Modules\ModuleName\Dto\CreateServiceNameDto;
+use App\Modules\ModuleName\Dto\SearchServiceNameDto;
+use App\Modules\ModuleName\Dto\UpdateServiceNameDto;
 use \App\Modules\Users\Models\Users;
 use \App\Modules\ModuleName\Services\ServiceNameService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,7 +32,7 @@ class ServiceNameTest extends TestCase
         {{header_tests}}
         $ServiceNameData = ServiceName::factory()->raw();
 
-        $resource = $this->service->create($ServiceNameData, $userAdmin);
+        $resource = $this->service->create(CreateServiceNameDto::make($ServiceNameData), $userAdmin);
 
         $this->assertGreaterThanOrEqual(1, $resource['id']);
         $this->assertEqualsArrayLeft($ServiceNameData, $resource);
@@ -43,11 +46,11 @@ class ServiceNameTest extends TestCase
         {{header_tests}}
         $ServiceNameData = ServiceName::factory()->raw();
 
-        $resource = $this->service->create($ServiceNameData, $userAdmin);
+        $resource = $this->service->create(CreateServiceNameDto::make($ServiceNameData), $userAdmin);
 
         $ServiceNameDataUpdate = ServiceName::factory()->raw();
 
-        $resourceUpdated = $this->service->update($resource['id'], $ServiceNameDataUpdate, $userAdmin);
+        $resourceUpdated = $this->service->update($resource['id'], UpdateServiceNameDto::make($ServiceNameDataUpdate), $userAdmin);
 
         $this->assertEqualsArrayLeft($ServiceNameDataUpdate, $resourceUpdated);
     }
@@ -60,7 +63,7 @@ class ServiceNameTest extends TestCase
         {{header_tests}}
         $ServiceNameData = ServiceName::factory()->raw();
 
-        $resourceCreated = $this->service->create($ServiceNameData, $userAdmin);
+        $resourceCreated = $this->service->create(CreateServiceNameDto::make($ServiceNameData), $userAdmin);
 
         $resource = $this->service->get($resourceCreated['id'], $userAdmin);
 
@@ -76,11 +79,11 @@ class ServiceNameTest extends TestCase
         {{header_tests}}
         ServiceName::factory()->count(5)->create();
 
-        $results = $this->service->search([
+        $results = $this->service->search(SearchServiceNameDto::make([
             "filters" => [
                 "id" => 1
             ]
-        ], $userAdmin);
+        ]), $userAdmin);
         $this->assertEquals(1, $results['count']);
 
     }
@@ -93,7 +96,7 @@ class ServiceNameTest extends TestCase
         {{header_tests}}
         $ServiceNameData = ServiceName::factory()->raw();
 
-        $resource = $this->service->create($ServiceNameData, $userAdmin);
+        $resource = $this->service->create(CreateServiceNameDto::make($ServiceNameData), $userAdmin);
 
         $this->service->delete($resource['id'], $userAdmin);
 

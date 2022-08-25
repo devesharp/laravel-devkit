@@ -41,6 +41,15 @@ class MakeModel extends GeneratorBase
         return  __DIR__ . '/Stubs/model.stub';
     }
 
+    protected function replaceClass($stub, $name)
+    {
+        $view = parent::replaceClass($stub, $name);
+        $name = Str::snake(trim($this->input->getArgument('name')));
+        $view = str_replace('{{table}}', $name, $view);
+
+        return $view;
+    }
+
     protected function getPath($name)
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
@@ -87,9 +96,7 @@ class MakeModel extends GeneratorBase
      */
     public function handle()
     {
-        if (parent::handle() === false && ! $this->option('force')) {
-            return false;
-        }
+        parent::handle();
 
         if ($this->option('migration')) {
             $this->createMigration();
@@ -103,11 +110,6 @@ class MakeModel extends GeneratorBase
      */
     protected function createMigration()
     {
-        $table = Str::snake(class_basename($this->argument('name') ?? $this->argument('module')));
-
-        $this->call('make:migration', [
-            'name' => "create_{$table}_table",
-            '--create' => $table,
-        ]);
+        $this->call('ds:migration', [ 'name' => $this->argument('name') ?? $this->argument('module') ]);
     }
 }

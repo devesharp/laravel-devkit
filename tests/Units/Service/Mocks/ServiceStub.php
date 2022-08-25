@@ -6,6 +6,7 @@ use Devesharp\Patterns\Service\Service;
 use Devesharp\Patterns\Service\ServiceFilterEnum;
 use Devesharp\Patterns\Transformer\Transformer;
 use Devesharp\Support\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ServiceStub extends Service
@@ -214,17 +215,44 @@ class ServiceStub extends Service
     public function delete($id, $requester = null)
     {
         try {
-            DB::beginTransaction();
 
             $model = $this->repository->findIdOrFail($id);
 
             // Authorization
             $this->policy->delete($requester, $model);
 
-//            $this->repository->updateById($id, ['enabled' => false]);
+            DB::beginTransaction();
+
             $this->repository->deleteById($id, $requester);
 
             DB::commit();
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * @param $id
+     * @param $requester
+     * @return bool
+     * @throws \Devesharp\Exceptions\Exception
+     */
+    public function deleteMany($data, $requester = null)
+    {
+        try {
+            // Authorization
+            $this->policy->delete($requester);
+
+            $query = $this->makeSelectActions($data, $requester);
+
+            $query->chunk(50, function ($resources) use ($requester) {
+                foreach ($resources as $resource) {
+                    $this->delete($resource->id, $requester);
+                }
+            });
 
             return true;
         } catch (\Exception $e) {

@@ -10,11 +10,13 @@ class Exception extends \Exception
     const UNAUTHORIZED = 2; // Não autorizado
     const TOKEN_INVALID = 3; // Token não encontrado ou vencido
     const LOGIN_INCORRECT = 4; // Login ou senha incorretos
+    const PASSWORD_INCORRECT = 5; // Senha incorreta
 
     const DATA_ERROR = 200;
     const DATA_ERROR_GENERAL = 201;
 
     const NOT_FOUND_RESOURCE = 300; // Recurso não encontrado
+    const SEARCH_FILTERS_EMPTY = 400; // Recurso não encontrado
 
     public $body;
 
@@ -61,7 +63,11 @@ class Exception extends \Exception
                 break;
 
             case static::NOT_FOUND_RESOURCE:
-                return $bodyOrString ?? 'Recurso não encontrado';
+                return  $bodyOrString ?? 'Recurso não encontrado';
+                break;
+
+            case static::SEARCH_FILTERS_EMPTY:
+                return 'Filtros de ações não podem ser vazios';
                 break;
 
             default:

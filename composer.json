@@ -12,7 +12,7 @@
         }
     },
     "bin": [
-        "ds-api-docs"
+        "bin/generate-swagger"
     ],
     "require": {
         "php": ">=8.1",

@@ -285,6 +285,11 @@ class Generator
             $schema['type'] = 'object';
             $schema['properties'] = [];
 
+            // Caso não tenha nenhum valor, transforma em objeto vazio
+            if (empty($data)) {
+                $schema['properties'] = (object) [];
+            }
+
             foreach ($data as $key => $datum) {
                 $schema['properties'][$key] = $this->dataToSchema($datum, $addExample);
             }

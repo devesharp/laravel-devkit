@@ -53,7 +53,7 @@ class Provider extends ServiceProvider
     {
         if (defined('API_DOCS_ENABLED')) {
             $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
-            file_put_contents($apiDocs->toYml(), Provider::$file);
+            file_put_contents(Provider::$file, $apiDocs->toYml());
         }
     }
 }

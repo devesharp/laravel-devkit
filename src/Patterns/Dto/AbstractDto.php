@@ -5,6 +5,7 @@ namespace Devesharp\Patterns\Dto;
 use Devesharp\Exceptions\Exception;
 use Devesharp\Support\Collection;
 use Devesharp\Support\Helpers;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator as ValidatorLaravel;
 use Illuminate\Support\Str;
 
@@ -203,6 +204,38 @@ abstract class AbstractDto extends Collection
 
     public function toArray() {
         return $this->data->toArray();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sobrescrita de métodos
+    |--------------------------------------------------------------------------
+    |
+    |
+    |
+    */
+    public function __set($key, $value)
+    {
+        $this->data[$key] = $value;
+        return parent::__set($key, $value);
+    }
+
+    public function __unset($name)
+    {
+        unset($this->data[$name]);
+        parent::__unset($name);
+    }
+
+    public function offsetUnset($name): void
+    {
+        unset($this->data[$name]);
+        parent::offsetUnset($name);
+    }
+
+    public function offsetSet($key, $value): void
+    {
+        $this->data[$key] = $value;
+        parent::offsetSet($key, $value);
     }
 
     /* @return array */

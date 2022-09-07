@@ -9,6 +9,7 @@ use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\License;
 use Devesharp\APIDocs\Utils\Get;
 use Devesharp\APIDocs\Utils\Route;
+use Devesharp\Support\Collection;
 use Devesharp\Support\Helpers;
 use Illuminate\Console\Command;
 use cebe\openapi\spec\OpenApi;
@@ -212,30 +213,82 @@ class Generator
 
         $pathExist = false;
 
-        $path->{$method} = new \cebe\openapi\spec\Operation([
-            'tags' => $route->tags ?? [],
-            'summary' => $route->summary ?? '',
-            'description' => $route->description ?? '',
-            'parameters' => $route->parameters ?? [],
-            'deprecated' => $route->deprecated ?? false,
-            'security' => $route->security ?? [],
-            'responses' => new \cebe\openapi\spec\Responses([])
-        ]);
+        if (empty($path->{$method})) {
+            $path->{$method} = new \cebe\openapi\spec\Operation([
+                'tags' => $route->tags ?? [],
+                'summary' => $route->summary ?? '',
+                'description' => $route->description ?? '',
+                'parameters' => $route->parameters ?? [],
+                'deprecated' => $route->deprecated ?? false,
+                'security' => $route->security ?? [],
+                'responses' => new \cebe\openapi\spec\Responses([])
+            ]);
+        }
 
         if (!empty($route->externalDocs)) {
             $path->{$method}->externalDocs = $route->externalDocs;
         }
 
-        $path->{$method}->responses = [
-            $route->statusCode => [
-                'description' => $route->descriptionResponse,
-                'content' => [
-                    $route->bodyType => [
-                        'schema' => $this->dataToSchema($route->response, true)
+        /**
+         * Uma rota pode ter diversos responses na mesma rota, por isso é necessário verificar se o response já existe
+         * Se existir deve agrupar os responses em oneOf
+         *
+         * (Exemplo: Pagamento com cartão de crédito, boleto ou pix)
+         */
+        if (empty($path->{$method}->responses[$route->statusCode])) {
+            $path->{$method}->responses = [
+                $route->statusCode => [
+                    'description' => $route->descriptionResponse,
+                    'content' => [
+                        $route->bodyType => [
+                            'schema' => [
+                                'title' => $route->variationName,
+                                'description' => $route->variationDescription,
+                                ...$this->dataToSchema($route->response, true)
+                            ]
+                        ]
                     ]
                 ]
-            ]
-        ];
+            ];
+        } else {
+            $body = $path->{$method}->responses[$route->statusCode]['content'][$route->bodyType]['schema'];
+            $exist = !empty($path->{$method}->responses[$route->statusCode]['content'][$route->bodyType]['schema']['oneOf']);
+
+            if (!$exist) {
+                if (Helpers::isArrayAssoc($body)) {
+                    $methodContent = $path->{$method}->responses;
+                    $methodContent[$route->statusCode]['content'][$route->bodyType] = [
+                        "schema" => [
+                            "oneOf" => [
+                                $body,
+                                [
+                                    'title' => $route->variationName,
+                                    'description' => $route->variationDescription,
+                                    ...$this->dataToSchema($route->response, true)
+                                ]
+                            ]
+                        ]
+                    ];
+                    $path->{$method}->responses = $methodContent;
+                }
+            } else {
+                $body = $path->{$method}->responses[$route->statusCode]['content'][$route->bodyType]['schema']['oneOf'];
+                $methodContent = $path->{$method}->responses;
+                $methodContent[$route->statusCode]['content'][$route->bodyType] = [
+                    "schema" => [
+                        "oneOf" => [
+                            ...$body,
+                            [
+                                'title' => $route->variationName,
+                                'description' => $route->variationDescription,
+                                ...$this->dataToSchema($route->response, true)
+                            ]
+                        ]
+                    ]
+                ];
+                $path->{$method}->responses = $methodContent;
+            }
+        }
 
         if (empty($route->bodyComplete)) {
             $route->bodyComplete = $route->body;
@@ -249,14 +302,52 @@ class Generator
                 $route->bodyType = 'multipart/form-data';
             }
 
-            $path->{$method}->requestBody = [
-                'description' => $route->descriptionResponse,
-                'content' => [
-                    $route->bodyType => [
-                        'schema' => $schema
+            /**
+             * Uma rota pode ter diversos body na mesma rota, por isso é necessário verificar se o response já existe
+             * Se existir deve agrupar os body em oneOf
+             *
+             * (Exemplo: Pagamento com cartão de crédito, boleto ou pix)
+             */
+            if (empty($path->{$method}->requestBody)) {
+                $path->{$method}->requestBody = [
+                    'description' => $route->descriptionResponse,
+                    'content' => [
+                        $route->bodyType => [
+                            'schema' => [
+                                'title' => $route->variationName,
+                                'description' => $route->variationDescription,
+                                ...$schema
+                            ]
+                        ]
                     ]
-                ]
-            ];
+                ];
+            } else {
+                if (empty($path->{$method}->requestBody['content'][$route->bodyType]['schema']['oneOf'])) {
+                    $body = $path->{$method}->requestBody;
+                    $body['content'][$route->bodyType]['schema'] = [
+                        'oneOf' => [
+                            $path->{$method}->requestBody['content'][$route->bodyType]['schema'],
+                            [
+                                'title' => $route->variationName,
+                                'description' => $route->variationDescription,
+                                ...$schema
+                            ]
+                        ]
+                    ];
+                    $path->{$method}->requestBody = $body;
+                } else {
+                    $body = $path->{$method}->requestBody;
+                    $body['content'][$route->bodyType]['schema']['oneOf'] = [
+                        ...$body['content'][$route->bodyType]['schema']['oneOf'],
+                        [
+                            'title' => $route->variationName,
+                            'description' => $route->variationDescription,
+                            ...$schema
+                        ]
+                    ];
+                    $path->{$method}->requestBody = $body;
+                }
+            }
         }
     }
 

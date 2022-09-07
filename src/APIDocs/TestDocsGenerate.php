@@ -115,6 +115,12 @@ class TestDocsGenerate
         return $this;
     }
 
+    function addVaritionName($name, $description = ''): self {
+        $this->route->variationName = $name;
+        $this->route->variationDescription = $description;
+        return $this;
+    }
+
     /**
      * @param $name
      * @param string $routeDoc

@@ -8,6 +8,8 @@ class Route
     public int $statusCode = 200;
     public string $path = '';
     public array $tags = [];
+    public string $variationName = '';
+    public string $variationDescription = '';
     public string $summary = '';
     public string $bodyType = 'application/json'; // pode usar multipart/form-data
     public string $description = '';

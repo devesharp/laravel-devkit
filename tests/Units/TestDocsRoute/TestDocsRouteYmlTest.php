@@ -1013,4 +1013,171 @@ components:
       description: 'Tipo de Imóvel'
 ", $yml);
     }
+
+
+    /**
+     * @testdox gerar duas rotas com mesmo nome (variação)
+     */
+    public function testSimplePostWithTestTwo()
+    {
+        $http = $this->withPost('/resource/search')
+            ->addRouteName('Create Post', 'method post')
+            ->addVaritionName('Search Name', 'Description for search Name')
+            ->addGroups(['resources'])
+            ->addBody([
+                'name' => 'John',
+            ])
+            ->run();
+
+        $this->withPost('/resource/search')
+            ->addRouteName('Create Post', 'method post')
+            ->addVaritionName('Search Age', 'Description for search Age')
+            ->addGroups(['resources'])
+            ->addBody([
+                'age' => 10,
+            ])
+            ->run();
+
+        $this->withPost('/resource/search')
+            ->addRouteName('Create Post', 'method post')
+            ->addVaritionName('Search active', 'Description for search active')
+            ->addGroups(['resources'])
+            ->addBody([
+                'active' => false,
+            ])
+            ->run();
+
+        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+
+        $this->assertEquals("openapi: 3.0.2
+info:
+  title: 'API 1.0'
+  description: 'API Example'
+  version: 1.0.0
+servers:
+  -
+    url: 'https://example.com.br'
+    description: 'Prod API'
+paths:
+  /resource/search:
+    post:
+      tags:
+        - resources
+      summary: 'Create Post'
+      description: 'method post'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    title: 'Search Name'
+                    description: 'Description for search Name'
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              example: 1
+                            name:
+                              type: string
+                              example: John
+                            age:
+                              type: string
+                              example: '10'
+                      count:
+                        type: integer
+                        format: int64
+                        example: 1
+                  -
+                    title: 'Search Age'
+                    description: 'Description for search Age'
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              example: 1
+                            name:
+                              type: string
+                              example: John
+                            age:
+                              type: string
+                              example: '10'
+                      count:
+                        type: integer
+                        format: int64
+                        example: 1
+                  -
+                    title: 'Search active'
+                    description: 'Description for search active'
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              example: 1
+                            name:
+                              type: string
+                              example: John
+                            age:
+                              type: string
+                              example: '10'
+                      count:
+                        type: integer
+                        format: int64
+                        example: 1
+      deprecated: false
+      security: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              oneOf:
+                -
+                  title: 'Search Name'
+                  description: 'Description for search Name'
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: John
+                -
+                  title: 'Search Age'
+                  description: 'Description for search Age'
+                  type: object
+                  properties:
+                    age:
+                      type: integer
+                      format: int64
+                      example: 10
+                -
+                  title: 'Search active'
+                  description: 'Description for search active'
+                  type: object
+                  properties:
+                    active:
+                      type: boolean
+                      example: false
+", $yml);
+    }
 }

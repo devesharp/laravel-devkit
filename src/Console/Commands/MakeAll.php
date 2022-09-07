@@ -42,6 +42,7 @@ class MakeAll extends Command
             ['route', 'o', \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'Create only route'],
             ['presenter', 'i', \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'Create only presenter'],
             ['unit-test', 'u', \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'Create only unit test'],
+            ['route-docs', 'w', \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'Create only unit test'],
             ['route-test', 'b', \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'Create only route test'],
         ];
     }
@@ -50,9 +51,7 @@ class MakeAll extends Command
     {
         $all = $this->option('all');
 
-//        $namePtBr = $this->ask('Nome em português em plural do módulo (Para usar usado nas documentações): ');
-        $namePtBr = 'sdsd';
-
+        $namePtBr = $this->ask('Nome em português em plural do módulo (Para usar ser usado nas documentações): ');
 
         if ($all || $this->confirm('create route?')) {
             $this->callSilent('ds:route', [ 'module' => $this->argument('module'), 'name' => $this->argument('name') ?? $this->argument('module') ]);
@@ -89,18 +88,17 @@ class MakeAll extends Command
             $this->callSilent('ds:controller', [ 'module' => $this->argument('module'), 'name' => $this->argument('name') ?? $this->argument('module') ]);
         }
 
-        if ($all || $this->option('unit-test')) {
+        if ($all || $this->confirm('create unit test?')) {
             $this->callSilent('ds:unit-test', [ 'module' => $this->argument('module'), 'name' => $this->argument('name') ?? $this->argument('module') ]);
         }
 
-        if ($all || $this->option('route-test')) {
+        if ($all || $this->confirm('create route test?')) {
             $this->callSilent('ds:route-test', [ 'module' => $this->argument('module'), 'name' => $this->argument('name') ?? $this->argument('module'), '--namePtBr' => $namePtBr ]);
         }
 
-        if ($all || $this->option('route-docs')) {
+        if ($all || $this->confirm('create route doc?')) {
             $this->callSilent('ds:route-docs', [ 'module' => $this->argument('module'), 'name' => $this->argument('name') ?? $this->argument('module'), '--namePtBr' => $namePtBr ]);
         }
-
 
         return 0;
     }

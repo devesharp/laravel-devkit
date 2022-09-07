@@ -46,6 +46,7 @@ class MakeRouteTestService extends GeneratorBase
         $view = str_replace('{{header_tests}}', config('devesharp.commands.snippets.unit-tests.header-test', 'API Docs'), $view);
         $view = str_replace('{{use_namespace}}', config('devesharp.commands.snippets.unit-tests.header-namespaces', 'API Docs'), $view);
         $view = str_replace('ServiceName', Str::studly($this->argument('name')), $view);
+        $view = str_replace('NamePtBr', @$this->option('namePtBr') ?? Str::studly($this->argument('module')), $view);
         $view = str_replace('ModuleName', Str::studly($this->argument('module') ?? $this->argument('name')), $view);
 
         return $view;

@@ -18,6 +18,14 @@ class MakeRouteDoc extends GeneratorBase
 
     protected string $folder = 'Docs';
 
+    protected function replaceClass($stub, $name)
+    {
+        $view = parent::replaceClass($stub, $name);
+        $view = str_replace('NamePtBr', @$this->option('namePtBr') ?? Str::studly($this->argument('module')), $view);
+
+        return $view;
+    }
+
     protected function getStub()
     {
         return  __DIR__ . '/Stubs/route-docs.stub';

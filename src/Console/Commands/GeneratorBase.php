@@ -24,7 +24,6 @@ class GeneratorBase extends GeneratorCommand
 
         $view = str_replace('ServiceName', Str::studly($this->argument('name') ?? $this->argument('module')), $stub);
         $view = str_replace('ModuleName', Str::studly($this->argument('module')), $view);
-//        $view = str_replace('NamePtBr', @$this->option('namePtBr') ?? Str::studly($this->argument('module')), $view);
         $view = str_replace('$namespace', $this->getDefaultNamespace('App'), $view);
 
         return $view;

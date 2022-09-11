@@ -1,6 +1,6 @@
 <?php
 
-namespace Devesharp\Console;
+namespace Devesharp\Generators;
 
 use Devesharp\Console\Commands\MakeController;
 use Devesharp\Console\Commands\MakeFactoryService;
@@ -21,7 +21,7 @@ use Devesharp\Console\Commands\MakeDictionary;
 use UpInside\LaravelMakeTrait\Commands\TraitMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
-class MakeProvider extends ServiceProvider
+class GeneratorsProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -30,8 +30,11 @@ class MakeProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadViewsFrom(__DIR__.'/Stubs', 'devesharp-generators');
 
-        $this->loadViewsFrom(__DIR__.'/../views', 'laravel-generator');
+        $path = realpath(__DIR__ . '/../../config/devesharp_generator.php');
+        $this->publishes([$path => config_path('devesharp_generator.php')], 'config');
+        $this->mergeConfigFrom($path, 'devesharp_generator');
 
         /**
          * Register makes

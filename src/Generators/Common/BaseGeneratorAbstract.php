@@ -5,6 +5,8 @@ namespace Devesharp\Generators\Common;
 //    ds:generator $typeName $module $name
 abstract class BaseGeneratorAbstract
 {
+    public array $options = [];
+
     public string $moduleName = '';
     public string $resourceType = '';
     public string $resourceName = '';
@@ -30,12 +32,15 @@ abstract class BaseGeneratorAbstract
     public bool $withTestRoute = false;
     public bool $withTestUnit = false;
 
+    //
+    public array $fieldsDto = [];
+
     public function __construct(protected GeneratorConfig $config)
     {
         $config->init();
     }
 
-    public function setData(array $data): self
+    public function setData(array $data, array $options = []): self
     {
         $this->moduleName = $data['module'];
         $this->resourceName = $data['name'] ?? $data['module'];
@@ -59,6 +64,10 @@ abstract class BaseGeneratorAbstract
         $this->withTransformer = $data['withTransformer'] ?? false;
         $this->withTestRoute = $data['withTestRoute'] ?? false;
         $this->withTestUnit = $data['withTestUnit'] ?? false;
+
+        $this->fieldsDto = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForDto() : [];
+
+        $this->options = $options;
 
         return $this;
     }
@@ -109,6 +118,10 @@ abstract class BaseGeneratorAbstract
             'transformerNamespace' => $this->replaceNameSpace($this->config->getNamespace('transformer')),
             'testRouteNamespace' => $this->replaceNameSpace($this->config->getNamespace('testRoute')),
             'testUnitNamespace' => $this->replaceNameSpace($this->config->getNamespace('testUnit')),
+            //
+            'fieldsDto' => $this->fieldsDto,
+            //
+            'options' => $this->options ?? [],
         ];
     }
 

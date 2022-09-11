@@ -1,0 +1,102 @@
+name: Posts
+fields:
+    id:
+        dbType: "id"
+        rules: null
+        searchable: true
+        primary: true
+        isDto: false
+        inTransformer: true
+        description: "The ID of the post"
+    enabled:
+        dbType: "boolean"
+        default: true
+        isDto: false
+        description: "Soft delete?"
+    platform_id:
+        dbType: "foreignId:constrained"
+        relation: "mt1,Platforms,platform_id,id"
+        getByUser: true
+        searchable: true
+        isDto: false
+        description: "Platform ID"
+    user_id:
+        dbType: "foreignId:constrained"
+        relation: "mt1,User,user_id,id"
+        getByUser: true
+        searchable: true
+        isDto: false
+        description: "The user who created the post"
+    title:
+        dbType: "string"
+        rules: "required"
+        searchable: true
+        isDto: true
+        inTransformer: true
+        description: "The title of the post"
+    body:
+        dbType: "text"
+        rules: "required"
+        searchable: true
+        isDto: true
+        inTransformer: true
+        description: "The body of the post"
+    is_featured:
+        dbType: "boolean"
+        rules: ""
+        searchable: true
+        isDto: true
+        inTransformer: true
+        description: "Is this post featured?"
+    published_at:
+        dbType: "date"
+        rules: ""
+        searchable: true
+        isDto: false
+        inTransformer: true
+        description: "When was this post published?"
+    password:
+        dbType: "string"
+        rules: ""
+        searchable: true
+        isDto: true
+        inTransformer: true
+        description: "The password to view this post"
+    post_type:
+        dbType: "integer"
+        rules: ""
+        searchable: true
+        isDto: true
+        inTransformer: true
+        description: "The type of post"
+    status:
+        dbType: "integer"
+        rules: ""
+        searchable: true
+        isDto: true
+        inTransformer: true
+        description: "The status of the post"
+    created_by:
+        dbType: "unsignedBigInteger:foreign,users,id"
+        relation: "mt1,User,user_id,id"
+        rules: "required|min:1"
+        searchable: true
+        isDto: false
+        inTransformer: true
+        description: "The user that created this post"
+    created_at:
+        dbType: "timestamp"
+        onlyTable: true
+        isDto: false
+        rules: null
+        searchable: true
+        inTransformer: true
+        description: "When was this post created?"
+    updated_at:
+        dbType: "timestamp"
+        onlyTable: true
+        rules: null
+        isDto: false
+        searchable: true
+        inTransformer: true
+        description: "When was this post updated?"

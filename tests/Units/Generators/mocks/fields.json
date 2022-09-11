@@ -1,0 +1,121 @@
+[
+  {
+    "name": "id",
+    "dbType": "id",
+    "onlyTable": true,
+    "rules": null,
+    "searchable": true,
+    "primary": true,
+    "inTransformer": true
+  },
+  {
+    "name": "user_id",
+    "dbType": "foreignId:constrained",
+    "relation": "mt1,User,user_id,id",
+    "onlyTable": false,
+    "rules": "required|min:1",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "title",
+    "dbType": "string",
+    "onlyTable": false,
+    "rules": "required",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "body",
+    "dbType": "text",
+    "onlyTable": false,
+    "rules": "",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "is_featured",
+    "dbType": "boolean",
+    "onlyTable": false,
+    "rules": "",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "is_enabled",
+    "dbType": "boolean",
+    "onlyTable": false,
+    "rules": "",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "published_at",
+    "dbType": "date",
+    "onlyTable": false,
+    "rules": "",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "password",
+    "dbType": "string",
+    "onlyTable": false,
+    "rules": "",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "post_type",
+    "dbType": "integer",
+    "onlyTable": false,
+    "rules": "",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "status",
+    "dbType": "integer",
+    "onlyTable": false,
+    "rules": "",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "created_by",
+    "dbType": "unsignedBigInteger:foreign,users,id",
+    "relation": "mt1,User,user_id,id",
+    "onlyTable": false,
+    "rules": "required|min:1",
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "created_at",
+    "dbType": "timestamp",
+    "onlyTable": true,
+    "rules": null,
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  },
+  {
+    "name": "updated_at",
+    "dbType": "timestamp",
+    "onlyTable": true,
+    "rules": null,
+    "searchable": true,
+    "primary": false,
+    "inTransformer": true
+  }
+]

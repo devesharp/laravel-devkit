@@ -38,6 +38,7 @@ abstract class BaseGeneratorAbstract
     public array $fieldsDto = [];
     public array $fieldsFaker = [];
     public array $fieldsMigration = [];
+    public array $fieldsCasts = [];
 
     public function __construct(protected GeneratorConfig $config)
     {
@@ -72,6 +73,7 @@ abstract class BaseGeneratorAbstract
         $this->fieldsDto = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForDto() : [];
         $this->fieldsFaker = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForFaker() : [];
         $this->fieldsMigration = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForMigration() : [];
+        $this->fieldsCasts = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForCasts() : [];
 
         $this->options = $options;
 
@@ -129,6 +131,7 @@ abstract class BaseGeneratorAbstract
             'fieldsDto' => $this->fieldsDto,
             'fieldsFaker' => $this->fieldsFaker,
             'fieldsMigration' => $this->fieldsMigration,
+            'fieldsCasts' => $this->fieldsCasts,
             //
             'options' => $this->options ?? [],
         ];

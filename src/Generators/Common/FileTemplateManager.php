@@ -123,6 +123,44 @@ class FileTemplateManager
         return $fields;
     }
 
+    public function getFieldsForCasts()
+    {
+        $fields = [];
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            $cast = '';
+            switch (strtolower($field['dbType'])) {
+                case 'json':
+                    $cast = 'array';
+                    break;
+                case 'bool':
+                case 'boolean':
+                    $cast = 'bool';
+                    break;
+                case 'date':
+                case 'datetime':
+                case 'timestamp':
+                case 'time':
+                    $cast = "date";
+                    break;
+            }
+
+            if ($key == 'enabled') {
+                $fields[] = [
+                    'name' => 'deleted_at',
+                    'cast' => 'cast',
+                ];
+            }
+
+            if (!empty($cast)) {
+                $fields[] = [
+                    'name' => $key,
+                    'cast' => $cast,
+                ];
+            }
+        }
+        return $fields;
+    }
+
     public function getFieldsForMigration()
     {
         $fields = [];

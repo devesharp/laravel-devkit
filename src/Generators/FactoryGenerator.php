@@ -5,14 +5,14 @@ namespace Devesharp\Generators;
 
 use Devesharp\Generators\Common\BaseGeneratorAbstract;
 
-class DtoGenerator extends BaseGeneratorAbstract
+class FactoryGenerator extends BaseGeneratorAbstract
 {
 
-    public string $resourceType = 'dto';
+    public string $resourceType = 'factory';
 
     public function getFile(): string
     {
-        return 'devesharp-generators::Dto/dto-default';
+        return 'devesharp-generators::Factory/factory-default';
     }
 
     public function getData()

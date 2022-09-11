@@ -34,6 +34,7 @@ abstract class BaseGeneratorAbstract
 
     //
     public array $fieldsDto = [];
+    public array $fieldsFaker = [];
 
     public function __construct(protected GeneratorConfig $config)
     {
@@ -66,6 +67,7 @@ abstract class BaseGeneratorAbstract
         $this->withTestUnit = $data['withTestUnit'] ?? false;
 
         $this->fieldsDto = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForDto() : [];
+        $this->fieldsFaker = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForFaker() : [];
 
         $this->options = $options;
 
@@ -120,6 +122,7 @@ abstract class BaseGeneratorAbstract
             'testUnitNamespace' => $this->replaceNameSpace($this->config->getNamespace('testUnit')),
             //
             'fieldsDto' => $this->fieldsDto,
+            'fieldsFaker' => $this->fieldsFaker,
             //
             'options' => $this->options ?? [],
         ];

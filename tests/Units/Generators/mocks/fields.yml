@@ -22,7 +22,7 @@ fields:
         description: "Platform ID"
     user_id:
         dbType: "foreignId:constrained"
-        relation: "mt1,User,user_id,id"
+        relation: "mt1,Users,user_id,id"
         getByUser: true
         searchable: true
         isDto: false
@@ -78,7 +78,7 @@ fields:
         description: "The status of the post"
     created_by:
         dbType: "unsignedBigInteger:foreign,users,id"
-        relation: "mt1,User,user_id,id"
+        relation: "mt1,Users,user_id,id"
         rules: "required|min:1"
         searchable: true
         isDto: false

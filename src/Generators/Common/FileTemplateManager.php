@@ -122,4 +122,79 @@ class FileTemplateManager
         }
         return $fields;
     }
+
+    public function getFieldsForMigration()
+    {
+        $fields = [];
+        $foreignKeys = [];
+        $createdAtField = null;
+        $updatedAtField = null;
+        $enabledAtField = null;
+
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            if ($key == 'created_at') {
+                $createdAtField = $field;
+                continue;
+            } else if ($key == 'updated_at') {
+                $updatedAtField = $field;
+                continue;
+            } else if ($key == 'enabled') {
+                $enabledAtField = $field;
+                continue;
+            }
+
+            if (Str::contains($field['dbType'], 'foreign')) {
+                $migrationField = '$table->unsignedBigInteger(\'' . $key . '\')';
+            } else {
+                if ($field['dbType'] == "id" && $key == "id") {
+                    $migrationField = '$table->' . $field['dbType'] . '()';
+                } else {
+                    $migrationField = '$table->' . $field['dbType'] . '(\'' . $key . '\')';
+                }
+            }
+
+            if (!empty($field['default'])) {
+                $migrationField .= '->default(\'' . $field['default'] . '\')';
+            }
+
+            if ($field['dbType'] != "id" && !empty($field['primary'])) {
+                $migrationField .= '->primary()';
+            }
+
+            if (!empty($field['isNullable'])) {
+                $migrationField .= '->nullable()';
+            }
+
+            $migrationField .= ';';
+
+            $fields[] = $migrationField;
+
+            if (Str::contains($field['dbType'], 'foreign')) {
+                $foreignTable = Str::snake(trim(explode(",", $field['relation'])[1]));
+                $foreignField = explode(",", $field['relation'])[2] ?? 'id';
+
+                $foreignKeys[] = "\$table->foreign('".$key."')->references('".$foreignField."')->on('".$foreignTable."');";
+            }
+        }
+
+        if (!empty($enabledAtField)) {
+            $fields[] = '$table->softDeletes();';
+        }
+
+        if ($createdAtField['dbType'] === 'timestamp' and $updatedAtField['dbType'] === 'timestamp') {
+            $fields[] = '$table->timestamps();';
+        } else {
+            if ($createdAtField) {
+                $fields[] = $createdAtField->migrationText;
+            }
+            if ($updatedAtField) {
+                $fields[] = $updatedAtField->migrationText;
+            }
+        }
+
+        return [
+            'fields' => $fields,
+            'foreignKeys' => $foreignKeys,
+        ];
+    }
 }

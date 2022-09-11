@@ -14,18 +14,19 @@ fields:
         isDto: false
         description: "Soft delete?"
     platform_id:
-        dbType: "foreignId:constrained"
-        relation: "mt1,Platforms,platform_id,id"
+        dbType: "foreign"
+        relation: "mt1,Platforms,id"
         getByUser: true
         searchable: true
         isDto: false
         description: "Platform ID"
     user_id:
-        dbType: "foreignId:constrained"
-        relation: "mt1,Users,user_id,id"
+        dbType: "foreign"
+        relation: "mt1,Users,id"
         getByUser: true
         searchable: true
         isDto: false
+        isNullable: true
         description: "The user who created the post"
     title:
         dbType: "string"
@@ -77,7 +78,7 @@ fields:
         inTransformer: true
         description: "The status of the post"
     created_by:
-        dbType: "unsignedBigInteger:foreign,users,id"
+        dbType: "foreign"
         relation: "mt1,Users,user_id,id"
         rules: "required|min:1"
         searchable: true

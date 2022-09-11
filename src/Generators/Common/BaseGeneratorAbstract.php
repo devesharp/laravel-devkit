@@ -3,6 +3,8 @@
 namespace Devesharp\Generators\Common;
 
 //    ds:generator $typeName $module $name
+use Illuminate\Support\Str;
+
 abstract class BaseGeneratorAbstract
 {
     public array $options = [];
@@ -35,6 +37,7 @@ abstract class BaseGeneratorAbstract
     //
     public array $fieldsDto = [];
     public array $fieldsFaker = [];
+    public array $fieldsMigration = [];
 
     public function __construct(protected GeneratorConfig $config)
     {
@@ -68,6 +71,7 @@ abstract class BaseGeneratorAbstract
 
         $this->fieldsDto = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForDto() : [];
         $this->fieldsFaker = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForFaker() : [];
+        $this->fieldsMigration = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForMigration() : [];
 
         $this->options = $options;
 
@@ -92,6 +96,7 @@ abstract class BaseGeneratorAbstract
             'namespaceApp' => $this->getNamespace(),
             'moduleName' => $this->moduleName,
             'resourceName' => $this->resourceName,
+            'tableName' => Str::snake(trim($this->resourceName)),
             //
             'withController' => $this->withController,
             'withDto' => $this->withDto,
@@ -123,6 +128,7 @@ abstract class BaseGeneratorAbstract
             //
             'fieldsDto' => $this->fieldsDto,
             'fieldsFaker' => $this->fieldsFaker,
+            'fieldsMigration' => $this->fieldsMigration,
             //
             'options' => $this->options ?? [],
         ];

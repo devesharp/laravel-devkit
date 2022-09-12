@@ -43,7 +43,7 @@ class ModelGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
             'file_template' => __DIR__ . '/mocks/fields.yml',
         ]);
-
+        
         $this->assertEquals(file_get_contents(__DIR__ . '/mocks/model/model-with-file.php'), $this->generator->render());
     }
 

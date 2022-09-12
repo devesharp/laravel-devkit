@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class ResourceExample
- * @package App\Modules\ModuleExample\Resources\Model\
+ * @package App\Modules\ModuleExample\Resources\Model
  *
-
  * @method static App\Modules\ModuleExample\Resources\Model\ResourceExample find($value)
  */
 class ResourceExample extends Model

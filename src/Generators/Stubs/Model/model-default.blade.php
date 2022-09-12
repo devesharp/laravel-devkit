@@ -17,9 +17,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class {{ $resourceName }}
- * @package {{ $namespaceApp }}\
+ * @package {{ $namespaceApp }}
  *
-
+@foreach($propertyPHPDocs as $field)
+ * @property {{$field['type']}} ${{$field['name']}}
+@endforeach
  * @@method static {{ $namespaceApp }}\{{ $resourceName }} find($value)
  */
 class {{ $resourceName }} extends Model
@@ -62,5 +64,8 @@ class {{ $resourceName }} extends Model
     {
         return {{ $resourceName }}Factory::new();
     }
+@endif
+@if($modelRelations)
+{!! $modelRelations !!}
 @endif
 }

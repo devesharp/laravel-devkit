@@ -79,7 +79,7 @@ fields:
         description: "The status of the post"
     created_by:
         dbType: "foreign"
-        relation: "mt1,Users,user_id,id"
+        relation: "mt1,Users,id"
         rules: "required|min:1"
         searchable: true
         isDto: false

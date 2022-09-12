@@ -123,6 +123,125 @@ class FileTemplateManager
         return $fields;
     }
 
+    public function getPropertyPHPDocs()
+    {
+        $fields = [];
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            $type = '';
+            switch (strtolower($field['dbType'])) {
+                case 'integer':
+                case 'unsignedinteger':
+                case 'smallinteger':
+                case 'biginteger':
+                case 'unsignedbiginteger':
+                case 'long':
+                    $type = 'integer';
+                    break;
+                case 'double':
+                case 'float':
+                case 'decimal':
+                    $type = 'double';
+                    break;
+                case 'string':
+                case 'char':
+                case 'text':
+                    $type = 'string';
+                    break;
+                case 'bool':
+                case 'boolean':
+                    $type = 'bool';
+                    break;
+                case 'date':
+                case 'datetime':
+                case 'timestamp':
+                case 'time':
+                    $type = "\Illuminate\Support\Carbon";
+                    break;
+                default:
+                    $type = 'string';
+            }
+
+            if (empty($field['primary']) && $key !== 'created_at' && $key !== 'updated_at') {
+                $fields[] = [
+                    'name' => $key,
+                    'type' => $type,
+                    'description' => $field['description'] ?? '',
+                ];
+            }
+        }
+        return $fields;
+    }
+
+    public function getModelRelationFunctions($namespaceModel)
+    {
+        $relations = '';
+
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            if (!empty($field['relation'])) {
+                $typeRelation = explode(",", $field['relation'])[0];
+
+                $tableForeign = explode(",", $field['relation'])[1];
+                $singularRelation = Str::camel(Str::singular($tableForeign));
+                $pluralRelation = Str::camel(Str::plural($tableForeign));
+                $primaryKeyName = explode(",", $field['relation'])[2];
+
+                if (str_replace('_id', '', $key) != $singularRelation && substr($key, -2) != "Id") {
+                    $singularRelation .= Str::studly($key);
+                }
+
+                switch ($typeRelation) {
+                    case '1t1':
+                        $functionName = $singularRelation;
+                        $relation = 'hasOne';
+                        $relationClass = 'HasOne';
+                        break;
+                    case '1tm':
+                        $functionName = $pluralRelation;
+                        $relation = 'hasMany';
+                        $relationClass = 'HasMany';
+                        break;
+                    case 'mt1':
+                        $functionName = $singularRelation;
+                        $relation = 'belongsTo';
+                        $relationClass = 'BelongsTo';
+                        break;
+                    case 'mtm':
+                        $functionName = $pluralRelation;
+                        $relation = 'belongsToMany';
+                        $relationClass = 'BelongsToMany';
+                        break;
+                    case 'hmt':
+                        $functionName = $pluralRelation;
+                        $relation = 'hasManyThrough';
+                        $relationClass = 'HasManyThrough';
+                        break;
+                    default:
+                        $functionName = '';
+                        $relation = '';
+                        $relationClass = '';
+                        break;
+                }
+
+                if (!empty($functionName)) {
+                    $relations .= "\n";
+                    if ($relation == 'belongsTo') {
+                        $relations .= "    public function $functionName(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\\$namespaceModel\\$tableForeign {";
+                    }else {
+                        $relations .= "    public function $functionName():  {";
+                    }
+                    $relations .= "\n";
+                    $relations .= "        return \$this->$relation(\\$namespaceModel\\$tableForeign::class, '$key', '$primaryKeyName');";
+                    $relations .= "\n";
+                    $relations .= "    }";
+                    $relations .= "\n";
+                }
+            }
+
+        }
+
+        return $relations;
+    }
+
     public function getFieldsForCasts()
     {
         $fields = [];

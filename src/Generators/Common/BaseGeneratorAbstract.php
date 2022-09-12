@@ -39,6 +39,7 @@ abstract class BaseGeneratorAbstract
     public array $fieldsFaker = [];
     public array $fieldsMigration = [];
     public array $fieldsCasts = [];
+    public array $propertyPHPDocs = [];
 
     public function __construct(protected GeneratorConfig $config)
     {
@@ -74,6 +75,10 @@ abstract class BaseGeneratorAbstract
         $this->fieldsFaker = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForFaker() : [];
         $this->fieldsMigration = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForMigration() : [];
         $this->fieldsCasts = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForCasts() : [];
+        $this->propertyPHPDocs = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getPropertyPHPDocs() : [];
+
+        //
+        $this->modelRelations = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getModelRelationFunctions($this->replaceNameSpace($this->config->getNamespace('model'))) : '';
 
         $this->options = $options;
 
@@ -132,6 +137,9 @@ abstract class BaseGeneratorAbstract
             'fieldsFaker' => $this->fieldsFaker,
             'fieldsMigration' => $this->fieldsMigration,
             'fieldsCasts' => $this->fieldsCasts,
+            'propertyPHPDocs' => $this->propertyPHPDocs,
+            //
+            'modelRelations' => $this->modelRelations,
             //
             'options' => $this->options ?? [],
         ];

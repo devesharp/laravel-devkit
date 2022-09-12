@@ -8,8 +8,6 @@ use App\Modules\ModuleName\Dto\SearchServiceNameDto;
 use App\Modules\ModuleName\Dto\UpdateServiceNameDto;
 use \App\Modules\Users\Models\Users;
 use \App\Modules\ModuleName\Services\ServiceNameService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ServiceNameTest extends TestCase

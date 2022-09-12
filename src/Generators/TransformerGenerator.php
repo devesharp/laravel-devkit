@@ -4,13 +4,14 @@ namespace Devesharp\Generators;
 
 use Devesharp\Generators\Common\BaseGeneratorAbstract;
 
-class RouteDocGenerator extends BaseGeneratorAbstract
+class TransformerGenerator extends BaseGeneratorAbstract
 {
-    public string $resourceType = 'route-docs';
+
+    public string $resourceType = 'transformer';
 
     public function getFile(): string
     {
-        return 'devesharp-generators::Docs/route-docs-default';
+        return 'devesharp-generators::Transformer/transformer-default';
     }
 
     public function getData()

@@ -106,7 +106,7 @@ class FileTemplateManager
                     $fakerFn = "fake()->date('H:i:s')";
                     break;
                 default:
-                    if (Str::contains($field['dbType'], 'foreignId')) {
+                    if (Str::contains($field['dbType'], 'foreign')) {
                         $fakerFn = 1;
                     } else {
                         $fakerFn = 'fake()->text(100)';

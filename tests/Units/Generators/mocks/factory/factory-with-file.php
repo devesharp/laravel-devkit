@@ -34,7 +34,7 @@ class ResourceExampleFactory extends Factory
             'password' => fake()->text(100),
             'post_type' => fake()->randomFloat(2),
             'status' => fake()->randomFloat(2),
-            'created_by' => fake()->text(100),
+            'created_by' => 1,
         ];
     }
 }

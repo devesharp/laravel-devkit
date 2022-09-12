@@ -4,6 +4,7 @@ fields:
         dbType: "id"
         rules: null
         searchable: true
+        sort: true
         primary: true
         isDto: false
         inTransformer: true
@@ -23,6 +24,7 @@ fields:
     user_id:
         dbType: "foreign"
         relation: "mt1,Users,id"
+        sort: true
         getByUser: true
         searchable: true
         isDto: false
@@ -52,6 +54,7 @@ fields:
     published_at:
         dbType: "date"
         rules: ""
+        sort: true
         searchable: true
         isDto: false
         inTransformer: true
@@ -73,6 +76,7 @@ fields:
     status:
         dbType: "integer"
         rules: ""
+        sort: true
         searchable: true
         isDto: true
         inTransformer: true
@@ -81,12 +85,14 @@ fields:
         dbType: "foreign"
         relation: "mt1,Users,id"
         rules: "required|min:1"
+        getByUser: true
         searchable: true
         isDto: false
         inTransformer: true
         description: "The user that created this post"
     created_at:
         dbType: "timestamp"
+        sort: true
         onlyTable: true
         isDto: false
         rules: null
@@ -95,6 +101,7 @@ fields:
         description: "When was this post created?"
     updated_at:
         dbType: "timestamp"
+        sort: true|
         onlyTable: true
         rules: null
         isDto: false

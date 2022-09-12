@@ -80,6 +80,102 @@ class FileTemplateManager
         return $fields;
     }
 
+    public function getFiltersSearchable()
+    {
+        $fields = [];
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            $filterType = '';
+
+            switch (strtolower($field['dbType'])) {
+                case 'integer':
+                case 'unsignedinteger':
+                case 'smallinteger':
+                case 'biginteger':
+                case 'unsignedbiginteger':
+                case 'long':
+                    $filterType = 'ServiceFilterEnum::whereInt';
+                    break;
+                case 'double':
+                case 'float':
+                case 'decimal':
+                    $filterType = 'ServiceFilterEnum::whereNumber';
+                    break;
+                case 'string':
+                case 'char':
+                case 'text':
+                    $filterType = 'ServiceFilterEnum::whereContainsExplodeString';
+                    break;
+                case 'bool':
+                case 'boolean':
+                    $filterType = 'ServiceFilterEnum::whereBoolean';
+                    break;
+                case 'date':
+                case 'datetime':
+                case 'timestamp':
+                case 'time':
+                    $filterType = 'ServiceFilterEnum::whereDate';
+                    break;
+                default:
+                    $filterType = 'ServiceFilterEnum::whereEqual';
+            }
+
+            if (!empty($field['searchable'])) {
+                $fields[] = [
+                    'name' => $key,
+                    'filterType' => $filterType,
+                ];
+
+                switch (strtolower($field['dbType'])) {
+                    case 'date':
+                    case 'datetime':
+                    case 'timestamp':
+                    case 'time':
+                        $fields[] = [
+                            'name' => $key . '_gte',
+                            'filterType' => 'ServiceFilterEnum::whereDateGte',
+                        ];
+
+                        $fields[] = [
+                            'name' => $key . '_lte',
+                            'filterType' => 'ServiceFilterEnum::whereDateLte',
+                        ];
+
+                        break;
+                }
+            }
+        }
+        return $fields;
+    }
+
+    public function getFiltersSort()
+    {
+        $fields = [];
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            if (!empty($field['sort'])) {
+                $fields[] = [
+                    'name' => $key
+                ];
+            }
+        }
+        return $fields;
+    }
+
+    public function getUsersServiceRelation()
+    {
+        $fields = [];
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            if (!empty($field['getByUser'])) {
+                $table = explode(",", $field['relation'])[1];
+
+                $fields[] = [
+                    'fieldName' => $key,
+                    'userFieldName' => $table == "Users" || $table == "User" ? "id" : $key,
+                ];
+            }
+        }
+        return $fields;
+    }
+
     public function getFieldsForFaker()
     {
         $fields = [];

@@ -41,6 +41,8 @@ abstract class BaseGeneratorAbstract
     public array $fieldsMigration = [];
     public array $fieldsCasts = [];
     public array $propertyPHPDocs = [];
+    //
+    public string $fileTemplate = '';
 
     public function __construct(protected GeneratorConfig $config)
     {
@@ -49,6 +51,7 @@ abstract class BaseGeneratorAbstract
 
     public function setData(array $data, array $options = []): self
     {
+        $this->fileTemplate = $data['file_template'] ?? '';
         $this->moduleName = $data['module'];
         $this->resourceName = $data['name'] ?? $data['module'];
         $this->withCreate = $data['withCreate'] ?? true;

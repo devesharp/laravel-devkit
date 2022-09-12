@@ -1,73 +1,83 @@
-<?php
+@php
+    echo "<?php".PHP_EOL;
+@endphp
 
-namespace Tests\Units\Service\Mocks;
+namespace {{ $namespaceApp }};
 
 use Devesharp\Patterns\Service\Service;
 use Devesharp\Patterns\Service\ServiceFilterEnum;
 use Devesharp\Patterns\Transformer\Transformer;
+use {{ $dtoNamespace }}\Create{{ $resourceName }}Dto;
+use {{ $dtoNamespace }}\Update{{ $resourceName }}Dto;
+use {{ $dtoNamespace }}\Search{{ $resourceName }}Dto;
+use {{ $dtoNamespace }}\Delete{{ $resourceName }}Dto;
 use Devesharp\Support\Collection;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ServiceStub extends Service
+class {{ $resourceName }}Service extends Service
 {
-    protected TransformerStub $transformer;
-    protected RepositoryStub $repository;
-    protected PolicyStub $policy;
-
+    /**
+     * Sorts permitidas.
+     */
     public array $sort = [
-        'id' => [
-            'column' => 'id',
+@foreach($filtersSort as $filter)
+        '{{$filter['name']}}' => [
+            'column' => '{{$tableName}}.{{$filter['name']}}',
         ],
+@endforeach
     ];
 
-    public string $sort_default = 'id';
+    /**
+     * @var string Sort padrão
+     */
+    public string $sort_default = '-id';
 
+    /**
+     * @var int limit de resultados
+     */
+    public int $limitMax = 40;
+
+    /**
+     * @var int limit padrão
+     */
+    public int $limitDefault = 20;
+
+    /**
+     * @var array Filtros rápidos
+     */
     public array $filters = [
-        // Filter default
-        'id' => [
-            'column' => 'id',
-            'filter' => ServiceFilterEnum::whereEqual,
+@foreach($filtersSearchable as $filter)
+        '{{$filter['name']}}' => [
+            'column' => '{{$tableName}}.{{$filter['name']}}',
+            'filter' => {{$filter['filterType']}},
         ],
-        'name' => [
-            'column' => 'name',
-            'filter' => ServiceFilterEnum::whereContainsLike,
-        ],
-        // Filter column raw
-        'full_name' => [
-            'column' => "raw:(name || ' ' || age)",
-            'filter' => ServiceFilterEnum::whereContainsExplodeString,
-        ],
+@endforeach
     ];
 
     public function __construct(
-        TransformerStub $transformer,
-        RepositoryStub $repository,
-        PolicyStub $policy
+        protected {{ $transformerNamespace }}\{{ $resourceName }}Transformer $transformer,
+        protected {{ $repositoryNamespace }}\{{ $resourceName }}Repository $repository,
+        protected {{ $policyNamespace }}\{{ $resourceName }}Policy $policy
     ) {
-        $this->transformer = $transformer;
-        $this->repository = $repository;
-        $this->policy = $policy;
     }
 
     /**
      * Create resource
      *
-     * @param array $originalData
+     * @param Create{{ $resourceName }}Dto $data
      * @param null $requester
      * @return mixed
      * @throws \Exception
      */
-    public function create(array $originalData, $requester = null)
+    public function create(Create{{ $resourceName }}Dto $data, $requester = null, $context = 'model')
     {
         try {
-            DB::beginTransaction();
 
             // Authorization
             $this->policy->create($requester);
 
-            // Data validation
-            $data = Collection::make($originalData);
+            // Iniciar transação
+            DB::beginTransaction();
 
             // Treatment data
             $resourceData = $this->treatment($requester, $data, null, 'create');
@@ -77,7 +87,7 @@ class ServiceStub extends Service
 
             DB::commit();
 
-            return $this->get($model->id, $requester);
+            return $this->get($model->id, $requester, $context);
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -86,26 +96,25 @@ class ServiceStub extends Service
 
     /**
      * @param int $id
-     * @param array $originalData
+     * @param Update{{ $resourceName }}Dto $originalData
      * @param null $requester
      * @return mixed
      * @throws \Exception
      */
     public function update(
         int $id,
-        array $originalData,
-        $requester = null
+        Update{{ $resourceName }}Dto $data,
+        $requester = null,
+        $context = 'model'
     ) {
         try {
-            DB::beginTransaction();
-
             $model = $this->repository->findIdOrFail($id);
 
             // Authorization
             $this->policy->update($requester, $model);
 
-            // Data validation
-            $data = Collection::make($originalData);
+            // Iniciar transação
+            DB::beginTransaction();
 
             // Treatment data
             $resourceData = $this->treatment($requester, $data, $model, 'update');
@@ -115,7 +124,7 @@ class ServiceStub extends Service
 
             DB::commit();
 
-            return $this->get($id, $requester);
+            return $this->get($id, $requester, $context);
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -136,8 +145,12 @@ class ServiceStub extends Service
         string $method
     ) {
         if ($method == 'update') {
-            return $requestData;
+
         } else if ($method == 'create') {
+@foreach($userGetData as $userGet)
+            $requestData['{{$userGet['fieldName']}}'] = $requester->{{$userGet['userFieldName']}};
+@endforeach
+
             return $requestData;
         }
 
@@ -151,33 +164,37 @@ class ServiceStub extends Service
      * @return mixed
      * @throws \Devesharp\Exceptions\Exception
      */
-    public function get(int $id, $receiver)
+    public function get(int $id, $receiver, string $context = 'default')
     {
         // Get model
-        $model = $this->repository->findIdOrFail($id);
+        $model = $this->makeSearch($data, $receiver)
+            ->whereInt('id', $id)
+            ->findOne();
 
-        $this->policy->get($receiver, $model);
+        if (empty($model)) {
+            \Devesharp\Exceptions\Exception::NotFound({{ $modelNamespace }}\{{ $resourceName }}::class);
+        }
+
+        if ($context != 'model')
+            $this->policy->get($receiver, $model);
 
         return Transformer::item(
             $model,
             $this->transformer,
-            'default',
+            $context,
             $receiver,
         );
     }
 
     /**
-     * @param array $originalData
+     * @param Search{{ $resourceName }}Dto $originalData
      * @param null $requester
      * @return array
      */
-    public function search(array $originalData = [], $requester = null)
+    public function search(Search{{ $resourceName }}Dto $data, $requester = null)
     {
         // Authorization
         $this->policy->search($requester);
-
-        // Validate data
-        $data = Collection::make($originalData);
 
         // Make query
         $query = $this->makeSearch($data, $requester);
@@ -193,11 +210,11 @@ class ServiceStub extends Service
     /**
      * @param $data
      * @param null $requester
-     * @return \Devesharp\CRUD\RepositoryInterface|RepositoryStub
+     * @return \Devesharp\Pattners\Repository\RepositoryInterface|\{{ $repositoryNamespace }}\{{ $resourceName }}Repository
      */
     protected function makeSearch(&$data, $requester = null)
     {
-        /** @var RepositoryStub $query */
+        /** @var \{{ $repositoryNamespace }}\{{ $resourceName }}Repository $query */
         $query = parent::makeSearch($data, $requester);
 
 //        // Example Query
@@ -215,19 +232,22 @@ class ServiceStub extends Service
     public function delete($id, $requester = null)
     {
         try {
-
             $model = $this->repository->findIdOrFail($id);
 
             // Authorization
             $this->policy->delete($requester, $model);
 
+            // Iniciar transação
             DB::beginTransaction();
 
-            $this->repository->deleteById($id, $requester);
+            $this->repository->updateById($id, ['enabled' => false]);
 
             DB::commit();
 
-            return true;
+            return [
+                'id' => $id,
+                'deleted' => true,
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -235,12 +255,12 @@ class ServiceStub extends Service
     }
 
     /**
-     * @param $id
+     * @param Delete{{ $resourceName }}Dto $data
      * @param $requester
      * @return bool
      * @throws \Devesharp\Exceptions\Exception
      */
-    public function deleteMany($data, $requester = null)
+    public function deleteMany(Delete{{ $resourceName }}Dto $data, $requester = null)
     {
         try {
             // Authorization
@@ -248,13 +268,19 @@ class ServiceStub extends Service
 
             $query = $this->makeSelectActions($data, $requester);
 
+            $count = 0;
+
             $query->chunk(50, function ($resources) use ($requester) {
                 foreach ($resources as $resource) {
                     $this->delete($resource->id, $requester);
+                    $count++;
                 }
             });
 
-            return true;
+            return [
+                'executed' => true,
+                'count' => $count,
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;

@@ -39,6 +39,24 @@ return [
         'testRoute' => base_path('tests/Routes/{{ModuleName}}'),
         'testUnit' => base_path('tests/Units/{{ModuleName}}'),
     ],
+//    "relations" => [
+//        "Users" => [
+//            "platform_id" => [
+//                "resource" => "Platforms",
+//                "field" => "id",
+//            ],
+//            "type_id" => [
+//                "resource" => "UsersTypes",
+//                "field" => "id",
+//            ],
+//        ],
+//        "Platforms" => [
+//            "system_id" => [
+//                "resource" => "System",
+//                "field" => "id",
+//            ]
+//        ],
+//    ],
     'commands' => [
         'group_by_name' => true, // Agrupar arquivos por nome
         'snippets' => [

@@ -36,6 +36,7 @@ abstract class BaseGeneratorAbstract
 
     //
     public array $fieldsDto = [];
+    public array $fieldsTransformer = [];
     public array $fieldsFaker = [];
     public array $fieldsMigration = [];
     public array $fieldsCasts = [];
@@ -72,6 +73,7 @@ abstract class BaseGeneratorAbstract
         $this->withTestUnit = $data['withTestUnit'] ?? false;
 
         $this->fieldsDto = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForDto() : [];
+        $this->fieldsTransformer = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForTransformer() : [];
         $this->fieldsFaker = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForFaker() : [];
         $this->fieldsMigration = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForMigration() : [];
         $this->fieldsCasts = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForCasts() : [];
@@ -103,6 +105,8 @@ abstract class BaseGeneratorAbstract
             'namespaceApp' => $this->getNamespace(),
             'moduleName' => $this->moduleName,
             'resourceName' => $this->resourceName,
+            'resourceNameForDocs' => $this->resourceName,
+            'routeName' => $this->routeName,
             'tableName' => Str::snake(trim($this->resourceName)),
             //
             'withController' => $this->withController,
@@ -134,6 +138,7 @@ abstract class BaseGeneratorAbstract
             'testUnitNamespace' => $this->replaceNameSpace($this->config->getNamespace('testUnit')),
             //
             'fieldsDto' => $this->fieldsDto,
+            'fieldsTransformer' => $this->fieldsTransformer,
             'fieldsFaker' => $this->fieldsFaker,
             'fieldsMigration' => $this->fieldsMigration,
             'fieldsCasts' => $this->fieldsCasts,

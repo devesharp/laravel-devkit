@@ -67,6 +67,19 @@ class FileTemplateManager
         return $fields;
     }
 
+    public function getFieldsForTransformer()
+    {
+        $fields = [];
+        foreach ($this->fileContent['fields'] as $key => $field) {
+            if (!empty($field['inTransformer'])) {
+                $fields[] = [
+                    'name' => $key
+                ];
+            }
+        }
+        return $fields;
+    }
+
     public function getFieldsForFaker()
     {
         $fields = [];

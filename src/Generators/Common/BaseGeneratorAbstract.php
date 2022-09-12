@@ -89,7 +89,7 @@ abstract class BaseGeneratorAbstract
 
     public function getNamespace(): string
     {
-        return $this->replaceNameSpace($this->config->getNamespace($this->resourceType));
+        return $this->replaceNameSpace($this->config->getNamespace(Str::camel($this->resourceType)));
     }
 
     function replaceNameSpace(string $namespace): string

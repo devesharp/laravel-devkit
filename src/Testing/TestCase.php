@@ -8,6 +8,22 @@ use Devesharp\Support\Helpers;
 
 trait TestCase
 {
+
+    /**
+     * Comparar datas
+     * @param $leftArray
+     * @param $array
+     * @param $exclude
+     * @return void
+     */
+    function assertDateEqual($leftArray, $array, $exclude = []) {
+        $this->assertSame(Carbon::parse($leftArray)->toString(), Carbon::parse($array)->toString());
+    }
+
+    function assertDateLessOrEqualThanNow($array, $message = '') {
+        $this->assertTrue(Carbon::parse($array)->lessThanOrEqualTo(Carbon::now()), $message . ' date is not less or equal than now');
+    }
+
     /**
      * Verifica se todas as keys da $array são iguais da $leftArray
      * $array pode ter mais de keys que $leftArray, só é necessário ter as de $leftArray

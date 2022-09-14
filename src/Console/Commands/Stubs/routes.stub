@@ -1,7 +1,0 @@
-Route::controller(|CONTROLLER_NAME|::class)->group(function () {
-    Route::post('|SLUG|/search', 'search');
-    Route::get('|SLUG|/{id}', 'get');
-    Route::post('|SLUG|/{id}', 'update');
-    Route::post('|SLUG|', 'create');
-    Route::delete('|SLUG|/{id}', 'delete');
-});

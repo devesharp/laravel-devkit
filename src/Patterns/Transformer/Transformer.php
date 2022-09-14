@@ -42,9 +42,11 @@ class Transformer
      */
     public function transformMany(
         array $models,
-        string $context = 'default',
+        $context = 'default',
         $requester = null
     ) {
+        $context = $context->name ?? $context;
+
         $transformed = [];
 
         /**
@@ -131,9 +133,11 @@ class Transformer
      */
     public function transformOne(
         $model,
-        string $context = 'default',
+        $context = 'default',
         $requester = null
     ) {
+        $context = $context->name ?? $context;
+
         $function = 'transform' . ucfirst(Str::camel($context));
 
         foreach ($this->loads as $loadName => $load) {
@@ -306,7 +310,7 @@ class Transformer
     public static function item(
         $model,
         Transformer $transform,
-        string $context = 'default',
+        $context = 'default',
         $requester = null
     ) {
         return $transform->transformOne($model, $context, $requester);
@@ -325,7 +329,7 @@ class Transformer
     public static function collection(
         $models,
         Transformer $transform,
-        string $context = 'default',
+        $context = 'default',
         $requester = null
     ) {
         return $transform->transformMany($models, $context, $requester);

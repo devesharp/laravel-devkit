@@ -9,7 +9,7 @@ use {{ $dtoNamespace }}\Create{{ $resourceName }}Dto;
 use {{ $dtoNamespace }}\Search{{ $resourceName }}Dto;
 use {{ $dtoNamespace }}\Update{{ $resourceName }}Dto;
 use {{ $modelNamespace }}\{{ $resourceName }};
-use {{ $modelNamespace }}\Users;
+use {{ $userModelNamespace }}\Users;
 use {{ $serviceNamespace }}\{{ $resourceName }}Service;
 {!!  $useNamespace !!}
 use Tests\TestCase;
@@ -38,9 +38,13 @@ class {{ $resourceName }}UnitTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $resource['id']);
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
-        $this->assertGreaterThanOrEqual(1, $resource['{{ $field['name'] }}']);
+        $this->assertGreaterThanOrEqual(1, $resource['id']);
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+        $this->assertDateLessOrEqualThanNow($resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date")
+        $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
-        $this->assertSame($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}']);
+        $this->assertSame($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
 @endforeach
     }
@@ -58,9 +62,13 @@ class {{ $resourceName }}UnitTest extends TestCase
 
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
-        $this->assertGreaterThanOrEqual(1, $resource['{{ $field['name'] }}']);
+        $this->assertGreaterThanOrEqual(1, $resource['id']);
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+        $this->assertDateLessOrEqualThanNow($resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date")
+        $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
-        $this->assertSame($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}']);
+        $this->assertSame($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
 @endforeach
     }
@@ -71,16 +79,20 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testGet{{ $resourceName }}()
     {
 {!!  $headerFnTest !!}
+        $resourceOther = {{ $resourceName }}::factory()->create();
         $resource = {{ $resourceName }}::factory()->create();
 
-        $resource = $this->service->get($resource->id, ${{ $userVariable }});
+        $resourceGet = $this->service->get($resource->id, ${{ $userVariable }});
 
-        $this->assertGreaterThanOrEqual(1, $resource['id']);
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
-        $this->assertGreaterThanOrEqual(1, $resource['{{ $field['name'] }}']);
+        $this->assertGreaterThanOrEqual($resource->id, $resourceGet['id']);
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+        $this->assertDateLessOrEqualThanNow($resourceGet['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date")
+        $this->assertDateEqual($resource->{{ $field['name'] }}, $resourceGet['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
-        $this->assertSame($resource->{{ $field['name'] }}, $resource['{{ $field['name'] }}']);
+        $this->assertSame($resource->{{ $field['name'] }}, $resourceGet['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
 @endforeach
     }

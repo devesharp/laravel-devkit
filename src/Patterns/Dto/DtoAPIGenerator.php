@@ -106,7 +106,7 @@ trait DtoAPIGenerator
                     $value = 'string';
                 }else if (Helpers::inArrayAny(['boolean'], explode('|', $value))) {
                     $value = false;
-                }else if (Helpers::inArrayAny(['integer', 'numeric'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['integer', 'numeric', 'numeric_string'], explode('|', $value))) {
                     $value = 1;
                 }else if (Helpers::inArrayAny(['nullable'], explode('|', $value))) {
                     $value = null;

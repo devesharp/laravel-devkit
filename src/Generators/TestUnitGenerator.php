@@ -23,7 +23,7 @@ class TestUnitGenerator extends BaseGeneratorAbstract
         $headerFnTest = '';
         $useNamespace = '';
 
-        $modelNamespace = $this->replaceNameSpace($this->config->getNamespace('model'));
+        $modelNamespace = $this->replaceString($this->config->getNamespace('model'));
 
         if (!empty($relations['Users'])) {
             foreach ($relations['Users'] as $key => $field) {

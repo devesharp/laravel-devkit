@@ -18,5 +18,5 @@ class {{ $resourceName }}Repository extends RepositoryMysql
     /**
      * @@var string
      */
-    protected $model = {{ $modelNamespace }}\{{ $resourceName }}::class;
+    protected $model = \{{ $modelNamespace }}\{{ $resourceName }}::class;
 }

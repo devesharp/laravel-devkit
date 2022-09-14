@@ -55,9 +55,9 @@ class {{ $resourceName }}Service extends Service
     ];
 
     public function __construct(
-        protected {{ $transformerNamespace }}\{{ $resourceName }}Transformer $transformer,
-        protected {{ $repositoryNamespace }}\{{ $resourceName }}Repository $repository,
-        protected {{ $policyNamespace }}\{{ $resourceName }}Policy $policy
+        protected \{{ $transformerNamespace }}\{{ $resourceName }}Transformer $transformer,
+        protected \{{ $repositoryNamespace }}\{{ $resourceName }}Repository $repository,
+        protected \{{ $policyNamespace }}\{{ $resourceName }}Policy $policy
     ) {
     }
 
@@ -164,7 +164,7 @@ class {{ $resourceName }}Service extends Service
      * @return mixed
      * @throws \Devesharp\Exceptions\Exception
      */
-    public function get(int $id, $receiver, string $context = 'default')
+    public function get(int $id, $receiver, $context = 'default')
     {
         // Get model
         $model = $this->makeSearch($data, $receiver)

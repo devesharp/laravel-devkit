@@ -15,7 +15,7 @@ use Devesharp\Patterns\Dto\Templates\ActionManyTemplateDto;
 use {{ $namespaceApp }}\Create{{ $resourceName }}Dto;
 @endif
 
-class {{@$options['template'] == 'delete' ? 'Delete' : ''}}{{@$options['template'] == 'update' ? 'Update' : ''}}{{@$options['template'] == 'search' ? 'Search' : ''}}{{ $resourceName }}Dto extends AbstractDto
+class {{@$options['template'] == 'create' ? 'Create' : ''}}{{@$options['template'] == 'delete' ? 'Delete' : ''}}{{@$options['template'] == 'update' ? 'Update' : ''}}{{@$options['template'] == 'search' ? 'Search' : ''}}{{ $resourceName }}Dto extends AbstractDto
 {
     protected function configureValidatorRules(): array
     {
@@ -33,9 +33,16 @@ class {{@$options['template'] == 'delete' ? 'Delete' : ''}}{{@$options['template
 
 @endif
         return [
+@if(@$options['template'] != 'search' && @$options['template'] != 'delete' && @$options['template'] != 'update')
 @foreach($fieldsDto as $field)
             '{{ $field['name'] }}' => ['{{ $field['rules'] }}', '{{ $field['description'] }}'],
 @endforeach
+@endif
+@if(@$options['template'] == 'search')
+@foreach($fieldsDtoSearch as $field)
+            '{{ $field['name'] }}' => ['{{ $field['rules'] }}', '{{ $field['description'] }}'],
+@endforeach
+@endif
         ];
     }
 }

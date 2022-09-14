@@ -9,7 +9,7 @@ use {{ $dtoNamespace }}\Create{{ $resourceName }}Dto;
 use {{ $dtoNamespace }}\Search{{ $resourceName }}Dto;
 use {{ $dtoNamespace }}\Update{{ $resourceName }}Dto;
 use {{ $modelNamespace }}\{{ $resourceName }};
-use {{ $modelNamespace }}\Users;
+use {{ $userModelNamespace }}\Users;
 {!!  $useNamespace !!}
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -39,9 +39,13 @@ class {{ $resourceName }}RouteTest extends TestCase
         $this->assertTrue($responseData['success']);
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
-        $this->assertGreaterThanOrEqual(1, $responseData['{{ $field['name'] }}']);
+        $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+        $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date")
+        $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
-        $this->assertSame($resourceData['{{ $field['name'] }}'], $responseData['{{ $field['name'] }}']);
+        $this->assertSame($resourceData['{{ $field['name'] }}'], $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
 @endforeach
     }
@@ -70,9 +74,13 @@ class {{ $resourceName }}RouteTest extends TestCase
         $this->assertTrue($responseData['success']);
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
-        $this->assertGreaterThanOrEqual(1, $responseData['{{ $field['name'] }}']);
+        $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+        $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date")
+        $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
-        $this->assertSame($resourceData['{{ $field['name'] }}'], $responseData['{{ $field['name'] }}']);
+        $this->assertSame($resourceData['{{ $field['name'] }}'], $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
 @endforeach
     }
@@ -99,9 +107,13 @@ class {{ $resourceName }}RouteTest extends TestCase
         $this->assertTrue($responseData['success']);
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
-        $this->assertGreaterThanOrEqual(1, $responseData['{{ $field['name'] }}']);
+        $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+        $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date")
+        $this->assertDateEqual($resource->{{ $field['name'] }}, $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
-        $this->assertSame($resource->{{ $field['name'] }}, $responseData['{{ $field['name'] }}']);
+        $this->assertSame($resource->{{ $field['name'] }}, $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
 @endforeach
     }

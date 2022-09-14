@@ -9,20 +9,20 @@ use {{ $dtoNamespace }}\Create{{ $resourceName }}Dto;
 use {{ $dtoNamespace }}\Search{{ $resourceName }}Dto;
 use {{ $dtoNamespace }}\Update{{ $resourceName }}Dto;
 @if($withTransformerInterface)
-use {{ $transformInterfaceNamespace }}\{{ $resourceName }}TransformerType;
+use {{ $transformerInterfaceNamespace }}\{{ $resourceName }}TransformerType;
 @endif
 
 class {{ $resourceName }}Controller extends ControllerBase
 {
     public function __construct(
-        protected {{ $serviceNamespace }}\{{ $resourceName }}Service $service
+        protected \{{ $serviceNamespace }}\{{ $resourceName }}Service $service
     ) {
         parent::__construct();
     }
 
     public function search()
     {
-        return $this->service->search(Search{{ $resourceName }}Dto::make(request()->all()), $this->auth, @if($withTransformerInterface){{ $resourceName }}TransformerType::Default @else'default'@endif);
+        return $this->service->search(Search{{ $resourceName }}Dto::make(request()->all()), $this->auth, @if($withTransformerInterface){{ $resourceName }}TransformerType::default @else'default'@endif);
     }
 
     public function get($id)
@@ -32,12 +32,12 @@ class {{ $resourceName }}Controller extends ControllerBase
 
     public function update($id)
     {
-        return $this->service->update($id, Update{{ $resourceName }}Dto::make(request()->all()), $this->auth, @if($withTransformerInterface){{ $resourceName }}TransformerType::Default @else'default'@endif);
+        return $this->service->update($id, Update{{ $resourceName }}Dto::make(request()->all()), $this->auth, @if($withTransformerInterface){{ $resourceName }}TransformerType::default @else'default'@endif);
     }
 
     public function create()
     {
-        return $this->service->create(Create{{ $resourceName }}Dto::make(request()->all()), $this->auth, @if($withTransformerInterface){{ $resourceName }}TransformerType::Default @else'default'@endif);
+        return $this->service->create(Create{{ $resourceName }}Dto::make(request()->all()), $this->auth, @if($withTransformerInterface){{ $resourceName }}TransformerType::default @else'default'@endif);
     }
 
     public function delete($id)

@@ -30,7 +30,7 @@ class FileTemplateManager
                 case 'double':
                 case 'float':
                 case 'decimal':
-                    $rules = ['alpha_num'];
+                    $rules = ['numeric_string'];
                     break;
                 case 'string':
                 case 'char':
@@ -67,13 +67,107 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getFieldsForTransformer()
+    public function getFieldsForDtoSearch()
     {
         $fields = [];
         foreach ($this->fileContent['fields'] as $key => $field) {
+
+            $rules = [];
+            switch (strtolower($field['dbType'])) {
+                case 'integer':
+                case 'unsignedinteger':
+                case 'smallinteger':
+                case 'biginteger':
+                case 'unsignedbiginteger':
+                case 'long':
+                case 'double':
+                case 'float':
+                case 'decimal':
+                case 'id':
+                    $rules = ['numeric_string'];
+                    break;
+                case 'string':
+                case 'char':
+                case 'text':
+                    $rules = ['string'];
+                    break;
+                    break;
+                case 'boolean':
+                    $rules = ['bool'];
+                    break;
+                case 'date':
+                case 'datetime':
+                case 'timestamp':
+                case 'time':
+                    $rules = ['string'];
+                    break;
+                default:
+                    $rules = ['string'];
+            }
+
+            if (!empty($field['searchable'])) {
+
+                if (!empty($field['rules'])) {
+                    $removeRequireds = str_replace(['|required', 'required|', 'required'], '', $field['rules']);
+
+                    if (!empty($removeRequireds)) {
+                        $rules[] = $removeRequireds;
+                    }
+                }
+
+                $fields[] = [
+                    'name' => 'filters.' . $key,
+                    'rules' => implode( '|', $rules),
+                    'description' => $field['description'] ?? '',
+                ];
+            }
+        }
+        return $fields;
+    }
+
+    public function getFieldsForTransformer()
+    {
+        $fields = [];
+
+        foreach ($this->fileContent['fields'] as $key => $field) {
+
+            $type = "string";
+            switch (strtolower($field['dbType'])) {
+                case 'integer':
+                case 'unsignedinteger':
+                case 'smallinteger':
+                case 'biginteger':
+                case 'unsignedbiginteger':
+                case 'long':
+                    $type = 'number';
+                case 'double':
+                case 'float':
+                case 'decimal':
+                    $type = 'float';
+                    break;
+                case 'string':
+                case 'char':
+                case 'text':
+                    $type = 'string';
+                    break;
+                    break;
+                case 'boolean':
+                    $type = 'bool';
+                    break;
+                case 'date':
+                case 'datetime':
+                case 'timestamp':
+                case 'time':
+                    $type = 'date';
+                    break;
+                default:
+                    $type = 'string';
+            }
+
             if (!empty($field['inTransformer'])) {
                 $fields[] = [
-                    'name' => $key
+                    'name' => $key,
+                    'type' => $type,
                 ];
             }
         }
@@ -220,6 +314,10 @@ class FileTemplateManager
                     } else {
                         $fakerFn = 'fake()->text(100)';
                     }
+            }
+
+            if ($key == "enabled") {
+                $fakerFn = 'true';
             }
 
             if (empty($field['primary']) && $key !== 'created_at' && $key !== 'updated_at') {
@@ -406,7 +504,6 @@ class FileTemplateManager
                 continue;
             } else if ($key == 'enabled') {
                 $enabledAtField = $field;
-                continue;
             }
 
             if (Str::contains($field['dbType'], 'foreign')) {

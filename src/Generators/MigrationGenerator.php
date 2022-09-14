@@ -15,6 +15,11 @@ class MigrationGenerator extends BaseGeneratorAbstract
         return 'devesharp-generators::Migration/migration-table';
     }
 
+    public function getFileName()
+    {
+        return date('Y_m_d_His') . '_create_' . $this->getRootData()['tableName'] . '_table.php';
+    }
+
     public function getData()
     {
         return [

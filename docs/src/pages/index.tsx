@@ -6,9 +6,13 @@ import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
 import styles from './index.module.css';
+import {Redirect} from "@docusaurus/router";
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
+
+    return <Redirect to="/laravel-devkit/docs/intro" />;
+
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">

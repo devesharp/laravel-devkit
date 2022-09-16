@@ -114,11 +114,15 @@ public function getDefault(
 }
 ```
 
+:::info
+
 Se `$this->getUser($id)` for chamado com um id que não existia em um relacionamento, o mesmo irá buscar o valor no repositório `UsersRepository::class` na coluna `alternative_id` e então irá salvar em cache.
 
-## Swagger
+:::
 
-Para facilitar a documentação da API, você pode utilizar o trait `Devesharp\Swagger\SwaggerTransformer` no transformer. Que irá ajudar a documentação do swagger.
+## Swagger Generator
+
+Para gerar um documentação mais rica com 'Swagger Generator', você deve utilizar o trait `Devesharp\Swagger\SwaggerTransformer` no transformer. Que irá ajudar a documentação do swagger.
 
 ```php title="UsersTransformer.php"
 <?php

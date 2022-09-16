@@ -132,20 +132,7 @@ class Service
 
 Por padrão `additionalProperties` é falso e nenhum valor adicional é permitido, você pode alterar isso para resgatar todos os valores que vieram da array.
 
-### API Docs Generator
+## Swagger Generator
 
-Essa classe possui funcionalidades para ser usadas na biblioteca Devesharp API Generator, por isso, é importante que você utilize essas funcionalidades.
-
-##### Descrição dos campos
-
-Você pode adicionar descrição das suas keys, passando uma array no seu schema, ao invés de passar apenas a validação.
-
-```php
-protected array $rules = [
-    'create' => [
-        'name' => ['string|max:100|required', 'Nome do usuário'],
-        'age' => ['numeric|required', 'Idade do usuário'],
-        'active' => ['boolean', 'Ativo/Inativo'],
-    ],
-];
-```
+Para gerar usar 'Swagger Generator', você deve utilizar o trait `Devesharp\Swagger\Traits\SwaggerValidator` no validator.
+Esse trait irá habilitar alguns métodos para gerar 'Swagger Generator' de forma dinâmica.

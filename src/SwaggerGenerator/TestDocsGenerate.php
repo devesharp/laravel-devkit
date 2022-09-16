@@ -7,7 +7,6 @@ use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\License;
-use Devesharp\SwaggerGenerator\Utils\Get;
 use Devesharp\SwaggerGenerator\Utils\Route;
 use Devesharp\Patterns\Dto\AbstractDto;
 use Devesharp\Patterns\Validator\Validator;
@@ -110,7 +109,7 @@ class TestDocsGenerate
      * @return $this
      */
     function addRouteName($name, $description = ''): self {
-        $this->route->summary = $name;
+        $this->route->title = $name;
         $this->route->description = $description;
         return $this;
     }

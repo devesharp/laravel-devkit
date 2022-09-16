@@ -216,7 +216,7 @@ class Generator
         if (empty($path->{$method})) {
             $path->{$method} = new \cebe\openapi\spec\Operation([
                 'tags' => $route->tags ?? [],
-                'summary' => $route->summary ?? '',
+                'summary' => $route->title ?? '',
                 'description' => $route->description ?? '',
                 'parameters' => $route->parameters ?? [],
                 'deprecated' => $route->deprecated ?? false,

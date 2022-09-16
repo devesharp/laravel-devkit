@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\APIDocsGenerator;
+namespace Tests\Units\SwaggerGenerator;
 
 use Devesharp\Console\Commands\MakeService;
 use Devesharp\Support\Collection;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class APIInfoTest extends \Tests\TestCase
+class SwaggerGeneratorInfoTest extends \Tests\TestCase
 {
     /**
      * @testdox Test header docs

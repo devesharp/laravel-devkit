@@ -1,24 +1,24 @@
 <?php
 
-namespace Tests\Units\APIDocsGenerator;
+namespace Tests\Units\SwaggerGenerator;
 
 use Devesharp\Console\Commands\MakeService;
 use Devesharp\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tests\Units\APIDocsGenerator\Mocks\ValidatorStubWithGenerator;
+use Tests\Units\SwaggerGenerator\Mocks\ValidatorStubWithGenerator;
 
-class APIUtilsTest extends \Tests\TestCase
+class SwaggerUtilsTest extends \Tests\TestCase
 {
     /**
      * @testdox converter data para schema swagger - string
      */
     public function testConvertDataToSchemaString()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->dataToSchema([
+        $schema = $swaggerGenerator->dataToSchema([
             'key_string' => 'string',
         ], true, ['key_string'], ['key_string' => 'Example String', '' => 'Example Data']);
 
@@ -41,9 +41,9 @@ class APIUtilsTest extends \Tests\TestCase
      */
     public function testConvertDataToSchemaBoolean()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->dataToSchema([
+        $schema = $swaggerGenerator->dataToSchema([
             'key_string' => false,
         ]);
 
@@ -59,9 +59,9 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaNumber()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->dataToSchema([
+        $schema = $swaggerGenerator->dataToSchema([
             'key_integer' => 10,
             'key_double' => 10.10,
         ]);
@@ -83,9 +83,9 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaSimpleArray()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->dataToSchema([
+        $schema = $swaggerGenerator->dataToSchema([
             'array_string' => ['10'],
             'array_integer' => [10],
             'array_double' => [10.10],
@@ -126,9 +126,9 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaSimpleArrayObject()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->dataToSchema([
+        $schema = $swaggerGenerator->dataToSchema([
             'array_object' => [
                 [
                     'key_string' => 'string',
@@ -165,9 +165,9 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaSimpleArrayObjectWithExample()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->dataToSchema([
+        $schema = $swaggerGenerator->dataToSchema([
             'array_object' => [
                 [
                     'key_string' => 'string',
@@ -205,9 +205,9 @@ class APIUtilsTest extends \Tests\TestCase
      */
     public function testConvertDataToSchemaRequiredItemsArrayObject()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->addRequiredToSchema([
+        $schema = $swaggerGenerator->addRequiredToSchema([
             'type' => 'object',
             'properties' => [
                 'array_object' => [
@@ -269,9 +269,9 @@ class APIUtilsTest extends \Tests\TestCase
      */
     public function testConvertDataToSchemaRequiredItemsObject()
     {
-        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
+        $swaggerGenerator = new \Devesharp\SwaggerGenerator\Generator();
 
-        $schema = $apiDocs->addRequiredToSchema([
+        $schema = $swaggerGenerator->addRequiredToSchema([
             'type' => 'object',
             'properties' => [
                 'item_object' => [

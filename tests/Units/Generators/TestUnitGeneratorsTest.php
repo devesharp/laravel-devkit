@@ -34,8 +34,7 @@ class TestUnitGeneratorsTest extends \Tests\TestCase
             'file_template' => __DIR__ . '/mocks/fields.yml',
         ]);
 
-//        var_dump($this->generator->render());
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-route-simple.php'), $this->generator->render());
+        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-unit-with-file.php'), $this->generator->render());
     }
 
     public function testTestUnitBaseWithUserRelation()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Units\APIDocsGenerator\Mocks;
+namespace Tests\Units\SwaggerRequestTest\Mocks;
 
 use Devesharp\Validator\Validator;
 use Devesharp\Validator\ValidatorAPIGenerator;
@@ -11,13 +11,13 @@ class ValidatorStubWithGenerator extends \Devesharp\Patterns\Validator\Validator
 
     protected array $rules = [
         'create' => [
-            'name' => ['string|max:100|required', 'Nome'],
-            'age' => ['numeric|required', 'Idade'],
-            'active' => ['boolean', 'Ativo' ],
         ],
         'complex' => [
             '_extends' => 'create',
-            'pets.*' => ['array|required', 'ID'],
+            'name' => ['string|max:100|required', 'Nome'],
+            'age' => ['numeric|required', 'Idade'],
+            'active' => ['boolean', 'Ativo' ],
+            'pets' => ['array|required', 'ID'],
             'pets.*.id' => ['numeric|required', 'ID'],
             'pets.*.name' => ['string|required', 'Nome do Pet'],
             'owner.id' => ['numeric', 'ID do Dono'],

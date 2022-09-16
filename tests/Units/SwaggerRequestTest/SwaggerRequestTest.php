@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Units\TestDocsRoute;
+namespace Tests\Units\SwaggerRequestTest;
 
 use Devesharp\Console\Commands\MakeService;
 use Devesharp\Support\Collection;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tests\Units\APIDocsGenerator\Mocks\ValidatorStubWithGenerator;
 
-class TestDocsRouteTest extends \Tests\TestCase
+class SwaggerRequestTest extends \Tests\TestCase
 {
     use \Devesharp\Testing\TestCase;
 

@@ -1,0 +1,67 @@
+openapi: 3.0.2
+info:
+  title: 'API 1.0'
+  version: 1.0.0
+servers: []
+paths:
+  /upload:
+    post:
+      tags:
+        - pets
+        - get
+      summary: 'Find pets by ID'
+      description: 'Returns pets based on ID'
+      parameters:
+        -
+          name: platformId
+          in: query
+          description: 'Platform ID'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ''
+          content:
+            multipart/form-data:
+              schema:
+                title: ''
+                description: ''
+                type: object
+                properties:
+                  key_string:
+                    type: string
+                    example: string
+      deprecated: true
+      security:
+        -
+          basicAuth: []
+      externalDocs:
+        description: 'Find more info here'
+        url: 'https://example.com'
+      requestBody:
+        description: ''
+        content:
+          multipart/form-data:
+            schema:
+              title: ''
+              description: ''
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                key_array:
+                  type: array
+                  items:
+                    type: string
+                    example: string
+              required:
+                - file
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      description: 'Bearer Authentication'
+      scheme: basic

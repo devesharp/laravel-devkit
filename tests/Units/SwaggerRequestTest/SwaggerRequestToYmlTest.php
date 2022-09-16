@@ -1,18 +1,12 @@
 <?php
 
-namespace Tests\Units\TestDocsRoute;
+namespace Tests\Units\SwaggerRequestTest;
 
-use Devesharp\Console\Commands\MakeService;
-use Devesharp\Support\Collection;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
-use Symfony\Component\Console\Tester\CommandTester;
-use Tests\Units\TestDocsRoute\Mocks\ComplexDtoStub;
-use Tests\Units\TestDocsRoute\Mocks\RefTest;
-use Tests\Units\TestDocsRoute\Mocks\ValidatorStubWithGenerator;
+use Tests\Units\SwaggerRequestTest\Mocks\ComplexDtoStub;
+use Tests\Units\SwaggerRequestTest\Mocks\RefTest;
 
-class TestDocsRouteYmlTest extends \Tests\TestCase
+class SwaggerRequestToYmlTest extends \Tests\TestCase
 {
     use \Devesharp\Testing\TestCase;
 
@@ -111,6 +105,8 @@ paths:
           content:
             application/json:
               schema:
+                title: ''
+                description: ''
                 type: object
                 properties:
                   results:
@@ -139,6 +135,8 @@ paths:
         content:
           application/json:
             schema:
+              title: ''
+              description: ''
               type: object
               properties:
                 name:
@@ -222,6 +220,8 @@ paths:
           content:
             application/json:
               schema:
+                title: ''
+                description: ''
                 type: object
                 properties:
                   id:
@@ -355,6 +355,8 @@ paths:
           content:
             application/json:
               schema:
+                title: ''
+                description: ''
                 type: object
                 properties:
                   id:
@@ -429,6 +431,8 @@ paths:
         content:
           application/json:
             schema:
+              title: ''
+              description: ''
               type: object
               properties:
                 name:
@@ -515,6 +519,8 @@ paths:
           content:
             application/json:
               schema:
+                title: ''
+                description: ''
                 type: object
                 properties:
                   id:
@@ -589,6 +595,8 @@ paths:
         content:
           application/json:
             schema:
+              title: ''
+              description: ''
               type: object
               properties:
                 name:
@@ -677,6 +685,8 @@ paths:
           content:
             application/json:
               schema:
+                title: ''
+                description: ''
                 type: object
                 properties:
                   id:
@@ -751,6 +761,8 @@ paths:
         content:
           multipart/form-data:
             schema:
+              title: ''
+              description: ''
               type: object
               properties:
                 file:
@@ -827,6 +839,8 @@ paths:
           content:
             application/json:
               schema:
+                title: ''
+                description: ''
                 type: object
                 properties:
                   results:
@@ -855,6 +869,8 @@ paths:
         content:
           application/json:
             schema:
+              title: ''
+              description: ''
               type: object
               properties:
                 pets:
@@ -968,6 +984,8 @@ paths:
           content:
             application/json:
               schema:
+                title: ''
+                description: ''
                 type: object
                 properties:
                   results:
@@ -996,6 +1014,8 @@ paths:
         content:
           application/json:
             schema:
+              title: ''
+              description: ''
               type: object
               properties:
                 name:

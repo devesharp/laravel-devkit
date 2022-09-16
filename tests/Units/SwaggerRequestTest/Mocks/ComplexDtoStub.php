@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Units\TestDocsRoute\Mocks;
+namespace Tests\Units\SwaggerRequestTest\Mocks;
 
 use Devesharp\Patterns\Dto\AbstractDto;
 

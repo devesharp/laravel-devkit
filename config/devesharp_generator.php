@@ -22,6 +22,7 @@ return [
         'migration' => 'database/migrations',
         'testRoute' => 'Tests\Routes\{{ModuleName}}',
         'testUnit' => 'Tests\Units\{{ModuleName}}',
+        'formatter' => 'App\Supports\Formatters',
     ],
     "path" => [
         'controller' => app_path('Modules/{{ModuleName}}/Controllers'),

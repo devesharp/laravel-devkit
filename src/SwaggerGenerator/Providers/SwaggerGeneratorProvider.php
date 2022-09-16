@@ -15,27 +15,24 @@ class SwaggerGeneratorProvider extends ServiceProvider
     public function boot()
     {
         if (!defined('API_DOCS_INIT')) {
-            define('API_DOCS_INIT', true);
-            $path = realpath(__DIR__ . '/../../config/config.php');
-            $this->publishes([$path => config_path('devesharp.php')], 'devesharp-laravel-devit-config');
-            $this->mergeConfigFrom($path, 'devesharp');
-
-            $apiDocs = \Devesharp\SwaggerGenerator\Generator::getInstance();
-            $apiDocs->setTitle(config('devesharp.APIDocs.name', 'API Docs'));
-            $apiDocs->setDescription(config('devesharp.APIDocs.description', ''));
-            $apiDocs->setVersion(config('devesharp.APIDocs.version', '1.0.0'));
-
-            SwaggerGeneratorProvider::$file = config('devesharp.APIDocs.save_file');
-            file_put_contents(SwaggerGeneratorProvider::$file, '');
-
-            foreach (config('devesharp.APIDocs.refs', []) as $ref) {
-                $apiDocs->addRef($ref);
-            }
-
-            foreach (config('devesharp.APIDocs.servers', []) as $item) {
-                if (!empty($item['url']))
-                    $apiDocs->addServers($item['url'], $item['description'] ?? '');
-            }
+//            define('API_DOCS_INIT', true);
+//
+//            $apiDocs = \Devesharp\SwaggerGenerator\Generator::getInstance();
+//            $apiDocs->setTitle(config('devesharp.APIDocs.name', 'API Docs'));
+//            $apiDocs->setDescription(config('devesharp.APIDocs.description', ''));
+//            $apiDocs->setVersion(config('devesharp.APIDocs.version', '1.0.0'));
+//
+//            SwaggerGeneratorProvider::$file = config('devesharp.APIDocs.save_file');
+//            file_put_contents(SwaggerGeneratorProvider::$file, '');
+//
+//            foreach (config('devesharp.APIDocs.refs', []) as $ref) {
+//                $apiDocs->addRef($ref);
+//            }
+//
+//            foreach (config('devesharp.APIDocs.servers', []) as $item) {
+//                if (!empty($item['url']))
+//                    $apiDocs->addServers($item['url'], $item['description'] ?? '');
+//            }
         }
     }
 

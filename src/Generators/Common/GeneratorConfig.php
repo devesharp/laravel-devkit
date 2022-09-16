@@ -19,6 +19,7 @@ class GeneratorConfig
     public string $migrationNamespace = "";
     public string $testRouteNamespace = "";
     public string $testUnitNamespace = "";
+    public string $formatterNamespace = "";
 
     public string $controllerPath = "";
     public string $dtoPath = "";
@@ -80,6 +81,7 @@ class GeneratorConfig
         $this->transformerNamespace = config('devesharp_generator.namespace.transformer', 'App\Modules\{{ModuleName}}\Transformer');
         $this->testRouteNamespace = config('devesharp_generator.namespace.testRoute', 'Testes\Routes\{{ModuleName}}');
         $this->testUnitNamespace = config('devesharp_generator.namespace.testUnit', 'Tests\Units\{{ModuleName}}');
+        $this->formatterNamespace = config('devesharp_generator.namespace.formatter', 'App\Supports\Formatters');
 
         $this->controllerPath = config('devesharp_generator.path.controller', app_path('Modules/{{ModuleName}}/Controller'));
         $this->dtoPath = config('devesharp_generator.path.dto', app_path('Modules/{{ModuleName}}/Dto'));

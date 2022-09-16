@@ -3,6 +3,8 @@
 namespace Devesharp\Generators;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
+use MichaelRubel\Formatters\Commands\MakeFormatterCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -42,6 +44,10 @@ class MakeAll extends Command
     protected function generate($type, $data, $options = [])
     {
         switch ($type) {
+            case 'formatter':
+                return $this->call(MakeFormatter::class, [
+                    'name' => $data['module'] . 'Formatter',
+                ]);
             case 'controller':
                 $generator = app(ControllerGenerator::class);
                 break;
@@ -104,6 +110,8 @@ class MakeAll extends Command
                 $this->generate('transformer', $data);
                 $this->generate('interface-transformer', $data);
                 return;
+            default:
+                throw new \Exception('Invalid type');
         }
 
         $generator->setCommand($this);
@@ -114,6 +122,8 @@ class MakeAll extends Command
     public function handle()
     {
         $type = $this->argument('type');
+
+        var_dump($this->argument('module'));
 
         $data = [
             'module' => $this->argument('module'),

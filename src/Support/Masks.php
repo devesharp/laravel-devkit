@@ -38,6 +38,8 @@ class Masks {
     }
 
     static function CNPJAndCPF($string): string {
+        if (empty($string)) return '';
+
         $string = Masks::onlyNumbers((string) $string);
 
         if (strlen($string) <= 11) {
@@ -54,6 +56,8 @@ class Masks {
     }
 
     static function PhoneMask($string): string {
+        if (empty($string)) return '';
+
         $string = Masks::onlyNumbers((string) $string);
 
         if(strlen($string) <= 10) {
@@ -61,6 +65,17 @@ class Masks {
         }
 
         return Masks::mask($string, "(##) #####-####");
+    }
+
+    static function priceBr(int|string|null $price, $showDecimal = true): string {
+        if (empty($price)) {
+            $priceNumber = 0;
+        } else {
+            $priceNumber = intval(Masks::onlyNumbers((string) $price));
+        }
+
+
+        return number_format($priceNumber/100, $showDecimal ? 2 : false, ',', '.');
     }
 
     static function NoSpaces($string): string {

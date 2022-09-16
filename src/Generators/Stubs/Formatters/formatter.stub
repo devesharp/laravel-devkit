@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Illuminate\Support\Collection;
+use MichaelRubel\Formatters\Formatter;
+
+class {{ class }} implements Formatter
+{
+    /**
+     * @param  null  $attribute
+     */
+    public function __construct(
+        public $attribute = null
+    ) {
+    }
+
+    /**
+     * Format the input.
+     *
+     * @param Collection $items
+     *
+     * @return
+     */
+    public function format(Collection $items)
+    {
+        return $this->attribute;
+    }
+}

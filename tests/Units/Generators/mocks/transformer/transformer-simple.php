@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\ModuleExample\Transformer;
+namespace App\Modules\ModuleExample\Transformers;
 
 use Devesharp\Patterns\Transformer\Transformer;
-use App\Modules\ModuleExample\Resources\Model\ResourceExample;
+use App\Modules\ModuleExample\Resources\Models\ResourceExample;
 
 class ResourceExampleTransformer extends Transformer
 {

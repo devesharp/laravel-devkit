@@ -23,7 +23,7 @@ class DtoGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Dto');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Dtos');
     }
 
     public function testDtoBase()

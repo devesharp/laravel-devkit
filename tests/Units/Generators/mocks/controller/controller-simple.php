@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Modules\ModuleExample\Controller;
+namespace App\Modules\ModuleExample\Resources\Controllers;
 
 use Devesharp\Patterns\Controller\ControllerBase;
-use App\Modules\ModuleExample\Dto\CreateResourceExampleDto;
-use App\Modules\ModuleExample\Dto\SearchResourceExampleDto;
-use App\Modules\ModuleExample\Dto\UpdateResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\CreateResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\SearchResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\UpdateResourceExampleDto;
 
 class ResourceExampleController extends ControllerBase
 {
     public function __construct(
-        protected App\Modules\ModuleExample\Service\ResourceExampleService $service
+        protected \App\Modules\ModuleExample\Services\ResourceExampleService $service
     ) {
         parent::__construct();
     }

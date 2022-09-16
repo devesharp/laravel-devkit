@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Factory;
+namespace App\Modules\ModuleExample\Resources\Factories;
 
-use App\Modules\ModuleExample\Resources\Model\ResourceExample;
+use App\Modules\ModuleExample\Resources\Models\ResourceExample;
 use Devesharp\Support\Factory;
 
 class ResourceExampleFactory extends Factory
@@ -24,7 +24,7 @@ class ResourceExampleFactory extends Factory
     public function definition()
     {
         return [
-            'enabled' => fake()->boolean(),
+            'enabled' => true,
             'platform_id' => 1,
             'user_id' => 1,
             'title' => fake()->text(100),

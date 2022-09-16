@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Modules\ModuleExample\Service;
+namespace App\Modules\ModuleExample\Services;
 
 use Devesharp\Patterns\Service\Service;
 use Devesharp\Patterns\Service\ServiceFilterEnum;
 use Devesharp\Patterns\Transformer\Transformer;
-use App\Modules\ModuleExample\Dto\CreateResourceExampleDto;
-use App\Modules\ModuleExample\Dto\UpdateResourceExampleDto;
-use App\Modules\ModuleExample\Dto\SearchResourceExampleDto;
-use App\Modules\ModuleExample\Dto\DeleteResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\CreateResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\UpdateResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\SearchResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\DeleteResourceExampleDto;
 use Devesharp\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -136,9 +136,9 @@ class ResourceExampleService extends Service
     ];
 
     public function __construct(
-        protected App\Modules\ModuleExample\Transformer\ResourceExampleTransformer $transformer,
-        protected App\Modules\ModuleExample\Resources\Repository\ResourceExampleRepository $repository,
-        protected App\Modules\ModuleExample\Policy\ResourceExamplePolicy $policy
+        protected \App\Modules\ModuleExample\Transformers\ResourceExampleTransformer $transformer,
+        protected \App\Modules\ModuleExample\Resources\Repositories\ResourceExampleRepository $repository,
+        protected \App\Modules\ModuleExample\Policies\ResourceExamplePolicy $policy
     ) {
     }
 
@@ -245,7 +245,7 @@ class ResourceExampleService extends Service
      * @return mixed
      * @throws \Devesharp\Exceptions\Exception
      */
-    public function get(int $id, $receiver, string $context = 'default')
+    public function get(int $id, $receiver, $context = 'default')
     {
         // Get model
         $model = $this->makeSearch($data, $receiver)
@@ -253,7 +253,7 @@ class ResourceExampleService extends Service
             ->findOne();
 
         if (empty($model)) {
-            \Devesharp\Exceptions\Exception::NotFound(App\Modules\ModuleExample\Resources\Model\ResourceExample::class);
+            \Devesharp\Exceptions\Exception::NotFound(App\Modules\ModuleExample\Resources\Models\ResourceExample::class);
         }
 
         if ($context != 'model')
@@ -291,11 +291,11 @@ class ResourceExampleService extends Service
     /**
      * @param $data
      * @param null $requester
-     * @return \Devesharp\Pattners\Repository\RepositoryInterface|\App\Modules\ModuleExample\Resources\Repository\ResourceExampleRepository
+     * @return \Devesharp\Pattners\Repository\RepositoryInterface|\App\Modules\ModuleExample\Resources\Repositories\ResourceExampleRepository
      */
     protected function makeSearch(&$data, $requester = null)
     {
-        /** @var \App\Modules\ModuleExample\Resources\Repository\ResourceExampleRepository $query */
+        /** @var \App\Modules\ModuleExample\Resources\Repositories\ResourceExampleRepository $query */
         $query = parent::makeSearch($data, $requester);
 
 //        // Example Query

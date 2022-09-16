@@ -3,7 +3,7 @@
 namespace Devesharp\Testing;
 
 use Carbon\Carbon;
-use Devesharp\APIDocs\TestDocsGenerate;
+use Devesharp\SwaggerGenerator\TestDocsGenerate;
 use Devesharp\Support\Helpers;
 
 trait TestCase

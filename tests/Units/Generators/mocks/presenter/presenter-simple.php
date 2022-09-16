@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Presenter;
+namespace App\Modules\ModuleExample\Resources\Presenters;
 
 use Devesharp\Patterns\Presenter\Presenter;
 

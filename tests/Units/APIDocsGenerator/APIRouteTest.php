@@ -17,7 +17,7 @@ class APIRouteTest extends \Tests\TestCase
      */
     public function testDefaultGet()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
         $apiDocs->setTitle('API 1.0');
         $apiDocs->setDescription('API Example');
         $apiDocs->setTermsOfService('http://example.com/terms/');
@@ -26,7 +26,7 @@ class APIRouteTest extends \Tests\TestCase
         $apiDocs->setVersion('1.0.0');
         $apiDocs->addServers('https://example.com.br', 'Prod API');
 
-        $data = new \Devesharp\APIDocs\Utils\Get();
+        $data = new \Devesharp\SwaggerGenerator\Utils\Get();
         $data->path = '/pets';
         $data->tags = ['pets', 'get'];
         $data->summary = 'Find pets by ID';
@@ -112,7 +112,7 @@ paths:
      */
     public function testDefaultPost2()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
         $apiDocs->setTitle('API 1.0');
         $apiDocs->setDescription('API Example');
         $apiDocs->setTermsOfService('http://example.com/terms/');
@@ -121,7 +121,7 @@ paths:
         $apiDocs->setVersion('1.0.0');
         $apiDocs->addServers('https://example.com.br', 'Prod API');
 
-        $data = new \Devesharp\APIDocs\Utils\Post();
+        $data = new \Devesharp\SwaggerGenerator\Utils\Post();
         $data->path = '/pets';
         $data->tags = ['pets', 'get'];
         $data->summary = 'Find pets by ID';
@@ -232,12 +232,12 @@ paths:
      */
     public function testDefaultPostFormData()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
         $apiDocs->setTitle('API 1.0');
         $apiDocs->setVersion('1.0.0');
         $apiDocs->addBasicAuth('basicAuth');
 
-        $data = new \Devesharp\APIDocs\Utils\Post();
+        $data = new \Devesharp\SwaggerGenerator\Utils\Post();
         $data->path = '/upload';
         $data->bodyType = 'multipart/form-data';
         $data->tags = ['pets', 'get'];

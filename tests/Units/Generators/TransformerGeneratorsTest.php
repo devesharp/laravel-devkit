@@ -23,7 +23,7 @@ class TransformerGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Transformer');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Transformers');
     }
 
     public function testTransformerBase()

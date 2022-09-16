@@ -20,9 +20,9 @@ class TestDocsRouteYmlTest extends \Tests\TestCase
     {
         parent::setUp();
 
-        \Devesharp\APIDocs\Generator::clear();
+        \Devesharp\SwaggerGenerator\Generator::clear();
 
-        $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
+        $apiDocs = \Devesharp\SwaggerGenerator\Generator::getInstance();
         $apiDocs->setTitle('API 1.0');
         $apiDocs->setDescription('API Example');
         $apiDocs->setVersion('1.0.0');
@@ -85,7 +85,7 @@ class TestDocsRouteYmlTest extends \Tests\TestCase
             ])
             ->run();
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:
@@ -165,7 +165,7 @@ paths:
             ->addGroups('resources')
             ->run();
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:
@@ -298,7 +298,7 @@ paths:
             ->addGroups('resources')
             ->run();
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:
@@ -458,7 +458,7 @@ paths:
             ->addGroups('resources')
             ->run();
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:
@@ -620,7 +620,7 @@ paths:
             ->addGroups('resources')
             ->run();
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:
@@ -801,7 +801,7 @@ paths:
             ], ComplexDtoStub::class)
             ->run();
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:
@@ -930,7 +930,7 @@ paths:
      */
     public function testRouteWithTestRef()
     {
-        $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
+        $apiDocs = \Devesharp\SwaggerGenerator\Generator::getInstance();
 
         $http = $this->withPost('/resource/search')
             ->addRouteName('Create Post', 'method post')
@@ -942,7 +942,7 @@ paths:
             ->run();
 
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:
@@ -1047,7 +1047,7 @@ components:
             ])
             ->run();
 
-        $yml = \Devesharp\APIDocs\Generator::getInstance()->toYml();
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
 
         $this->assertEquals("openapi: 3.0.2
 info:

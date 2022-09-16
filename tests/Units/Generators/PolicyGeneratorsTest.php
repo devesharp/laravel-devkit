@@ -23,7 +23,7 @@ class PolicyGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Policy');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Policies');
     }
 
     public function testPolicyBase()

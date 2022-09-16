@@ -15,7 +15,7 @@ class APIInfoTest extends \Tests\TestCase
      */
     public function testHeaderDocs()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
         $apiDocs->setTitle('API 1.0');
         $apiDocs->setDescription('API Example');
         $apiDocs->setTermsOfService('http://example.com/terms/');

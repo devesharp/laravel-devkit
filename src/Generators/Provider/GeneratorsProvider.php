@@ -17,15 +17,13 @@ class GeneratorsProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../Stubs', 'devesharp-generators');
 
         $path = realpath(__DIR__ . '/../../../config/devesharp_generator.php');
-        $this->publishes([$path => config_path('devesharp_generator.php')], 'config');
+        $this->publishes([$path => config_path('devesharp_generator.php')], 'devesharp-laravel-devit-config');
         $this->mergeConfigFrom($path, 'devesharp_generator');
 
         /**
          * Register makes
          */
         if ($this->app->runningInConsole()) {
-            $path = realpath(__DIR__ . '/../../config/config.php');
-
             $this->commands([
                 MakeAll::class
             ]);

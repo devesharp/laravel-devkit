@@ -3,13 +3,13 @@
 namespace Tests\Routes\ModuleExample;
 
 use App\Modules\ModuleExample\Supports\DocsResourceExampleRouteDoc;
-use App\Modules\ModuleExample\Dto\CreateResourceExampleDto;
-use App\Modules\ModuleExample\Dto\SearchResourceExampleDto;
-use App\Modules\ModuleExample\Dto\UpdateResourceExampleDto;
-use App\Modules\ModuleExample\Resources\Model\ResourceExample;
-use App\Modules\ModuleExample\Resources\Model\Users;
-use App\Modules\ModuleExample\Resources\Model\Platforms;
-use App\Modules\ModuleExample\Resources\Model\UsersTypes;
+use App\Modules\ModuleExample\Dtos\CreateResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\SearchResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\UpdateResourceExampleDto;
+use App\Modules\ModuleExample\Resources\Models\ResourceExample;
+use App\Modules\Users\Resources\Models\Users;
+use App\Modules\ModuleExample\Resources\Models\Platforms;
+use App\Modules\ModuleExample\Resources\Models\UsersTypes;
 
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -18,7 +18,7 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 class ResourceExampleRouteTest extends TestCase
 {
     /**
-     * @testdox [POST] /v1/ResourceExample
+     * @testdox [POST] /v1/resource-example
      */
     public function testRouteResourceExampleCreate()
     {
@@ -31,7 +31,7 @@ class ResourceExampleRouteTest extends TestCase
         $user->access_token = JWTAuth::fromUser($user);
         $resourceData = ResourceExample::factory()->raw();
 
-        $response = $this->withPost('/v1/ResourceExample')
+        $response = $this->withPost('/v1/resource-example')
             ->setRouteInfo('CreateResourceExample', ResourceExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
             ->addGroups(['ResourceExample'])
@@ -42,21 +42,21 @@ class ResourceExampleRouteTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertTrue($responseData['success']);
-        $this->assertGreaterThanOrEqual(1, $responseData['id']);
-        $this->assertSame($resourceData['title'], $responseData['title']);
-        $this->assertSame($resourceData['body'], $responseData['body']);
-        $this->assertSame($resourceData['is_featured'], $responseData['is_featured']);
-        $this->assertSame($resourceData['published_at'], $responseData['published_at']);
-        $this->assertSame($resourceData['password'], $responseData['password']);
-        $this->assertSame($resourceData['post_type'], $responseData['post_type']);
-        $this->assertSame($resourceData['status'], $responseData['status']);
-        $this->assertSame($resourceData['created_by'], $responseData['created_by']);
-        $this->assertSame($resourceData['created_at'], $responseData['created_at']);
-        $this->assertSame($resourceData['updated_at'], $responseData['updated_at']);
+        $this->assertGreaterThanOrEqual(1, $responseData['data']['id']);
+        $this->assertSame($resourceData['title'], $responseData['data']['title'], 'title');
+        $this->assertSame($resourceData['body'], $responseData['data']['body'], 'body');
+        $this->assertSame($resourceData['is_featured'], $responseData['data']['is_featured'], 'is_featured');
+        $this->assertDateEqual($resourceData['published_at'], $responseData['data']['published_at'], 'published_at');
+        $this->assertSame($resourceData['password'], $responseData['data']['password'], 'password');
+        $this->assertSame($resourceData['post_type'], $responseData['data']['post_type'], 'post_type');
+        $this->assertSame($resourceData['status'], $responseData['data']['status'], 'status');
+        $this->assertSame($resourceData['created_by'], $responseData['data']['created_by'], 'created_by');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['created_at'], 'created_at');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['updated_at'], 'updated_at');
     }
 
     /**
-     * @testdox [POST] /v1/ResourceExample/:id
+     * @testdox [POST] /v1/resource-example/:id
      */
     public function testRouteResourceExampleUpdate()
     {
@@ -70,7 +70,7 @@ class ResourceExampleRouteTest extends TestCase
         $resourceData = ResourceExample::factory()->raw();
         $resource = ResourceExample::factory()->create();
 
-        $response = $this->withPost('/v1/ResourceExample/:id')
+        $response = $this->withPost('/v1/resource-example/:id')
             ->addPath('id', $resource->id, 'ID do ResourceExample')
             ->setRouteInfo('UpdateResourceExample', ResourceExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
@@ -82,21 +82,21 @@ class ResourceExampleRouteTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertTrue($responseData['success']);
-        $this->assertGreaterThanOrEqual(1, $responseData['id']);
-        $this->assertSame($resourceData['title'], $responseData['title']);
-        $this->assertSame($resourceData['body'], $responseData['body']);
-        $this->assertSame($resourceData['is_featured'], $responseData['is_featured']);
-        $this->assertSame($resourceData['published_at'], $responseData['published_at']);
-        $this->assertSame($resourceData['password'], $responseData['password']);
-        $this->assertSame($resourceData['post_type'], $responseData['post_type']);
-        $this->assertSame($resourceData['status'], $responseData['status']);
-        $this->assertSame($resourceData['created_by'], $responseData['created_by']);
-        $this->assertSame($resourceData['created_at'], $responseData['created_at']);
-        $this->assertSame($resourceData['updated_at'], $responseData['updated_at']);
+        $this->assertGreaterThanOrEqual(1, $responseData['data']['id']);
+        $this->assertSame($resourceData['title'], $responseData['data']['title'], 'title');
+        $this->assertSame($resourceData['body'], $responseData['data']['body'], 'body');
+        $this->assertSame($resourceData['is_featured'], $responseData['data']['is_featured'], 'is_featured');
+        $this->assertDateEqual($resourceData['published_at'], $responseData['data']['published_at'], 'published_at');
+        $this->assertSame($resourceData['password'], $responseData['data']['password'], 'password');
+        $this->assertSame($resourceData['post_type'], $responseData['data']['post_type'], 'post_type');
+        $this->assertSame($resourceData['status'], $responseData['data']['status'], 'status');
+        $this->assertSame($resourceData['created_by'], $responseData['data']['created_by'], 'created_by');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['created_at'], 'created_at');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['updated_at'], 'updated_at');
     }
 
     /**
-     * @testdox [GET] /v1/ResourceExample/:id
+     * @testdox [GET] /v1/resource-example/:id
      */
     public function testRouteResourceExampleGet()
     {
@@ -109,7 +109,7 @@ class ResourceExampleRouteTest extends TestCase
         $user->access_token = JWTAuth::fromUser($user);
         $resource = ResourceExample::factory()->create();
 
-        $response = $this->withGet('/v1/ResourceExample/:id')
+        $response = $this->withGet('/v1/resource-example/:id')
             ->addPath('id', $resource->id, 'ID do ResourceExample')
             ->setRouteInfo('GetResourceExample', ResourceExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
@@ -120,21 +120,21 @@ class ResourceExampleRouteTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertTrue($responseData['success']);
-        $this->assertGreaterThanOrEqual(1, $responseData['id']);
-        $this->assertSame($resource->title, $responseData['title']);
-        $this->assertSame($resource->body, $responseData['body']);
-        $this->assertSame($resource->is_featured, $responseData['is_featured']);
-        $this->assertSame($resource->published_at, $responseData['published_at']);
-        $this->assertSame($resource->password, $responseData['password']);
-        $this->assertSame($resource->post_type, $responseData['post_type']);
-        $this->assertSame($resource->status, $responseData['status']);
-        $this->assertSame($resource->created_by, $responseData['created_by']);
-        $this->assertSame($resource->created_at, $responseData['created_at']);
-        $this->assertSame($resource->updated_at, $responseData['updated_at']);
+        $this->assertGreaterThanOrEqual(1, $responseData['data']['id']);
+        $this->assertSame($resource->title, $responseData['data']['title'], 'title');
+        $this->assertSame($resource->body, $responseData['data']['body'], 'body');
+        $this->assertSame($resource->is_featured, $responseData['data']['is_featured'], 'is_featured');
+        $this->assertDateEqual($resource->published_at, $responseData['data']['published_at'], 'published_at');
+        $this->assertSame($resource->password, $responseData['data']['password'], 'password');
+        $this->assertSame($resource->post_type, $responseData['data']['post_type'], 'post_type');
+        $this->assertSame($resource->status, $responseData['data']['status'], 'status');
+        $this->assertSame($resource->created_by, $responseData['data']['created_by'], 'created_by');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['created_at'], 'created_at');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['updated_at'], 'updated_at');
     }
 
     /**
-     * @testdox [POST] /v1/ResourceExample/search
+     * @testdox [POST] /v1/resource-example/search
      */
     public function testRouteResourceExampleSearch()
     {
@@ -147,7 +147,7 @@ class ResourceExampleRouteTest extends TestCase
         $user->access_token = JWTAuth::fromUser($user);
         ResourceExample::factory()->count(3)->create();
 
-        $response = $this->withPost('/v1/ResourceExample/search')
+        $response = $this->withPost('/v1/resource-example/search')
             ->setRouteInfo('SearchResourceExample', ResourceExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
             ->addGroups(['ResourceExample'])
@@ -166,7 +166,7 @@ class ResourceExampleRouteTest extends TestCase
     }
 
     /**
-     * @testdox [DELETE] /v1/ResourceExample/:id
+     * @testdox [DELETE] /v1/resource-example/:id
      */
     public function testRouteResourceExampleDelete()
     {
@@ -180,7 +180,7 @@ class ResourceExampleRouteTest extends TestCase
 
         $resource = ResourceExample::factory()->create();
 
-        $response = $this->withDelete('/v1/ResourceExample/:id')
+        $response = $this->withDelete('/v1/resource-example/:id')
             ->addPath('id', $resource->id, 'Id do ResourceExample')
             ->setRouteInfo('DeleteResourceExample', ResourceExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')

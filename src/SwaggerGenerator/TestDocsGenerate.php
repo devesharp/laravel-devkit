@@ -1,14 +1,14 @@
 <?php
 
-namespace Devesharp\APIDocs;
+namespace Devesharp\SwaggerGenerator;
 
 use cebe\openapi\exceptions\IOException;
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\License;
-use Devesharp\APIDocs\Utils\Get;
-use Devesharp\APIDocs\Utils\Route;
+use Devesharp\SwaggerGenerator\Utils\Get;
+use Devesharp\SwaggerGenerator\Utils\Route;
 use Devesharp\Patterns\Dto\AbstractDto;
 use Devesharp\Patterns\Validator\Validator;
 use Devesharp\Patterns\Validator\ValidatorAPIGenerator;
@@ -23,7 +23,7 @@ use Illuminate\Support\Str;
 
 class TestDocsGenerate
 {
-    protected \Devesharp\APIDocs\Generator $apiDocs;
+    protected \Devesharp\SwaggerGenerator\Generator $apiDocs;
     protected Route $route;
 
     protected array $headers = [];
@@ -234,7 +234,7 @@ class TestDocsGenerate
 
 //        if (multipart/form-data)
 
-        $apiDocs = \Devesharp\APIDocs\Generator::getInstance();
+        $apiDocs = \Devesharp\SwaggerGenerator\Generator::getInstance();
         $apiDocs->addRoute($this->route);
 
         return $request;

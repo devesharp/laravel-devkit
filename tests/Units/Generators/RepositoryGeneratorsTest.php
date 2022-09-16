@@ -23,7 +23,7 @@ class RepositoryGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Repository');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Repositories');
     }
 
     public function testRepositoryBase()

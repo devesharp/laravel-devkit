@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Modules\ModuleExample\Controller;
+namespace App\Modules\ModuleExample\Resources\Controllers;
 
 use Devesharp\Patterns\Controller\ControllerBase;
-use App\Modules\ModuleExample\Dto\CreateResourceExampleDto;
-use App\Modules\ModuleExample\Dto\SearchResourceExampleDto;
-use App\Modules\ModuleExample\Dto\UpdateResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\CreateResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\SearchResourceExampleDto;
+use App\Modules\ModuleExample\Dtos\UpdateResourceExampleDto;
 use App\Modules\ModuleExample\Interfaces\ResourceExampleTransformerType;
 
 class ResourceExampleController extends ControllerBase
 {
     public function __construct(
-        protected App\Modules\ModuleExample\Service\ResourceExampleService $service
+        protected \App\Modules\ModuleExample\Services\ResourceExampleService $service
     ) {
         parent::__construct();
     }
 
     public function search()
     {
-        return $this->service->search(SearchResourceExampleDto::make(request()->all()), $this->auth, ResourceExampleTransformerType::Default );
+        return $this->service->search(SearchResourceExampleDto::make(request()->all()), $this->auth, ResourceExampleTransformerType::default );
     }
 
     public function get($id)
@@ -28,12 +28,12 @@ class ResourceExampleController extends ControllerBase
 
     public function update($id)
     {
-        return $this->service->update($id, UpdateResourceExampleDto::make(request()->all()), $this->auth, ResourceExampleTransformerType::Default );
+        return $this->service->update($id, UpdateResourceExampleDto::make(request()->all()), $this->auth, ResourceExampleTransformerType::default );
     }
 
     public function create()
     {
-        return $this->service->create(CreateResourceExampleDto::make(request()->all()), $this->auth, ResourceExampleTransformerType::Default );
+        return $this->service->create(CreateResourceExampleDto::make(request()->all()), $this->auth, ResourceExampleTransformerType::default );
     }
 
     public function delete($id)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\ModuleExample\Policy;
+namespace App\Modules\ModuleExample\Policies;
 
 class ResourceExamplePolicy
 {

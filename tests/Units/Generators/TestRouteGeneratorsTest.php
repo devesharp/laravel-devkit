@@ -35,8 +35,6 @@ class TestRouteGeneratorsTest extends \Tests\TestCase
             'file_template' => __DIR__ . '/mocks/fields.yml',
         ]);
 
-//        var_dump($this->generator->render());
-
         $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-route-simple.php'), $this->generator->render());
     }
 
@@ -66,8 +64,6 @@ class TestRouteGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
             'file_template' => __DIR__ . '/mocks/fields.yml',
         ]);
-
-//        var_dump($this->generator->render());
 
         $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-route-with-user-relation.php'), $this->generator->render());
     }

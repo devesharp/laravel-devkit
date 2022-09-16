@@ -24,7 +24,7 @@ class FactoryGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Factory');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Factories');
     }
 
     public function testDtoBase()

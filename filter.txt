@@ -1,0 +1,14 @@
+
+
+PHPUnit Watcher
+===============
+
+ PHPUnit Watcher 1.23.2 by Spatie and contributors.
+
+ No config file detected. Using default options.
+
+ Tests will be rerun when *.php files are modified in
+ * /Volumes/Ammar/albertoammar/workspace/devesharp/php/pattern/src
+ * /Volumes/Ammar/albertoammar/workspace/devesharp/php/pattern/tests
+
+

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Model;
+namespace App\Modules\ModuleExample\Resources\Models;
 
 use Devesharp\Support\ModelGetTable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class ResourceExample
- * @package App\Modules\ModuleExample\Resources\Model
+ * @package App\Modules\ModuleExample\Resources\Models
  *
  * @property bool $enabled
  * @property string $platform_id
@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $post_type
  * @property integer $status
  * @property string $created_by
- * @method static App\Modules\ModuleExample\Resources\Model\ResourceExample find($value)
+ * @method static App\Modules\ModuleExample\Resources\Models\ResourceExample find($value)
  */
 class ResourceExample extends Model
 {
@@ -42,16 +42,16 @@ class ResourceExample extends Model
         'updated_at',
     ];
 
-    public function platform(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Model\Platforms {
-        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Model\Platforms::class, 'platform_id', 'id');
+    public function platform(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Models\Platforms {
+        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Models\Platforms::class, 'platform_id', 'id');
     }
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Model\Users {
-        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Model\Users::class, 'user_id', 'id');
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Models\Users {
+        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Models\Users::class, 'user_id', 'id');
     }
 
-    public function userCreatedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Model\Users {
-        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Model\Users::class, 'created_by', 'id');
+    public function userCreatedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Models\Users {
+        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Models\Users::class, 'created_by', 'id');
     }
 
 }

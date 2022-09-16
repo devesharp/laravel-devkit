@@ -23,7 +23,7 @@ class ServiceGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Service');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Services');
     }
 
     public function testServiceBase()
@@ -33,7 +33,7 @@ class ServiceGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
             'file_template' => __DIR__ . '/mocks/fields.yml',
         ]);
-        
+
         $this->assertEquals(file_get_contents(__DIR__ . '/mocks/service/service-simple.php'), $this->generator->render());
     }
 }

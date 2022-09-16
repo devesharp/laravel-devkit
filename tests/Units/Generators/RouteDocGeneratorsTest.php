@@ -33,7 +33,7 @@ class RouteDocGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
             'file_template' => __DIR__ . '/mocks/fields.yml',
         ]);
-
+;
         $this->assertEquals(file_get_contents(__DIR__ . '/mocks/docs/route-doc-simple.php'), $this->generator->render());
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Tests\Units\TestDocsRoute\Mocks;
 
-use Devesharp\APIDocs\Ref;
+use Devesharp\SwaggerGenerator\Ref;
 
 class RefTest extends Ref
 {

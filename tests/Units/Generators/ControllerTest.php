@@ -32,7 +32,7 @@ class ControllerTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Controller');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Controllers');
     }
 
     public function testControllerBase()

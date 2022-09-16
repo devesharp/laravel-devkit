@@ -4,44 +4,29 @@ sidebar_position: 2
 
 # Instalação
 
-Let's discover **Docusaurus in less than 5 minutes**.
-
-## Getting Started
-
-Get started by **creating a new site**.
-
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-### What you'll need
-
-- [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
+Via composer:
 
 ```bash
-npm init docusaurus@latest my-website classic
+composer require devesharp/laravel-devit
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+### Laravel > 5.5
+Se você executar o pacote no Laravel 5.5+, a descoberta automática de pacotes cuida da mágica de adicionar o provedor de serviços. Então não é necessário fazer mais nada.
 
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
+### Laravel < 5.5
+Se você não executa o Laravel 5.5 (ou superior), adicione os seguintes provedores de serviços em config/app.php:
 
 ```bash
-cd my-website
-npm run start
+Devesharp\Generators\Provider\GeneratorsProvider::class,
+Devesharp\SwaggerGenerator\Providers\SwaggerGeneratorProvider::class,
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+### Sobreescrevendo arquivos de configuração
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+Você pode sobre escrever os arquivos de configuração, rodando:
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+```bash
+php artisan vendor:publish --tag="devesharp-laravel-devit-config"
+```
+
+Importe 

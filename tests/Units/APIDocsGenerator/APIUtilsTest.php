@@ -16,7 +16,7 @@ class APIUtilsTest extends \Tests\TestCase
      */
     public function testConvertDataToSchemaString()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->dataToSchema([
             'key_string' => 'string',
@@ -41,7 +41,7 @@ class APIUtilsTest extends \Tests\TestCase
      */
     public function testConvertDataToSchemaBoolean()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->dataToSchema([
             'key_string' => false,
@@ -59,7 +59,7 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaNumber()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->dataToSchema([
             'key_integer' => 10,
@@ -83,7 +83,7 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaSimpleArray()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->dataToSchema([
             'array_string' => ['10'],
@@ -126,7 +126,7 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaSimpleArrayObject()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->dataToSchema([
             'array_object' => [
@@ -165,7 +165,7 @@ class APIUtilsTest extends \Tests\TestCase
 
     public function testConvertDataToSchemaSimpleArrayObjectWithExample()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->dataToSchema([
             'array_object' => [
@@ -205,7 +205,7 @@ class APIUtilsTest extends \Tests\TestCase
      */
     public function testConvertDataToSchemaRequiredItemsArrayObject()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->addRequiredToSchema([
             'type' => 'object',
@@ -269,7 +269,7 @@ class APIUtilsTest extends \Tests\TestCase
      */
     public function testConvertDataToSchemaRequiredItemsObject()
     {
-        $apiDocs = new \Devesharp\APIDocs\Generator();
+        $apiDocs = new \Devesharp\SwaggerGenerator\Generator();
 
         $schema = $apiDocs->addRequiredToSchema([
             'type' => 'object',

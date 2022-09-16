@@ -23,7 +23,7 @@ class TestUnitGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'Tests\Routes\ModuleMain');
+        $this->assertEquals($this->generator->getNamespace(), 'Tests\Units\ModuleMain');
     }
 
     public function testTestUnitBase()
@@ -35,7 +35,6 @@ class TestUnitGeneratorsTest extends \Tests\TestCase
         ]);
 
 //        var_dump($this->generator->render());
-
         $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-route-simple.php'), $this->generator->render());
     }
 
@@ -65,9 +64,7 @@ class TestUnitGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
             'file_template' => __DIR__ . '/mocks/fields.yml',
         ]);
-
-//        var_dump($this->generator->render());
-
+        
         $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-unit-simple.php'), $this->generator->render());
     }
 }

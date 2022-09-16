@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Factory;
+namespace App\Modules\ModuleExample\Resources\Factories;
 
-use App\Modules\ModuleExample\Resources\Model\ResourceExample;
+use App\Modules\ModuleExample\Resources\Models\ResourceExample;
 use Devesharp\Support\Factory;
 
 class ResourceExampleFactory extends Factory

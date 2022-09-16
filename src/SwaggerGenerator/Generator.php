@@ -1,14 +1,14 @@
 <?php
 
-namespace Devesharp\APIDocs;
+namespace Devesharp\SwaggerGenerator;
 
 use cebe\openapi\exceptions\IOException;
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\License;
-use Devesharp\APIDocs\Utils\Get;
-use Devesharp\APIDocs\Utils\Route;
+use Devesharp\SwaggerGenerator\Utils\Get;
+use Devesharp\SwaggerGenerator\Utils\Route;
 use Devesharp\Support\Collection;
 use Devesharp\Support\Helpers;
 use Illuminate\Console\Command;

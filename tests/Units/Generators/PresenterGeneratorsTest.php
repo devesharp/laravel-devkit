@@ -23,7 +23,7 @@ class PresenterGeneratorsTest extends \Tests\TestCase
             'name' => 'ResourceExample',
         ]);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Presenter');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Presenters');
     }
 
     public function testPressenterBase()

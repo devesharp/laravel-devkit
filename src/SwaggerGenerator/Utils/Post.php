@@ -1,6 +1,6 @@
 <?php
 
-namespace Devesharp\APIDocs\Utils;
+namespace Devesharp\SwaggerGenerator\Utils;
 
 class Post extends Route
 {

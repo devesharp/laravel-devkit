@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('resource_example', function (Blueprint $table) {
             $table->id();
+            $table->boolean('enabled')->default('1');
             $table->unsignedBigInteger('platform_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('title');
@@ -30,7 +31,7 @@ return new class extends Migration
 
             $table->foreign('platform_id')->references('id')->on('platforms');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('created_by')->references('user_id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users');
         });
     }
 

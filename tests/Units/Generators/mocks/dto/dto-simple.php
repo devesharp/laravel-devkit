@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\ModuleExample\Dto;
+namespace App\Modules\ModuleExample\Dtos;
 
 use Devesharp\Patterns\Dto\AbstractDto;
 

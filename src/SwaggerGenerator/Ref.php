@@ -1,6 +1,6 @@
 <?php
 
-namespace Devesharp\APIDocs;
+namespace Devesharp\SwaggerGenerator;
 
 
 abstract class Ref

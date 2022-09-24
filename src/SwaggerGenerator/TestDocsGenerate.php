@@ -2,23 +2,11 @@
 
 namespace Devesharp\SwaggerGenerator;
 
-use cebe\openapi\exceptions\IOException;
-use cebe\openapi\exceptions\TypeErrorException;
-use cebe\openapi\exceptions\UnresolvableReferenceException;
-use cebe\openapi\spec\Contact;
-use cebe\openapi\spec\License;
-use Devesharp\SwaggerGenerator\Utils\Route;
-use Devesharp\Patterns\Dto\AbstractDto;
 use Devesharp\Patterns\Validator\Validator;
 use Devesharp\Patterns\Validator\ValidatorAPIGenerator;
-use Devesharp\Support\Helpers;
-use Illuminate\Console\Command;
-use cebe\openapi\spec\OpenApi;
-use cebe\openapi\spec\PathItem;
-use Illuminate\Foundation\Testing\TestCase;
-use Illuminate\Http\File;
+use Devesharp\SwaggerGenerator\Utils\Ref;
+use Devesharp\SwaggerGenerator\Utils\Route;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class TestDocsGenerate
 {
@@ -40,14 +28,6 @@ class TestDocsGenerate
         $this->route->path = $url;
         $this->testCase = $testCase;
     }
-
-//    public function call($method, $url): self
-//    {
-//        $this->route->method = $method;
-//        $this->route->path = $url;
-//
-//        return $this;
-//    }
 
     public function addHeader($name, $value, $description, $required = false): self
     {
@@ -153,6 +133,7 @@ class TestDocsGenerate
             $data = new $DtoClass($data);
             $this->route->bodyRequired = $data->getRequireds();
             $this->route->bodyDescription = $data->getDescriptions();
+            $this->route->bodyEnum = $data->getEnums();
             $this->route->body = $data->toArray();
             $this->route->bodyComplete = $data->getDataModel(true);
         }else {
@@ -227,12 +208,16 @@ class TestDocsGenerate
                 break;
         }
 
+        /**
+         * Guardar resposta do teste
+         */
         $this->route->path = $pathFixed;
         $this->route->statusCode = $request->getStatusCode();
         $this->route->response = $request->json();
 
-//        if (multipart/form-data)
-
+        /**
+         * Adicionar rota a doc global
+         */
         $apiDocs = \Devesharp\SwaggerGenerator\Generator::getInstance();
         $apiDocs->addRoute($this->route);
 

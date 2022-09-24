@@ -3,15 +3,16 @@
 namespace Tests\Units\Dto\Mocks;
 
 use Devesharp\Patterns\Dto\AbstractDto;
+use Devesharp\Patterns\Dto\Rule;
 
 class CreateDtoStub extends AbstractDto
 {
     protected function configureValidatorRules(): array
     {
         return [
-            'name' => ['string|max:100|required', 'Nome'],
-            'age' => ['numeric|required', 'Idade'],
-            'active' => ['boolean', 'Ativo' ],
+            'name' => new Rule('string|max:100|required', 'Nome'),
+            'age' => new Rule('numeric|required', 'Idade'),
+            'active' => new Rule('boolean', 'Ativo' ),
         ];
     }
 }

@@ -100,6 +100,11 @@ class Route
     public array $bodyDescription = [];
 
     /**
+     * @var array Parâmetros do body que são enums
+     */
+    public array $bodyEnum = [];
+
+    /**
      * @var array Resposta da rota
      */
     public array $response = [];

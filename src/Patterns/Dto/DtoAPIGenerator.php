@@ -4,8 +4,11 @@ namespace Devesharp\Patterns\Dto;
 
 use Devesharp\Support\Collection;
 use Devesharp\Support\Helpers;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator as ValidatorLaravel;
+use Illuminate\Validation\Rules\Enum;
 use PHPUnit\TextUI\Help;
+use Tests\Units\Dto\Mocks\Category;
 
 trait DtoAPIGenerator
 {
@@ -47,17 +50,12 @@ trait DtoAPIGenerator
 
         $newData = [];
 
-//        if ($validatorName === 'search') {
-////            \Illuminate\Support\Arr::set($data, 'query.offset', 0);
-//            $data["query.offset"] =  0;
-////            \Illuminate\Support\Arr::set($data, 'query.limit', 20);
-//            $data["query.limit"] =  20;
-////            \Illuminate\Support\Arr::set($data, 'query.sort', '');
-//            $data["query.sort"] =  '';
-//        }
-
         $schema = array_merge_recursive($this->getValidateRules(), $data);
 
+        /**
+         * @var string $keySchemaOriginal
+         * @var Rule $valueSchema
+         */
         foreach ($schema as $keySchemaOriginal => $valueSchema) {
             if ($keySchemaOriginal == '_extends') continue;
 
@@ -75,7 +73,8 @@ trait DtoAPIGenerator
 
             if (!$existKey && $showAll) {
                 $key = preg_replace('/\*/', '0', $keySchemaOriginal);
-                $value = is_array($valueSchema) ? $valueSchema[0] : $valueSchema;
+                $value = '';
+                $rules = is_array($valueSchema) ? $valueSchema : explode('|', $valueSchema);
 
                 if (Helpers::inArrayAny([
                     'alpha',
@@ -102,15 +101,15 @@ trait DtoAPIGenerator
                     'timezone',
                     'url',
                     'iuud'
-                ], explode('|', $value))) {
+                ], $rules)) {
                     $value = 'string';
-                }else if (Helpers::inArrayAny(['boolean'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['boolean'], $rules)) {
                     $value = false;
-                }else if (Helpers::inArrayAny(['integer', 'numeric', 'numeric_string'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['integer', 'numeric', 'numeric_string'], $rules)) {
                     $value = 1;
-                }else if (Helpers::inArrayAny(['nullable'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['nullable'], $rules)) {
                     $value = null;
-                }else if (Helpers::inArrayAny(['array'], explode('|', $value))) {
+                }else if (Helpers::inArrayAny(['array'], $rules)) {
                     $value = [];
                 } else {
                     $value = 'string';
@@ -156,11 +155,20 @@ trait DtoAPIGenerator
     public function getRequireds() {
         $data = [];
 
-        foreach ($this->getValidateRules() as $key => $value) {
+        /**
+         * @var string $key
+         * @var string|array $rule
+         */
+        foreach ($this->getValidateRules() as $key => $rule) {
             $key = str_replace('*', '0', $key);
-
-            if (in_array('required', explode('|', is_array($value) ? $value[0] : $value))) {
-                $data[] = $key;
+            if (is_array($rule)) {
+                if (Arr::exists($rule, 'required')) {
+                    $data[] = $key;
+                }
+            } else {
+                if (in_array('required', explode('|', $rule))) {
+                    $data[] = $key;
+                }
             }
         }
 
@@ -179,12 +187,54 @@ trait DtoAPIGenerator
 
         $descriptions = [];
 
-        foreach ($rules as $key => $value) {
-            if (is_array($value) && count($value) >= 2) {
-                $descriptions[$key] = $value[1];
+        /**
+         * @var string $key
+         * @var Rule $rule
+         */
+        foreach ($rules as $key => $rule) {
+            if (!empty($rule->description)) {
+                $descriptions[$key] = $rule->description;
             }
         }
 
         return $descriptions;
+    }
+
+    /**
+     * Resgatar enum das validações
+     * Usada no Devesharp API Generator
+     * @param string $validatorName
+     * @return array|mixed
+     */
+    public function getEnums() {
+
+        $rules = $this->getValidateRules(true);
+
+        $enum = [];
+
+        /**
+         * @var string $key
+         * @var Rule $rule
+         */
+        foreach ($rules as $key => $rule) {
+            if (is_array($rule->rules)) {
+                foreach ($rule->rules as $ruleValue) {
+                    if($ruleValue instanceof Enum) {
+                        // Hack para resgatar valor private de Illuminate\Validation\Rules\Enum
+                        $reflectionClass = new \ReflectionClass($ruleValue);
+                        $reflectionProperty = $reflectionClass->getProperty('type');
+                        $reflectionProperty->setAccessible(true);
+                        $enumClass = $reflectionProperty->getValue($ruleValue);
+                        $items = [];
+                        foreach ($enumClass::cases() as $case) {
+                            $items[] = $case->value;
+                        }
+                        $enum[$key] = $items;
+                    }
+                }
+            }
+        }
+
+        return $enum;
     }
 }

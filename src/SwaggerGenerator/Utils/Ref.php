@@ -1,7 +1,9 @@
 <?php
 
-namespace Devesharp\SwaggerGenerator;
+namespace Devesharp\SwaggerGenerator\Utils;
 
+
+use Devesharp\SwaggerGenerator\Generator;
 
 abstract class Ref
 {

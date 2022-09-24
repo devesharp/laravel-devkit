@@ -17,8 +17,6 @@ class SwaggerRequestTest extends \Tests\TestCase
     {
         parent::setUp();
 
-//        \Devesharp\APIDocs\APIDocsCreate::getInstance()->init();
-
         \Route::middleware([])->post('/resource/search', function () {
             return [
                 'results' => [

@@ -4,6 +4,7 @@ namespace Tests\Units\SwaggerRequestTest;
 
 use Illuminate\Http\UploadedFile;
 use Tests\Units\SwaggerRequestTest\Mocks\ComplexDtoStub;
+use Tests\Units\SwaggerRequestTest\Mocks\DtoWithEnumStub;
 use Tests\Units\SwaggerRequestTest\Mocks\RefTest;
 
 class SwaggerRequestToYmlTest extends \Tests\TestCase
@@ -779,169 +780,6 @@ paths:
     }
 
     /**
-     * @testdox testar criação de rota com validator
-     */
-    public function testSimplePostWithValidatorTest()
-    {
-        $http = $this->withPost('/resource/search')
-            ->addRouteName('Create Post', 'method post')
-            ->addGroups(['resources', 'posts'])
-            ->addBody([
-                'name' => 'John',
-                'age' => 2,
-                'pets' => [
-                    [
-                        'id' => 1,
-                        'name' => 'Dog'
-                    ]
-                ],
-                'owner' => [
-                    'id' => 1,
-                    'name' => 'Master Dog'
-                ],
-                'item_array_deep' => [
-                    [
-                        'id' => 1,
-                        'items' => [
-                            [
-                                'id' => 1,
-                                'name' => 'Dog'
-                            ]
-                        ]
-                    ]
-                ]
-            ], ComplexDtoStub::class)
-            ->run();
-
-        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
-
-        $this->assertEquals("openapi: 3.0.2
-info:
-  title: 'API 1.0'
-  description: 'API Example'
-  version: 1.0.0
-servers:
-  -
-    url: 'https://example.com.br'
-    description: 'Prod API'
-paths:
-  /resource/search:
-    post:
-      tags:
-        - resources
-        - posts
-      summary: 'Create Post'
-      description: 'method post'
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                title: ''
-                description: ''
-                type: object
-                properties:
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          format: int64
-                          example: 1
-                        name:
-                          type: string
-                          example: John
-                        age:
-                          type: string
-                          example: '10'
-                  count:
-                    type: integer
-                    format: int64
-                    example: 1
-      deprecated: false
-      security: []
-      requestBody:
-        description: ''
-        content:
-          application/json:
-            schema:
-              title: ''
-              description: ''
-              type: object
-              properties:
-                pets:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        format: int64
-                        example: 1
-                        description: ID
-                      name:
-                        type: string
-                        example: Dog
-                        description: 'Nome do Pet'
-                    required:
-                      - id
-                      - name
-                  description: 'Animais do usuário'
-                owner:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      format: int64
-                      example: 1
-                      description: 'ID do Dono'
-                    name:
-                      type: string
-                      example: 'Master Dog'
-                      description: 'Nome do Dono'
-                    age:
-                      type: string
-                      example: string
-                      description: 'Idade do Dono'
-                  description: 'Dados do Dono'
-                item_array_deep:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        format: int64
-                        example: 1
-                      items:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                              format: int64
-                              example: 1
-                            name:
-                              type: string
-                              example: Dog
-                      name:
-                        type: string
-                        example: string
-                    required:
-                      - items
-              required:
-                - pets
-                - owner
-                - item_array_deep
-", $yml);
-    }
-
-    /**
      * @testdox testar test de rota com ref
      */
     public function testRouteWithTestRef()
@@ -1198,6 +1036,261 @@ paths:
                     active:
                       type: boolean
                       example: false
+", $yml);
+    }
+
+    /**
+     * @testdox dto - completar todos os dados com dto
+     */
+    public function testSimplePostWithDtoTest()
+    {
+        $http = $this->withPost('/resource/search')
+            ->addRouteName('Create Post', 'method post')
+            ->addGroups(['resources', 'posts'])
+            ->addBody([
+                'name' => 'John',
+                'age' => 2,
+                'pets' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Dog'
+                    ]
+                ],
+                'owner' => [
+                    'id' => 1,
+                    'name' => 'Master Dog'
+                ],
+                'item_array_deep' => [
+                    [
+                        'id' => 1,
+                        'items' => [
+                            [
+                                'id' => 1,
+                                'name' => 'Dog'
+                            ]
+                        ]
+                    ]
+                ]
+            ], ComplexDtoStub::class)
+            ->run();
+
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
+
+        $this->assertEquals("openapi: 3.0.2
+info:
+  title: 'API 1.0'
+  description: 'API Example'
+  version: 1.0.0
+servers:
+  -
+    url: 'https://example.com.br'
+    description: 'Prod API'
+paths:
+  /resource/search:
+    post:
+      tags:
+        - resources
+        - posts
+      summary: 'Create Post'
+      description: 'method post'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                description: ''
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          example: 1
+                        name:
+                          type: string
+                          example: John
+                        age:
+                          type: string
+                          example: '10'
+                  count:
+                    type: integer
+                    format: int64
+                    example: 1
+      deprecated: false
+      security: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              title: ''
+              description: ''
+              type: object
+              properties:
+                pets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        example: 1
+                        description: ID
+                      name:
+                        type: string
+                        example: Dog
+                        description: 'Nome do Pet'
+                    required:
+                      - id
+                      - name
+                  description: 'Animais do usuário'
+                owner:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                      example: 1
+                      description: 'ID do Dono'
+                    name:
+                      type: string
+                      example: 'Master Dog'
+                      description: 'Nome do Dono'
+                    age:
+                      type: string
+                      example: string
+                      description: 'Idade do Dono'
+                  description: 'Dados do Dono'
+                item_array_deep:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        example: 1
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              example: 1
+                            name:
+                              type: string
+                              example: Dog
+                      name:
+                        type: string
+                        example: string
+                    required:
+                      - items
+              required:
+                - pets
+                - owner
+                - item_array_deep
+", $yml);
+    }
+
+    /**
+     * @testdox dto - completar com enum
+     */
+    public function testSimplePostWithDtoEnumTest()
+    {
+        $http = $this->withPost('/resource/search')
+            ->addRouteName('Create Post', 'method post')
+            ->addGroups(['resources', 'posts'])
+            ->addBody([
+                'category' => 'apartment',
+                'type' => 'rent',
+            ], DtoWithEnumStub::class)
+            ->run();
+
+        $yml = \Devesharp\SwaggerGenerator\Generator::getInstance()->toYml();
+
+        $this->assertEquals("openapi: 3.0.2
+info:
+  title: 'API 1.0'
+  description: 'API Example'
+  version: 1.0.0
+servers:
+  -
+    url: 'https://example.com.br'
+    description: 'Prod API'
+paths:
+  /resource/search:
+    post:
+      tags:
+        - resources
+        - posts
+      summary: 'Create Post'
+      description: 'method post'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                description: ''
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          example: 1
+                        name:
+                          type: string
+                          example: John
+                        age:
+                          type: string
+                          example: '10'
+                  count:
+                    type: integer
+                    format: int64
+                    example: 1
+      deprecated: false
+      security: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              title: ''
+              description: ''
+              type: object
+              properties:
+                category:
+                  type: string
+                  example: apartment
+                  description: 'Categoria do produto'
+                  enum:
+                    - apartment
+                    - house
+                    - commercial
+                type:
+                  type: string
+                  example: rent
+                  enum:
+                    - rent
+                    - sale
+                    - exchange
 ", $yml);
     }
 }

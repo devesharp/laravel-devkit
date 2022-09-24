@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Classe responsável por gerar a documentação da Swagger da API
+ */
 namespace Devesharp\SwaggerGenerator;
 
 use cebe\openapi\exceptions\IOException;
@@ -7,15 +10,13 @@ use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\License;
-use Devesharp\SwaggerGenerator\Utils\Get;
-use Devesharp\SwaggerGenerator\Utils\Route;
-use Devesharp\Support\Collection;
-use Devesharp\Support\Helpers;
-use Illuminate\Console\Command;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\PathItem;
+use Devesharp\Support\Helpers;
+use Devesharp\SwaggerGenerator\Utils\Get;
+use Devesharp\SwaggerGenerator\Utils\Ref;
+use Devesharp\SwaggerGenerator\Utils\Route;
 use Illuminate\Http\File;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Generator
@@ -204,14 +205,13 @@ class Generator
 
     function addRoute(Route $route) {
 
+        // Verificar se existe o path
         if (!isset($this->openAPIJSON->paths[$route->path])) {
             $this->openAPIJSON->paths[$route->path] = new PathItem([]);
         }
-
         $path = &$this->openAPIJSON->paths[$route->path];
-        $method = mb_strtolower($route->method);
 
-        $pathExist = false;
+        $method = mb_strtolower($route->method);
 
         if (empty($path->{$method})) {
             $path->{$method} = new \cebe\openapi\spec\Operation([
@@ -225,6 +225,7 @@ class Generator
             ]);
         }
 
+        // Documentação externa
         if (!empty($route->externalDocs)) {
             $path->{$method}->externalDocs = $route->externalDocs;
         }
@@ -296,7 +297,7 @@ class Generator
 
         if (!empty($route->bodyComplete)) {
 
-            $schema = $this->dataToSchema($route->bodyComplete, true, $route->bodyRequired, $route->bodyDescription);
+            $schema = $this->dataToSchema($route->bodyComplete, true, $route->bodyRequired, $route->bodyDescription, $route->bodyEnum);
 
             if (Str::contains(json_encode($schema), '"format":"binary"')) {
                 $route->bodyType = 'multipart/form-data';
@@ -351,7 +352,7 @@ class Generator
         }
     }
 
-    function dataToSchema($data, $addExample = false, $required = [], $description = []) {
+    function dataToSchema($data, $addExample = false, $required = [], $description = [], $enum = []) {
 
         $schema = [];
         if (is_object($data) || (is_array($data) && Helpers::isArrayAssoc($data))) {
@@ -436,6 +437,10 @@ class Generator
 
         if (!empty($description)) {
             $schema = $this->addDescriptionToSchema($schema, $description);
+        }
+
+        if (!empty($enum)) {
+            $schema = $this->addDescriptionToEnum($schema, $enum);
         }
 
         return $schema;
@@ -538,6 +543,50 @@ class Generator
             // Para key vazia, deve enviar description para root do body
             if ($key == 'properties.') {
                 $data2->set('description', $value);
+            }
+        }
+
+        return $data2->all();
+    }
+
+    function addDescriptionToEnum($data, $enums = []) {
+        $data2 = new \Adbar\Dot($data);
+
+        $enumsFixed = [];
+
+        foreach ($enums as $keyOriginal => $value) {
+            $explode = explode('.', $keyOriginal);
+            $string = [];
+
+            if ($explode[count($explode) - 1] == '*') {
+                array_pop($explode);
+            }
+
+            foreach ($explode as $key => $item2) {
+                if (is_numeric($item2) || $item2 == '*') {
+                    $string[] = 'items';
+                } else {
+                    $string[] = 'properties';
+
+                    $string[] = $item2;
+                }
+            }
+
+            $descriptionsFixed[implode('.', $string)] = $value;
+        }
+
+        foreach ($descriptionsFixed as $key => $value) {
+            $path = $data2->get($key);
+
+            $keyRequired = '';
+            if (!empty($path)) {
+                $path['enum'] = $value;
+                $data2->set($key, $path);
+            }
+
+            // Para key vazia, deve enviar description para root do body
+            if ($key == 'properties.') {
+                $data2->set('enum', $value);
             }
         }
 

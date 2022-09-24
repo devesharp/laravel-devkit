@@ -7,6 +7,7 @@ use Devesharp\Support\Collection;
 use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Tests\Units\Dto\Mocks\AcceptAdditionalValuesDtoStub;
 use Tests\Units\Dto\Mocks\CreateDtoStub;
+use Tests\Units\Dto\Mocks\DtoWithEnumStub;
 use Tests\Units\Dto\Mocks\HiddenDtoStub;
 use Tests\Units\Dto\Mocks\RemoveRequiredsDtoStub;
 use Tests\Units\Dto\Mocks\SearchDtoStub;
@@ -120,7 +121,7 @@ class DtoTest extends \Tests\TestCase
         ]);
 
         $this->assertInstanceOf(Collection::class, $data);
-        $this->assertEquals($data->toArray(), [
+        $this->assertEquals([
             'query' => [
                 'limit' => 10,
                 'offset' => 5,
@@ -129,6 +130,23 @@ class DtoTest extends \Tests\TestCase
             'filters' => [
                 'name' => 'John'
             ]
+        ], $data->toArray());
+    }
+
+    /**
+     * @testdox Dto - com enum
+     */
+    public function testDtoStubEnum()
+    {
+        $data = new DtoWithEnumStub([
+            'category' => 'apartment',
+            'type' => 'rent',
         ]);
+
+        $this->assertInstanceOf(Collection::class, $data);
+        $this->assertEquals([
+            'category' => 'apartment',
+            'type' => 'rent',
+        ], $data->toArray());
     }
 }

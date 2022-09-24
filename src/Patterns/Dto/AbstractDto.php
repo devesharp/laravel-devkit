@@ -8,6 +8,7 @@ use Devesharp\Support\Helpers;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator as ValidatorLaravel;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isNull;
 
 abstract class AbstractDto extends Collection
 {
@@ -95,11 +96,15 @@ abstract class AbstractDto extends Collection
 
         // Remove descriptions for keys
         if (!$raw) {
-            $rules = Collection::make($rules)->map(function ($rule) {
-                if (is_array($rule)) {
-                    return $rule[0];
+//            var_dump($rules);
+            $rules = Collection::make($rules)->map(function ($rule, $key) {
+                if (is_null($rule)) return null;
+
+                if (!($rule instanceof Rule)) {
+                    throw new Exception($key . ' not is instance of Rule');
                 }
-                return $rule;
+
+                return $rule->rules;
             })->toArray();
         }
 
@@ -120,11 +125,11 @@ abstract class AbstractDto extends Collection
                     }else {
                         $rulesExtends[] = (new $rule([], false))->getValidateRules();
                     }
-
                 }catch (\Exception $e) {}
             }
             unset($rules['_extends_']);
         }
+
 
         foreach ($rulesExtends as $rulesExtend) {
             foreach ($rules as $key => $value) {
@@ -180,8 +185,12 @@ abstract class AbstractDto extends Collection
         return $newArray;
     }
 
-    protected function isHidden(string $value): bool
+    protected function isHidden(string|array $value): bool
     {
+        if (is_array($value)) {
+            return in_array('hidden', $value);
+        }
+
         return Str::contains($value, ['hidden|', '|hidden']);
     }
 
@@ -189,9 +198,21 @@ abstract class AbstractDto extends Collection
     {
         $newArray = [];
 
+        /**
+         * @var string $key
+         * @var string|array $value
+         */
         foreach ($array as $key => $value) {
-            $newArray[$key] = str_replace('hidden|', '', $value);
-            $newArray[$key] = str_replace('|hidden', '', $newArray[$key]);
+            if (is_array($value)) {
+                $rule = $value;
+                if (array_search('hidden', $rule) !== false) {
+                    unset($rule[array_search('hidden', $rule)]);
+                }
+                $newArray[$key] = array_values($rule);
+            } else {
+                $newArray[$key] = str_replace('hidden|', '', $value);
+                $newArray[$key] = str_replace('|hidden', '', $newArray[$key]);
+            }
         }
 
         return $newArray;

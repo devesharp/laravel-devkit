@@ -29,11 +29,14 @@ class ControllerGenerator extends BaseGeneratorAbstract
         parent::generate();
 
         $render = $this->renderRoutes();
-        $file = file_get_contents($this->config->apiRoutesPath);
+        $file = $this->fileSystem->readFile($this->config->apiRoutesPath);
         $baseFileName = str_replace(base_path(''), '', $file);
 
         if (strpos($file, $render) == false) {
-            file_put_contents($this->config->apiRoutesPath, $render, FILE_APPEND);
+//            file_put_contents($this->config->apiRoutesPath, $render, FILE_APPEND);
+            $file .= "\n";
+            $file .= $render;
+            $this->fileSystem->writeFile($this->config->apiRoutesPath, $file);
             $this->infoEditFile($baseFileName);
         }
     }

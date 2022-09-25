@@ -49,7 +49,7 @@ abstract class BaseGeneratorAbstract
     //
     public string $fileTemplate = '';
 
-    public function __construct(protected GeneratorConfig $config)
+    public function __construct(protected GeneratorConfig $config, protected FileSystem $fileSystem)
     {
         $config->init();
     }
@@ -198,11 +198,12 @@ abstract class BaseGeneratorAbstract
         }
 
         try {
-            if (!file_exists(dirname($filename))) {
-                mkdir(dirname($filename), 0777, true);
-            }
+//            if (!file_exists(dirname($filename))) {
+//                mkdir(dirname($filename), 0777, true);
+//            }
 
-            file_put_contents($filename, $content);
+            $this->fileSystem->writeFile($filename, $content);
+//            file_put_contents($filename, $content);
             $this->infoCreateFile($baseFileName);
         }catch (\Exception $e) {
             $this->infoErrorFile($baseFileName);
@@ -215,23 +216,23 @@ abstract class BaseGeneratorAbstract
     }
 
     function error($string) {
-        $this->command->error($string);
+//        $this->command->error($string);
     }
 
     function infoCreateFile($string) {
-        $this->command->line( '<info>CREATED</info>  ' . $string);
+//        $this->command->line( '<info>CREATED</info>  ' . $string);
     }
 
     function infoErrorFile($string) {
-        $this->command->line( '<info>ERROR</info>    ' . $string);
+//        $this->command->line( '<info>ERROR</info>    ' . $string);
     }
 
     function infoExistFile($string) {
-        $this->command->line( '<error>EXIST</error>  ' . $string);
+//        $this->command->line( '<error>EXIST</error>  ' . $string);
     }
 
     function infoEditFile($string) {
-        $this->command->line( '<error>EDITED</error> ' . $string);
+//        $this->command->line( '<error>EDITED</error> ' . $string);
     }
 
     abstract public function getFile(): string;

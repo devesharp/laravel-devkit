@@ -2,6 +2,7 @@
 
 namespace Devesharp\Generators;
 
+use Devesharp\Generators\Common\FileSystem;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use MichaelRubel\Formatters\Commands\MakeFormatterCommand;
@@ -41,89 +42,9 @@ class MakeAll extends Command
         ];
     }
 
-    protected function generate($type, $data, $options = [])
-    {
-        switch ($type) {
-            case 'formatter':
-                return $this->call(MakeFormatter::class, [
-                    'name' => $data['module'] . 'Formatter',
-                ]);
-            case 'controller':
-                $generator = app(ControllerGenerator::class);
-                break;
-            case 'dto':
-                $generator = app(DtoGenerator::class);
-                break;
-            case 'factory':
-                $generator = app(FactoryGenerator::class);
-                break;
-                break;
-            case 'migration':
-                $generator = app(MigrationGenerator::class);
-                break;
-            case 'model':
-                $generator = app(ModelGenerator::class);
-                break;
-            case 'policy':
-                $generator = app(PolicyGenerator::class);
-                break;
-            case 'presenter':
-                $generator = app(PresenterGenerator::class);
-                break;
-            case 'repository':
-                $generator = app(RepositoryGenerator::class);
-                break;
-            case 'route-docs':
-                $generator = app(RouteDocGenerator::class);
-                break;
-            case 'service':
-                $generator = app(ServiceGenerator::class);
-                break;
-            case 'test-route':
-                $generator = app(TestRouteGenerator::class);
-                break;
-            case 'test-unit':
-                $generator = app(TestUnitGenerator::class);
-                break;
-            case 'transformer':
-                $generator = app(TransformerGenerator::class);
-                break;
-            case 'interface-transformer':
-                $generator = app(TransformerInterfaceGenerator::class);
-                break;
-            case 'all':
-                $this->generate('controller', $data);
-                $this->generate('dto', $data, [ 'template' => 'create' ]);
-                $this->generate('dto', $data, [ 'template' => 'update' ]);
-                $this->generate('dto', $data, [ 'template' => 'search' ]);
-                $this->generate('dto', $data, [ 'template' => 'delete' ]);
-                $this->generate('factory', $data);
-                $this->generate('migration', $data);
-                $this->generate('model', $data);
-                $this->generate('policy', $data);
-                $this->generate('presenter', $data);
-                $this->generate('repository', $data);
-                $this->generate('route-docs', $data);
-                $this->generate('service', $data);
-                $this->generate('test-route', $data);
-                $this->generate('test-unit', $data);
-                $this->generate('transformer', $data);
-                $this->generate('interface-transformer', $data);
-                return;
-            default:
-                throw new \Exception('Invalid type');
-        }
-
-        $generator->setCommand($this);
-        $generator->setData($data, $options);
-        $generator->generate();
-    }
-
     public function handle()
     {
         $type = $this->argument('type');
-
-        var_dump($this->argument('module'));
 
         $data = [
             'module' => $this->argument('module'),
@@ -145,6 +66,8 @@ class MakeAll extends Command
         ];
 
         $this->generate($type, $data);
+
+        app(FileSystem::class)->render();
 
         return 0;
     }

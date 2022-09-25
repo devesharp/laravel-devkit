@@ -17,14 +17,16 @@ class DtoGenerator extends BaseGeneratorAbstract
 
     public function getFileName()
     {
-        if ($this->options['template'] == 'create') {
-            return 'Create' . parent::getFileName();
-        }else if ($this->options['template'] == 'update') {
-            return 'Update' . parent::getFileName();
-        }else if ($this->options['template'] == 'delete') {
-            return 'Delete' . parent::getFileName();
-        }else if ($this->options['template'] == 'search') {
-            return 'Search' . parent::getFileName();
+        if (!empty($this->options['template'])) {
+            if ($this->options['template'] == 'create') {
+                return 'Create' . parent::getFileName();
+            }else if ($this->options['template'] == 'update') {
+                return 'Update' . parent::getFileName();
+            }else if ($this->options['template'] == 'delete') {
+                return 'Delete' . parent::getFileName();
+            }else if ($this->options['template'] == 'search') {
+                return 'Search' . parent::getFileName();
+            }
         }
 
         return parent::getFileName();

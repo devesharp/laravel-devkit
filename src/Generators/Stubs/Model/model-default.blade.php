@@ -22,6 +22,9 @@ use Illuminate\Database\Eloquent\Model;
 @foreach($propertyPHPDocs as $field)
  * @property {{$field['type']}} ${{$field['name']}}
 @endforeach
+@if($withPresenter)
+ * @@method {{ $presenterNamespace }}\{{ $resourceName }}Presenter present()
+@endif
  * @@method static {{ $namespaceApp }}\{{ $resourceName }} find($value)
  */
 class {{ $resourceName }} extends Model

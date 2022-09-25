@@ -16,13 +16,17 @@ return new class extends Migration
     public function up()
     {
         Schema::create('{{ $tableName }}', function (Blueprint $table) {
+@if(!empty($fieldsMigration['fields']))
 @foreach($fieldsMigration['fields'] as $field)
             {!! $field !!}
 @endforeach
+@endif
 
+@if(!empty($fieldsMigration['fields']))
 @foreach($fieldsMigration['foreignKeys'] as $field)
             {!! $field !!}
 @endforeach
+@endif
         });
     }
 

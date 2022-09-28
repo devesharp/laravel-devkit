@@ -5,7 +5,7 @@ namespace Tests\Units\Generators;
 use Devesharp\Generators\TestUnitGenerator;
 use Illuminate\Support\Facades\Config;
 
-class TestUnitGeneratorsTest extends \Tests\TestCase
+class TestUnitGeneratorsTest extends TestCaseGenerator
 {
     public TestUnitGenerator $generator;
 
@@ -26,7 +26,7 @@ class TestUnitGeneratorsTest extends \Tests\TestCase
         $this->assertEquals($this->generator->getNamespace(), 'Tests\Units\ModuleMain');
     }
 
-    public function testTestUnitBase()
+    public function testTestUnitBase2()
     {
         $this->generator->setData([
             'module' => 'ModuleExample',

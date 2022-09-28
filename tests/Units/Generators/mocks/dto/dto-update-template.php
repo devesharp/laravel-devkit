@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Modules\ModuleExample\Dtos;
+namespace App\Modules\Posts\Dtos;
 
 use Devesharp\Patterns\Dto\AbstractDto;
-use App\Modules\ModuleExample\Dtos\CreateResourceExampleDto;
+use Devesharp\Patterns\Dto\Rule;
+use App\Modules\Posts\Dtos\CreatePostsDto;
 
-class UpdateResourceExampleDto extends AbstractDto
+class UpdatePostsDto extends AbstractDto
 {
     protected function configureValidatorRules(): array
     {
-        $this->extendRules(CreateResourceExampleDto::class);
+        $this->extendRules(CreatePostsDto::class);
         $this->disableRequiredValues();
 
         return [

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Factories;
+namespace App\Modules\Products\Resources\Factories;
 
-use App\Modules\ModuleExample\Resources\Models\ResourceExample;
 use Devesharp\Support\Factory;
+use App\Modules\Products\Resources\Models\Eletronics;
 
-class ResourceExampleFactory extends Factory
+class EletronicsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = ResourceExample::class;
+    protected $model = Eletronics::class;
 
     protected $onlyRaw = [];
 
@@ -22,6 +22,17 @@ class ResourceExampleFactory extends Factory
      * @return array
      */
     public function definition()
+    {
+        return [
+        ];
+    }
+
+    /**
+    * Define the model's default state.
+    *
+    * @return array
+    */
+    public function bodyForRequest(): array
     {
         return [
         ];

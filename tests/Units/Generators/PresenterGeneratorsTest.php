@@ -4,9 +4,8 @@ namespace Tests\Units\Generators;
 
 use Devesharp\Generators\PresenterGenerator;
 
-class PresenterGeneratorsTest extends \Tests\TestCase
+class PresenterGeneratorsTest extends TestCaseGenerator
 {
-
     public PresenterGenerator $generator;
 
     protected function setUp(): void

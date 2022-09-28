@@ -29,3 +29,43 @@
   --ifm-background-color: #333333;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+h1,h2,h3,h4,h5,h6{
+  font-weight:600;
+  line-height:1.25
+}
+
+h1{
+  font-size:2.2rem
+}
+h2{
+  font-size:1.65rem;
+  padding-bottom:.3rem;
+  border-bottom:1px solid #eaecef
+}
+h3{
+  font-size:1.35rem
+}
+ol,p,ul{
+  line-height:1.7
+}
+hr{
+  border:0;
+  border-top:1px solid #eaecef
+}
+table{
+  border-collapse:collapse;
+  margin:1rem 0;
+  display:block;
+  overflow-x:auto
+}
+tr{
+  border-top:1px solid #dfe2e5
+}
+tr:nth-child(2n){
+  background-color:#f6f8fa
+}
+td,th{
+  border:1px solid #dfe2e5;
+  padding:.6em 1em
+}

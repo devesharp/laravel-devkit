@@ -5,7 +5,7 @@ namespace Tests\Units\Generators;
 use Devesharp\Generators\TestRouteGenerator;
 use Illuminate\Support\Facades\Config;
 
-class TestRouteGeneratorsTest extends \Tests\TestCase
+class TestRouteGeneratorsTest extends TestCaseGenerator
 {
 
     public TestRouteGenerator $generator;

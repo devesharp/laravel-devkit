@@ -1,16 +1,4 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use Devesharp\Patterns\Controller\ControllerBase;
-use {{ $dtoNamespace }}\Create{{ $resourceName }}Dto;
-use {{ $dtoNamespace }}\Search{{ $resourceName }}Dto;
-use {{ $dtoNamespace }}\Update{{ $resourceName }}Dto;
-@if($withTransformerInterface)
-use {{ $transformerInterfaceNamespace }}\{{ $resourceName }}TransformerType;
-@endif
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}Controller extends ControllerBase
 {

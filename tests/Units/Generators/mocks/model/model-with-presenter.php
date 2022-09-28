@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Models;
+namespace App\Modules\Products\Resources\Models;
 
-use App\Modules\ModuleExample\Resources\Presenters\ResourceExamplePresenter;
-use Devesharp\Patterns\Presenter\PresentableTrait;
 use Devesharp\Support\ModelGetTable;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Products\Resources\Presenters\EletronicsPresenter;
+use Devesharp\Patterns\Presenter\PresentableTrait;
 
 /**
- * Class ResourceExample
- * @package App\Modules\ModuleExample\Resources\Models
+ * Class Eletronics
+ * @package App\Modules\Products\Resources\Models
  *
- * @method static App\Modules\ModuleExample\Resources\Models\ResourceExample find($value)
+ * @method App\Modules\Products\Resources\Presenters\EletronicsPresenter present()
+ * @method static App\Modules\Products\Resources\Models\Eletronics find($value)
  */
-class ResourceExample extends Model
+class Eletronics extends Model
 {
     use ModelGetTable;
     use PresentableTrait;
 
-    protected $table = 'resource_example';
+    protected $table = 'eletronics';
 
-    protected string $presenter = ResourceExamplePresenter::class;
+    protected string $presenter = EletronicsPresenter::class;
 
     protected $guarded = [];
 

@@ -46,6 +46,7 @@ abstract class BaseGeneratorAbstract
     public array $fieldsMigration = [];
     public array $fieldsCasts = [];
     public array $propertyPHPDocs = [];
+    public array $fieldsRelationTest = [];
     //
     public string $fileTemplate = '';
 
@@ -87,9 +88,8 @@ abstract class BaseGeneratorAbstract
         $this->fieldsMigration = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForMigration() : [];
         $this->fieldsCasts = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForCasts() : [];
         $this->propertyPHPDocs = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getPropertyPHPDocs() : [];
-
-        //
         $this->modelRelations = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getModelRelationFunctions($this->replaceString($this->config->getNamespace('model'))) : '';
+        $this->fieldsRelationTest = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getModelRelationFunctions2($this->replaceString($this->config->getNamespace('model'))) : [];
 
         $this->options = $options;
 
@@ -171,6 +171,7 @@ abstract class BaseGeneratorAbstract
             'propertyPHPDocs' => $this->propertyPHPDocs,
             //
             'modelRelations' => $this->modelRelations,
+            'fieldsRelationTest' => $this->fieldsRelationTest,
             //
             'options' => $this->options ?? [],
         ];

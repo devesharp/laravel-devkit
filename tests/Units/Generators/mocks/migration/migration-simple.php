@@ -13,25 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('resource_example', function (Blueprint $table) {
-            $table->id();
-            $table->boolean('enabled')->default('1');
-            $table->unsignedBigInteger('platform_id');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('title');
-            $table->text('body');
-            $table->boolean('is_featured');
-            $table->date('published_at');
-            $table->string('password');
-            $table->integer('post_type');
-            $table->integer('status');
-            $table->unsignedBigInteger('created_by');
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('eletronics', function (Blueprint $table) {
 
-            $table->foreign('platform_id')->references('id')->on('platforms');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('created_by')->references('id')->on('users');
         });
     }
 
@@ -42,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('resource_example');
+        Schema::dropIfExists('eletronics');
     }
 };

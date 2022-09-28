@@ -147,8 +147,14 @@ class {{ $resourceName }}Service extends Service
         if ($method == 'update') {
 
         } else if ($method == 'create') {
-@foreach($userGetData as $userGet)
-            $requestData['{{$userGet['fieldName']}}'] = $requester->{{$userGet['userFieldName']}};
+@foreach($valueOnCreate as $value)
+@if(!empty($value['valueRaw']))
+            $requestData['{{$value['fieldName']}}'] = {{$value['valueRaw']}};
+@elseif(!empty($value['value']))
+            $requestData['{{$value['fieldName']}}'] = {{$value['value']}};
+@elseif(!empty($value['userFieldName']))
+            $requestData['{{$value['fieldName']}}'] = $requester->{{$value['userFieldName']}};
+@endif
 @endforeach
 
             return $requestData;

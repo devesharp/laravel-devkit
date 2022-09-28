@@ -4,7 +4,7 @@ namespace Tests\Units\Generators;
 
 use Devesharp\Generators\PolicyGenerator;
 
-class PolicyGeneratorsTest extends \Tests\TestCase
+class PolicyGeneratorsTest extends TestCaseGenerator
 {
 
     public PolicyGenerator $generator;

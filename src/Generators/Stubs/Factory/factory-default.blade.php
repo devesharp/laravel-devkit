@@ -1,11 +1,4 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use {{ $modelNamespace }}\{{ $resourceName }};
-use Devesharp\Support\Factory;
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}Factory extends Factory
 {
@@ -28,6 +21,22 @@ class {{ $resourceName }}Factory extends Factory
         return [
 @foreach($fieldsFaker as $field)
             '{{ $field['name'] }}' => {!! $field['faker_function'] !!},
+@endforeach
+        ];
+    }
+
+    /**
+    * Define the model's default state.
+    *
+    * @return array
+    */
+    public function bodyForRequest(): array
+    {
+        return [
+@foreach($fieldsFaker as $field)
+@if($field['request'])
+            '{{ $field['name'] }}' => {!! $field['faker_function'] !!},
+@endif
 @endforeach
         ];
     }

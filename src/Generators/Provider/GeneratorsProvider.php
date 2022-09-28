@@ -3,6 +3,7 @@
 namespace Devesharp\Generators\Provider;
 
 use Devesharp\Generators\MakeAll;
+use Devesharp\Generators\MakeWorkspace;
 use Illuminate\Support\ServiceProvider;
 
 class GeneratorsProvider extends ServiceProvider
@@ -29,7 +30,8 @@ class GeneratorsProvider extends ServiceProvider
          */
         if ($this->app->runningInConsole()) {
             $this->commands([
-                MakeAll::class
+                MakeAll::class,
+                MakeWorkspace::class,
             ]);
         }
     }

@@ -1,13 +1,18 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Models;
+namespace App\Modules\Products\Resources\Models;
 
+use \Illuminate\Support\Carbon;
 use Devesharp\Support\ModelGetTable;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Products\Resources\Presenters\EletronicsPresenter;
+use Devesharp\Patterns\Presenter\PresentableTrait;
+use App\Modules\Products\Resources\Factories\EletronicsFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class ResourceExample
- * @package App\Modules\ModuleExample\Resources\Models
+ * Class Eletronics
+ * @package App\Modules\Products\Resources\Models
  *
  * @property bool $enabled
  * @property string $platform_id
@@ -15,18 +20,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $body
  * @property bool $is_featured
- * @property \Illuminate\Support\Carbon $published_at
+ * @property Carbon $published_at
  * @property string $password
  * @property integer $post_type
  * @property integer $status
  * @property string $created_by
- * @method static App\Modules\ModuleExample\Resources\Models\ResourceExample find($value)
+ * @method App\Modules\Products\Resources\Presenters\EletronicsPresenter present()
+ * @method static App\Modules\Products\Resources\Models\Eletronics find($value)
  */
-class ResourceExample extends Model
+class Eletronics extends Model
 {
     use ModelGetTable;
+    use PresentableTrait;
+    use HasFactory;
 
-    protected $table = 'resource_example';
+    protected $table = 'eletronics';
+
+    protected string $presenter = EletronicsPresenter::class;
 
     protected $guarded = [];
 
@@ -42,16 +52,21 @@ class ResourceExample extends Model
         'updated_at',
     ];
 
-    public function platform(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Models\Platforms {
-        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Models\Platforms::class, 'platform_id', 'id');
+    protected static function newFactory()
+    {
+        return EletronicsFactory::new();
     }
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Models\Users {
-        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Models\Users::class, 'user_id', 'id');
+    public function platform(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\Products\Resources\Models\Platforms {
+        return $this->belongsTo(\App\Modules\Products\Resources\Models\Platforms::class, 'platform_id', 'id');
     }
 
-    public function userCreatedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\ModuleExample\Resources\Models\Users {
-        return $this->belongsTo(\App\Modules\ModuleExample\Resources\Models\Users::class, 'created_by', 'id');
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\Products\Resources\Models\Users {
+        return $this->belongsTo(\App\Modules\Products\Resources\Models\Users::class, 'user_id', 'id');
+    }
+
+    public function userCreatedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\Products\Resources\Models\Users {
+        return $this->belongsTo(\App\Modules\Products\Resources\Models\Users::class, 'created_by', 'id');
     }
 
 }

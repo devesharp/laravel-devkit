@@ -19,7 +19,7 @@ class ServiceGenerator extends BaseGeneratorAbstract
         return [
             'filtersSearchable' => !empty($this->fileTemplate) ? (new FileTemplateManager($this->fileTemplate))->getFiltersSearchable() : [],
             'filtersSort' => !empty($this->fileTemplate) ? (new FileTemplateManager($this->fileTemplate))->getFiltersSort() : [],
-            'userGetData' => !empty($this->fileTemplate) ? (new FileTemplateManager($this->fileTemplate))->getUsersServiceRelation() : [],
+            'valueOnCreate' => !empty($this->fileTemplate) ? (new FileTemplateManager($this->fileTemplate))->getUsersServiceRelation() : [],
         ];
     }
 }

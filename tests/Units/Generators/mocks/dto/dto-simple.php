@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Modules\ModuleExample\Dtos;
+namespace App\Modules\Products\Dtos;
 
 use Devesharp\Patterns\Dto\AbstractDto;
+use Devesharp\Patterns\Dto\Rule;
 
-class ResourceExampleDto extends AbstractDto
+class EletronicsDto extends AbstractDto
 {
     protected function configureValidatorRules(): array
     {

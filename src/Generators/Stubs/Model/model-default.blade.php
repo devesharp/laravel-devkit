@@ -1,25 +1,10 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-@if($withPresenter)
-use {{ $presenterNamespace }}\{{ $resourceName }}Presenter;
-use Devesharp\Patterns\Presenter\PresentableTrait;
-@endif
-@if($withFactory)
-use {{ $factoryNamespace }}\{{ $resourceName }}Factory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-@endif
-use Devesharp\Support\ModelGetTable;
-use Illuminate\Database\Eloquent\Model;
+@include('devesharp-generators::commons.header')
 
 /**
  * Class {{ $resourceName }}
  * @package {{ $namespaceApp }}
  *
-@foreach($propertyPHPDocs as $field)
+@foreach($fieldsPropertyPHPDocs as $field)
  * @property {{$field['type']}} ${{$field['name']}}
 @endforeach
 @if($withPresenter)
@@ -46,16 +31,16 @@ class {{ $resourceName }} extends Model
     protected $guarded = [];
 
     protected $casts = [
-@foreach($fieldsCasts as $field)
+@foreach($fieldsModelCasts as $field)
 @if($field['cast'] !== 'date')
         '{{ $field['name'] }}' => '{{ $field['cast'] }}',
 @endif
 @endforeach
     ];
 
-@if(\Devesharp\Support\Collection::make($fieldsCasts)->some(fn($f) => $f['cast'] == 'date'))
+@if(\Devesharp\Support\Collection::make($fieldsModelCasts)->some(fn($f) => $f['cast'] == 'date'))
     protected $dates = [
-@foreach($fieldsCasts as $field)
+@foreach($fieldsModelCasts as $field)
 @if($field['cast'] === 'date')
         '{{ $field['name'] }}',
 @endif
@@ -63,12 +48,14 @@ class {{ $resourceName }} extends Model
     ];
 @endif
 @if($withFactory)
+
     protected static function newFactory()
     {
         return {{ $resourceName }}Factory::new();
     }
 @endif
-@if($modelRelations)
-{!! $modelRelations !!}
+@if(!empty($modelRelationsFunctions))
+
+    {!! $modelRelationsFunctions !!}
 @endif
 }

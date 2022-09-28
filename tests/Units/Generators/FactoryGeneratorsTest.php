@@ -2,12 +2,11 @@
 
 namespace Tests\Units\Generators;
 
-use Devesharp\Generators\DtoGenerator;
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\FactoryGenerator;
 
-class FactoryGeneratorsTest extends \Tests\TestCase
+class FactoryGeneratorsTest extends TestCaseGenerator
 {
-
     public FactoryGenerator $generator;
 
     protected function setUp(): void
@@ -17,35 +16,31 @@ class FactoryGeneratorsTest extends \Tests\TestCase
         $this->generator = app(FactoryGenerator::class);
     }
 
-    public function testNamespaceDto()
+    public function testNamespaceFaker()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Factories');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\Products\Resources\Factories');
     }
 
-    public function testDtoBase()
+    public function testFakerBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/factory/factory-simple.php'), $this->generator->render());
+        $this->assertTemplate('factory/factory-simple.php', $this->generator->render());
     }
 
-    public function testDtoWithFile()
+    public function testFakerWithFile()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
+        $this->generator->setTemplateData(TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/factory/factory-with-file.php'), $this->generator->render());
+        $this->assertTemplate('factory/factory-with-file.php', $this->generator->render());
     }
 
 }

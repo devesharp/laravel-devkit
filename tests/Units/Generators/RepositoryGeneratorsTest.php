@@ -4,7 +4,7 @@ namespace Tests\Units\Generators;
 
 use Devesharp\Generators\RepositoryGenerator;
 
-class RepositoryGeneratorsTest extends \Tests\TestCase
+class RepositoryGeneratorsTest extends TestCaseGenerator
 {
 
     public RepositoryGenerator $generator;

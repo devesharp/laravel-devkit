@@ -39,6 +39,7 @@ class TestUnitGenerator extends BaseGeneratorAbstract
             $headerFnTest .= '        $user = Users::factory()->create();';
         }
 
+
         return [
             'headerFnTest' => $headerFnTest,
             'userVariable' => $userVariable,

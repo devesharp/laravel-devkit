@@ -1,5 +1,19 @@
-name: Eletronics
-module: Products
+name: Posts
+module: Posts
+components:
+    withController: true
+    withDto: true
+    withService: true
+    withFactory: true
+    withModel: true
+    withPolicy: true
+    withPresenter: true
+    withRepository: true
+    withRouteDocs: true
+    withTransformerInterface: true
+    withTransformer: true
+    withTestRoute: true
+    withTestUnit: true
 fields:
     id:
         dbType: "id"

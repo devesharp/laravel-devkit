@@ -5,7 +5,7 @@ namespace Tests\Units\Generators;
 use Devesharp\Generators\TransformerGenerator;
 use Illuminate\Support\Facades\Config;
 
-class TransformerGeneratorsTest extends \Tests\TestCase
+class TransformerGeneratorsTest extends TestCaseGenerator
 {
     public TransformerGenerator $generator;
 

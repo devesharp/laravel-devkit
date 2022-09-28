@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Factories;
+namespace App\Modules\Products\Resources\Factories;
 
-use App\Modules\ModuleExample\Resources\Models\ResourceExample;
 use Devesharp\Support\Factory;
+use App\Modules\Products\Resources\Models\Eletronics;
 
-class ResourceExampleFactory extends Factory
+class EletronicsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = ResourceExample::class;
+    protected $model = Eletronics::class;
 
     protected $onlyRaw = [];
 
@@ -35,6 +35,24 @@ class ResourceExampleFactory extends Factory
             'post_type' => fake()->randomFloat(2),
             'status' => fake()->randomFloat(2),
             'created_by' => 1,
+        ];
+    }
+
+    /**
+    * Define the model's default state.
+    *
+    * @return array
+    */
+    public function bodyForRequest(): array
+    {
+        return [
+            'title' => fake()->text(100),
+            'body' => fake()->text(100),
+            'is_featured' => fake()->boolean(),
+            'published_at' => fake()->date('Y-m-d'),
+            'password' => fake()->text(100),
+            'post_type' => fake()->randomFloat(2),
+            'status' => fake()->randomFloat(2),
         ];
     }
 }

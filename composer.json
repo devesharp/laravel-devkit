@@ -20,13 +20,15 @@
         "illuminate/database": "^9.0",
         "cebe/php-openapi": "^1.5",
         "adbario/php-dot-notation": "^3.1",
-        "michael-rubel/laravel-formatters": "^5.0"
+        "michael-rubel/laravel-formatters": "^5.0",
+        "spatie/data-transfer-object": "^3.9"
     },
     "extra": {
         "laravel": {
             "providers": [
                 "Devesharp\\Generators\\Provider\\GeneratorsProvider",
-                "Devesharp\\SwaggerGenerator\\Providers\\SwaggerGeneratorProvider"
+                "Devesharp\\SwaggerGenerator\\Providers\\SwaggerGeneratorProvider",
+                "Devesharp\\Support\\Validators\\ValidatorProvider"
             ]
         }
     },

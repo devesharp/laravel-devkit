@@ -5,7 +5,7 @@ namespace Tests\Units\Generators;
 use Devesharp\Generators\ServiceGenerator;
 use Illuminate\Support\Facades\Config;
 
-class ServiceGeneratorsTest extends \Tests\TestCase
+class ServiceGeneratorsTest extends TestCaseGenerator
 {
     public ServiceGenerator $generator;
 

@@ -2,11 +2,12 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\DtoGenerator;
 use Devesharp\Generators\FactoryGenerator;
 use Devesharp\Generators\MigrationGenerator;
 
-class MigrationsGeneratorsTest extends \Tests\TestCase
+class MigrationsGeneratorsTest extends TestCaseGenerator
 {
 
     public MigrationGenerator $generator;
@@ -20,12 +21,18 @@ class MigrationsGeneratorsTest extends \Tests\TestCase
 
     public function testMigrationBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/migration/migration-simple.php'), $this->generator->render());
+        $this->assertTemplate('migration/migration-simple.php', $this->generator->render());
+    }
+
+    public function testMigrationWithFields()
+    {
+        $this->generator->setTemplateData(TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'));
+
+        $this->assertTemplate('migration/migration-with-fields.php', $this->generator->render());
     }
 }

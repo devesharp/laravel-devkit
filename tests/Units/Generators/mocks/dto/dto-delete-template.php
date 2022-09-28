@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Modules\ModuleExample\Dtos;
+namespace App\Modules\Posts\Dtos;
 
 use Devesharp\Patterns\Dto\AbstractDto;
+use Devesharp\Patterns\Dto\Rule;
 use Devesharp\Patterns\Dto\Templates\ActionManyTemplateDto;
 
-class DeleteResourceExampleDto extends AbstractDto
+class DeletePostsDto extends AbstractDto
 {
     protected function configureValidatorRules(): array
     {

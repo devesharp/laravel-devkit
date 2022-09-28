@@ -1,32 +1,33 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Models;
+namespace App\Modules\Products\Resources\Models;
 
-use App\Modules\ModuleExample\Resources\Factories\ResourceExampleFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Devesharp\Support\ModelGetTable;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Products\Resources\Factories\EletronicsFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class ResourceExample
- * @package App\Modules\ModuleExample\Resources\Models
+ * Class Eletronics
+ * @package App\Modules\Products\Resources\Models
  *
- * @method static App\Modules\ModuleExample\Resources\Models\ResourceExample find($value)
+ * @method static App\Modules\Products\Resources\Models\Eletronics find($value)
  */
-class ResourceExample extends Model
+class Eletronics extends Model
 {
     use ModelGetTable;
     use HasFactory;
 
-    protected $table = 'resource_example';
+    protected $table = 'eletronics';
 
     protected $guarded = [];
 
     protected $casts = [
     ];
 
+
     protected static function newFactory()
     {
-        return ResourceExampleFactory::new();
+        return EletronicsFactory::new();
     }
 }

@@ -9,7 +9,7 @@ use Devesharp\Generators\ModuleGenerator;
 use Devesharp\Generators\TransformerGenerator;
 use Illuminate\Support\Facades\Config;
 
-class ModuleTest extends \Tests\TestCase
+class ModuleTest extends TestCaseGenerator
 {
     public ModuleGenerator $generator;
     public FileSystem $fileSystem;

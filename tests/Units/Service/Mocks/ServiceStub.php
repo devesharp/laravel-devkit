@@ -27,7 +27,7 @@ class ServiceStub extends Service
         // Filter default
         'id' => [
             'column' => 'id',
-            'filter' => ServiceFilterEnum::whereEqual,
+            'filter' => ServiceFilterEnum::whereInt,
         ],
         'name' => [
             'column' => 'name',

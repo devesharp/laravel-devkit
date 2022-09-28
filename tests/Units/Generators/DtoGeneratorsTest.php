@@ -2,9 +2,10 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\DtoGenerator;
 
-class DtoGeneratorsTest extends \Tests\TestCase
+class DtoGeneratorsTest extends TestCaseGenerator
 {
 
     public DtoGenerator $generator;
@@ -18,72 +19,67 @@ class DtoGeneratorsTest extends \Tests\TestCase
 
     public function testNamespaceDto()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $data = new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        );
+        $this->generator->setTemplateData($data);
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Dtos');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\Products\Dtos');
     }
 
     public function testDtoBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample'
-        ]);
+        $data = new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        );
+        $this->generator->setTemplateData($data);
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/dto/dto-simple.php'), $this->generator->render());
+        $this->assertTemplate('dto/dto-simple.php', $this->generator->render());
     }
 
     public function testDtoBaseWithFile()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
+        $this->generator->setTemplateData(TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/dto/dto-with-file.php'), $this->generator->render());
+        $this->assertTemplate('dto/dto-with-file.php', $this->generator->render());
     }
 
     public function testDtoSearchTemplate()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ], [
-            'template' => 'search',
-        ]);
+        $this->generator->setTemplateData(
+            TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'),
+            [
+                'template' => 'search',
+            ]
+        );
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/dto/dto-create-template.php'), $this->generator->render());
+        $this->assertTemplate('dto/dto-create-template.php', $this->generator->render());
     }
 
     public function testDtoDeleteTemplate()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ], [
-            'template' => 'delete',
-        ]);
+        $this->generator->setTemplateData(
+            TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'),
+            [
+                'template' => 'delete',
+            ]
+        );
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/dto/dto-delete-template.php'), $this->generator->render());
+        $this->assertTemplate('dto/dto-delete-template.php', $this->generator->render());
     }
 
     public function testDtoUpdateTemplate()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ], [
-            'template' => 'update',
-        ]);
+        $this->generator->setTemplateData(
+            TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'),
+            [
+                'template' => 'update',
+            ]
+        );
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/dto/dto-update-template.php'), $this->generator->render());
+        $this->assertTemplate('dto/dto-update-template.php', $this->generator->render());
     }
 
 }

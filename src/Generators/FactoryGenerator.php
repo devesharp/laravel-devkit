@@ -2,22 +2,24 @@
 
 namespace Devesharp\Generators;
 
+use Devesharp\Generators\Common\TemplateGenerator;
 
-use Devesharp\Generators\Common\BaseGeneratorAbstract;
-
-class FactoryGenerator extends BaseGeneratorAbstract
+class FactoryGenerator extends TemplateGenerator
 {
-
     public string $resourceType = 'factory';
 
-    public function getFile(): string
+    public function getTemplateFilename(): string
     {
         return 'devesharp-generators::Factory/factory-default';
     }
 
-    public function getData()
+    function loadImports(): void {
+        $this->templateData->addImport('Devesharp\Support\Factory');
+        $this->templateData->addImport('{{ $modelNamespace }}\{{ $resourceName }}');
+    }
+
+    public function getData(): array
     {
-        return [
-        ];
+        return [];
     }
 }

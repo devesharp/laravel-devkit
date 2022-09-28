@@ -2,22 +2,18 @@
 
 namespace Devesharp\Generators\Common;
 
-
-use Carbon\Carbon;
+//    ds:generator $typeName $module $name
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use Web64\Colors\Facades\Colors;
 
-class FileTemplateManager
+class TemplateFieldsGenerator
 {
-    public array $fileModuleGenerator = [];
-
-    public function setFile($file) {
-        $this->fileModuleGenerator = \yaml_parse(file_get_contents($file));
-    }
-
-    public function getFieldsForDto()
+    public function getFieldsForDto(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
 
             $rules = [];
             switch (strtolower($field['dbType'])) {
@@ -64,13 +60,14 @@ class FileTemplateManager
                 ];
             }
         }
+
         return $fields;
     }
 
-    public function getFieldsForDtoSearch()
+    public function getFieldsForDtoSearch(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
 
             $rules = [];
             switch (strtolower($field['dbType'])) {
@@ -125,11 +122,11 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getFieldsForTransformer()
+    public function getFieldsForTransformer(TemplateData &$templateData)
     {
         $fields = [];
 
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
 
             $type = "string";
             switch (strtolower($field['dbType'])) {
@@ -175,10 +172,10 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getFiltersSearchable()
+    public function getFiltersSearchable(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             $filterType = '';
 
             switch (strtolower($field['dbType'])) {
@@ -242,10 +239,10 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getFiltersSort()
+    public function getFiltersSort(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             if (!empty($field['sort'])) {
                 $fields[] = [
                     'name' => $key
@@ -255,10 +252,10 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getUsersServiceRelation()
+    public function getUsersServiceRelation(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             if (!empty($field['valueOnCreate'])) {
                 $treatmentField = [
                     'fieldName' => $key,
@@ -285,11 +282,13 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getFieldsForFaker()
+    public function getFieldsForFaker(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             $fakerFn = '""';
+            $request = true;
+
             switch (strtolower($field['dbType'])) {
                 case 'integer':
                 case 'unsignedinteger':
@@ -326,6 +325,7 @@ class FileTemplateManager
                 default:
                     if (Str::contains($field['dbType'], 'foreign')) {
                         $fakerFn = 1;
+                        $request = false;
                     } else {
                         $fakerFn = 'fake()->text(100)';
                     }
@@ -333,22 +333,24 @@ class FileTemplateManager
 
             if ($key == "enabled") {
                 $fakerFn = 'true';
+                $request = false;
             }
 
             if (empty($field['primary']) && $key !== 'created_at' && $key !== 'updated_at') {
                 $fields[] = [
                     'name' => $key,
                     'faker_function' => $fakerFn,
+                    'request' => $request,
                 ];
             }
         }
         return $fields;
     }
 
-    public function getPropertyPHPDocs()
+    public function getPropertyPHPDocs(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             $type = '';
             switch (strtolower($field['dbType'])) {
                 case 'integer':
@@ -377,7 +379,9 @@ class FileTemplateManager
                 case 'datetime':
                 case 'timestamp':
                 case 'time':
-                    $type = "\Illuminate\Support\Carbon";
+                    $type = "Carbon";
+                    // Add Carbon to use
+                    $templateData->addImport('\Illuminate\Support\Carbon');
                     break;
                 default:
                     $type = 'string';
@@ -394,11 +398,11 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getModelRelationFunctions($namespaceModel)
+    public function getModelRelationFunctions(TemplateData &$templateData): string
     {
         $relations = '';
 
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             if (!empty($field['relation'])) {
                 $typeRelation = explode(",", $field['relation'])[0];
 
@@ -447,12 +451,12 @@ class FileTemplateManager
                 if (!empty($functionName)) {
                     $relations .= "\n";
                     if ($relation == 'belongsTo') {
-                        $relations .= "    public function $functionName(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\\$namespaceModel\\$tableForeign {";
+                        $relations .= "    public function $functionName(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\\{{\$modelNamespace}}\\$tableForeign {";
                     }else {
                         $relations .= "    public function $functionName():  {";
                     }
                     $relations .= "\n";
-                    $relations .= "        return \$this->$relation(\\$namespaceModel\\$tableForeign::class, '$key', '$primaryKeyName');";
+                    $relations .= "        return \$this->$relation(\\{{\$modelNamespace}}\\$tableForeign::class, '$key', '$primaryKeyName');";
                     $relations .= "\n";
                     $relations .= "    }";
                     $relations .= "\n";
@@ -464,7 +468,7 @@ class FileTemplateManager
         return $relations;
     }
 
-    public function getModelRelationFunctions2()
+    public function getFieldsUsedOnResource(TemplateData &$templateData)
     {
         $relations = [];
 
@@ -472,7 +476,7 @@ class FileTemplateManager
         $config = app(GeneratorConfig::class);
         $config->init();
 
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             if (!empty($field['relation'])) {
                 $typeRelation = explode(",", $field['relation'])[0];
                 $tableForeign = explode(",", $field['relation'])[1];
@@ -533,15 +537,13 @@ class FileTemplateManager
 
         }
 
-        var_dump($relations);
-
         return $relations;
     }
 
-    public function getFieldsForCasts()
+    public function getFieldsForCasts(TemplateData &$templateData)
     {
         $fields = [];
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             $cast = '';
             switch (strtolower($field['dbType'])) {
                 case 'json':
@@ -576,15 +578,14 @@ class FileTemplateManager
         return $fields;
     }
 
-    public function getFieldsForMigration()
+    public function getColumnsForMigration(TemplateData &$templateData)
     {
         $fields = [];
-        $foreignKeys = [];
         $createdAtField = null;
         $updatedAtField = null;
         $enabledAtField = null;
 
-        foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
+        foreach ($templateData->fieldsRaw as $key => $field) {
             if ($key == 'created_at') {
                 $createdAtField = $field;
                 continue;
@@ -620,13 +621,6 @@ class FileTemplateManager
             $migrationField .= ';';
 
             $fields[] = $migrationField;
-
-            if (Str::contains($field['dbType'], 'foreign')) {
-                $foreignTable = Str::snake(trim(explode(",", $field['relation'])[1]));
-                $foreignField = explode(",", $field['relation'])[2] ?? 'id';
-
-                $foreignKeys[] = "\$table->foreign('".$key."')->references('".$foreignField."')->on('".$foreignTable."');";
-            }
         }
 
         if (!empty($enabledAtField)) {
@@ -644,9 +638,22 @@ class FileTemplateManager
             }
         }
 
-        return [
-            'fields' => $fields,
-            'foreignKeys' => $foreignKeys,
-        ];
+        return $fields;
+    }
+
+    public function getRelationsColumnsForMigration(TemplateData &$templateData)
+    {
+        $foreignKeys = [];
+
+        foreach ($templateData->fieldsRaw as $key => $field) {
+            if (Str::contains($field['dbType'], 'foreign')) {
+                $foreignTable = Str::snake(trim(explode(",", $field['relation'])[1]));
+                $foreignField = explode(",", $field['relation'])[2] ?? 'id';
+
+                $foreignKeys[] = "\$table->foreign('".$key."')->references('".$foreignField."')->on('".$foreignTable."');";
+            }
+        }
+
+        return $foreignKeys;
     }
 }

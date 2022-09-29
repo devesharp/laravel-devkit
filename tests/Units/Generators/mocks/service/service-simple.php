@@ -1,41 +1,23 @@
 <?php
 
-namespace App\Modules\ModuleExample\Services;
+namespace App\Modules\Products\Services;
 
 use Devesharp\Patterns\Service\Service;
 use Devesharp\Patterns\Service\ServiceFilterEnum;
 use Devesharp\Patterns\Transformer\Transformer;
-use App\Modules\ModuleExample\Dtos\CreateResourceExampleDto;
-use App\Modules\ModuleExample\Dtos\UpdateResourceExampleDto;
-use App\Modules\ModuleExample\Dtos\SearchResourceExampleDto;
-use App\Modules\ModuleExample\Dtos\DeleteResourceExampleDto;
+use App\Modules\Products\Dtos\CreateEletronicsDto;
+use App\Modules\Products\Dtos\UpdateEletronicsDto;
+use App\Modules\Products\Dtos\SearchEletronicsDto;
+use App\Modules\Products\Dtos\DeleteEletronicsDto;
 use Devesharp\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class ResourceExampleService extends Service
+class EletronicsService extends Service
 {
     /**
      * Sorts permitidas.
      */
     public array $sort = [
-        'id' => [
-            'column' => 'resource_example.id',
-        ],
-        'user_id' => [
-            'column' => 'resource_example.user_id',
-        ],
-        'published_at' => [
-            'column' => 'resource_example.published_at',
-        ],
-        'status' => [
-            'column' => 'resource_example.status',
-        ],
-        'created_at' => [
-            'column' => 'resource_example.created_at',
-        ],
-        'updated_at' => [
-            'column' => 'resource_example.updated_at',
-        ],
     ];
 
     /**
@@ -57,100 +39,24 @@ class ResourceExampleService extends Service
      * @var array Filtros rápidos
      */
     public array $filters = [
-        'id' => [
-            'column' => 'resource_example.id',
-            'filter' => ServiceFilterEnum::whereEqual,
-        ],
-        'platform_id' => [
-            'column' => 'resource_example.platform_id',
-            'filter' => ServiceFilterEnum::whereEqual,
-        ],
-        'user_id' => [
-            'column' => 'resource_example.user_id',
-            'filter' => ServiceFilterEnum::whereEqual,
-        ],
-        'title' => [
-            'column' => 'resource_example.title',
-            'filter' => ServiceFilterEnum::whereContainsExplodeString,
-        ],
-        'body' => [
-            'column' => 'resource_example.body',
-            'filter' => ServiceFilterEnum::whereContainsExplodeString,
-        ],
-        'is_featured' => [
-            'column' => 'resource_example.is_featured',
-            'filter' => ServiceFilterEnum::whereBoolean,
-        ],
-        'published_at' => [
-            'column' => 'resource_example.published_at',
-            'filter' => ServiceFilterEnum::whereDate,
-        ],
-        'published_at_gte' => [
-            'column' => 'resource_example.published_at_gte',
-            'filter' => ServiceFilterEnum::whereDateGte,
-        ],
-        'published_at_lte' => [
-            'column' => 'resource_example.published_at_lte',
-            'filter' => ServiceFilterEnum::whereDateLte,
-        ],
-        'password' => [
-            'column' => 'resource_example.password',
-            'filter' => ServiceFilterEnum::whereContainsExplodeString,
-        ],
-        'post_type' => [
-            'column' => 'resource_example.post_type',
-            'filter' => ServiceFilterEnum::whereInt,
-        ],
-        'status' => [
-            'column' => 'resource_example.status',
-            'filter' => ServiceFilterEnum::whereInt,
-        ],
-        'created_by' => [
-            'column' => 'resource_example.created_by',
-            'filter' => ServiceFilterEnum::whereEqual,
-        ],
-        'created_at' => [
-            'column' => 'resource_example.created_at',
-            'filter' => ServiceFilterEnum::whereDate,
-        ],
-        'created_at_gte' => [
-            'column' => 'resource_example.created_at_gte',
-            'filter' => ServiceFilterEnum::whereDateGte,
-        ],
-        'created_at_lte' => [
-            'column' => 'resource_example.created_at_lte',
-            'filter' => ServiceFilterEnum::whereDateLte,
-        ],
-        'updated_at' => [
-            'column' => 'resource_example.updated_at',
-            'filter' => ServiceFilterEnum::whereDate,
-        ],
-        'updated_at_gte' => [
-            'column' => 'resource_example.updated_at_gte',
-            'filter' => ServiceFilterEnum::whereDateGte,
-        ],
-        'updated_at_lte' => [
-            'column' => 'resource_example.updated_at_lte',
-            'filter' => ServiceFilterEnum::whereDateLte,
-        ],
     ];
 
     public function __construct(
-        protected \App\Modules\ModuleExample\Transformers\ResourceExampleTransformer $transformer,
-        protected \App\Modules\ModuleExample\Resources\Repositories\ResourceExampleRepository $repository,
-        protected \App\Modules\ModuleExample\Policies\ResourceExamplePolicy $policy
+        protected \App\Modules\Products\Transformers\EletronicsTransformer $transformer,
+        protected \App\Modules\Products\Resources\Repositories\EletronicsRepository $repository,
+        protected \App\Modules\Products\Policies\EletronicsPolicy $policy
     ) {
     }
 
     /**
      * Create resource
      *
-     * @param CreateResourceExampleDto $data
+     * @param CreateEletronicsDto $data
      * @param null $requester
      * @return mixed
      * @throws \Exception
      */
-    public function create(CreateResourceExampleDto $data, $requester = null, $context = 'model')
+    public function create(CreateEletronicsDto $data, $requester = null, $context = 'model')
     {
         try {
 
@@ -177,14 +83,14 @@ class ResourceExampleService extends Service
 
     /**
      * @param int $id
-     * @param UpdateResourceExampleDto $originalData
+     * @param UpdateEletronicsDto $originalData
      * @param null $requester
      * @return mixed
      * @throws \Exception
      */
     public function update(
         int $id,
-        UpdateResourceExampleDto $data,
+        UpdateEletronicsDto $data,
         $requester = null,
         $context = 'model'
     ) {
@@ -228,9 +134,6 @@ class ResourceExampleService extends Service
         if ($method == 'update') {
 
         } else if ($method == 'create') {
-            $requestData['platform_id'] = $requester->platform_id;
-            $requestData['user_id'] = $requester->id;
-            $requestData['created_by'] = $requester->id;
 
             return $requestData;
         }
@@ -240,39 +143,39 @@ class ResourceExampleService extends Service
 
     /**
      * @param int $id
-     * @param $receiver
+     * @param $requester
      * @param string $context
      * @return mixed
      * @throws \Devesharp\Exceptions\Exception
      */
-    public function get(int $id, $receiver, $context = 'default')
+    public function get(int $id, $requester, $context = 'default')
     {
         // Get model
-        $model = $this->makeSearch($data, $receiver)
+        $model = $this->makeSearch($data, $requester)
             ->whereInt('id', $id)
             ->findOne();
 
         if (empty($model)) {
-            \Devesharp\Exceptions\Exception::NotFound(App\Modules\ModuleExample\Resources\Models\ResourceExample::class);
+            \Devesharp\Exceptions\Exception::NotFound(App\Modules\Products\Resources\Models\Eletronics::class);
         }
 
         if ($context != 'model')
-            $this->policy->get($receiver, $model);
+            $this->policy->get($requester, $model);
 
         return Transformer::item(
             $model,
             $this->transformer,
             $context,
-            $receiver,
+            $requester,
         );
     }
 
     /**
-     * @param SearchResourceExampleDto $originalData
+     * @param SearchEletronicsDto $originalData
      * @param null $requester
      * @return array
      */
-    public function search(SearchResourceExampleDto $data, $requester = null)
+    public function search(SearchEletronicsDto $data, $requester = null)
     {
         // Authorization
         $this->policy->search($requester);
@@ -291,15 +194,13 @@ class ResourceExampleService extends Service
     /**
      * @param $data
      * @param null $requester
-     * @return \Devesharp\Pattners\Repository\RepositoryInterface|\App\Modules\ModuleExample\Resources\Repositories\ResourceExampleRepository
+     * @return \Devesharp\Pattners\Repository\RepositoryInterface|\App\Modules\Products\Resources\Repositories\EletronicsRepository
      */
     protected function makeSearch(&$data, $requester = null)
     {
-        /** @var \App\Modules\ModuleExample\Resources\Repositories\ResourceExampleRepository $query */
+        /** @var \App\Modules\Products\Resources\Repositories\EletronicsRepository $query */
         $query = parent::makeSearch($data, $requester);
 
-//        // Example Query
-//        $query->whereInt('id', 1);
 
         return $query;
     }
@@ -336,12 +237,12 @@ class ResourceExampleService extends Service
     }
 
     /**
-     * @param DeleteResourceExampleDto $data
+     * @param DeleteEletronicsDto $data
      * @param $requester
      * @return bool
      * @throws \Devesharp\Exceptions\Exception
      */
-    public function deleteMany(DeleteResourceExampleDto $data, $requester = null)
+    public function deleteMany(DeleteEletronicsDto $data, $requester = null)
     {
         try {
             // Authorization

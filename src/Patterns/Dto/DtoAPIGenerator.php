@@ -217,7 +217,7 @@ trait DtoAPIGenerator
          * @var Rule $rule
          */
         foreach ($rules as $key => $rule) {
-            if (is_array($rule->rules)) {
+            if (!empty($rule->rules) && is_array($rule->rules)) {
                 foreach ($rule->rules as $ruleValue) {
                     if($ruleValue instanceof Enum) {
                         // Hack para resgatar valor private de Illuminate\Validation\Rules\Enum

@@ -2,6 +2,7 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\RouteDocGenerator;
 use Illuminate\Support\Facades\Config;
 
@@ -18,22 +19,32 @@ class RouteDocGeneratorsTest extends TestCaseGenerator
 
     public function testNamespaceRouteDoc()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Supports\Docs');
+        $this->assertTemplate($this->generator->getNamespace(), 'App\Modules\ModuleMain\Supports\Docs');
     }
 
     public function testRouteDocBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
-;
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/docs/route-doc-simple.php'), $this->generator->render());
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
+
+        $this->assertTemplate('/docs/route-doc-simple.php', $this->generator->render());
+    }
+
+    public function testRouteDocWithName()
+    {
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+            resourceGramaticalName: 'Eletrônicos',
+        ));
+
+        $this->assertTemplate('/docs/route-doc-gramatical-name.php', $this->generator->render());
     }
 }

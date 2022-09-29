@@ -2,20 +2,24 @@
 
 namespace Devesharp\Generators;
 
-use Devesharp\Generators\Common\BaseGeneratorAbstract;
+use Devesharp\Generators\Common\TemplateGenerator;
 
-class RouteDocGenerator extends BaseGeneratorAbstract
+class RouteDocGenerator extends TemplateGenerator
 {
     public string $resourceType = 'route-docs';
 
-    public function getFile(): string
+    public function getTemplateFilename(): string
     {
         return 'devesharp-generators::Docs/route-docs-default';
     }
 
-    public function getData()
+    function loadImports(): void {
+        $this->templateData->addImport('Devesharp\APIDocs\RoutesDocAbstract');
+        $this->templateData->addImport('Devesharp\APIDocs\RoutesDocInfo');
+    }
+
+    public function getData(): array
     {
-        return [
-        ];
+        return [];
     }
 }

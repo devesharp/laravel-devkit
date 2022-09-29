@@ -3,20 +3,23 @@
 namespace Devesharp\Generators;
 
 use Devesharp\Generators\Common\BaseGeneratorAbstract;
+use Devesharp\Generators\Common\TemplateGenerator;
 
-class TransformerInterfaceGenerator extends BaseGeneratorAbstract
+class TransformerInterfaceGenerator extends TemplateGenerator
 {
 
     public string $resourceType = 'transformer-interface';
 
-    public function getFile(): string
+    public function getTemplateFilename(): string
     {
         return 'devesharp-generators::Transformer/interface-transformer-default';
     }
 
-    public function getData()
+    function loadImports(): void {
+    }
+
+    public function getData(): array
     {
-        return [
-        ];
+        return [];
     }
 }

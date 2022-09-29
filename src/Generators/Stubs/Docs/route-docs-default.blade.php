@@ -1,21 +1,14 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use Devesharp\APIDocs\RoutesDocAbstract;
-use Devesharp\APIDocs\RoutesDocInfo;
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}RouteDoc extends RoutesDocAbstract
 {
     public function getRouteInfo(string $name): RoutesDocInfo {
         return match ($name) {
-            "Get{{ $resourceName }}" => new RoutesDocInfo("Resgatar {{ $resourceNameForDocs }}", "Resgatar {{ $resourceNameForDocs }}"),
-            "Create{{ $resourceName }}" => new RoutesDocInfo("Criar {{ $resourceNameForDocs }}", "Criar {{ $resourceNameForDocs }}"),
-            "Update{{ $resourceName }}" => new RoutesDocInfo("Atualizar {{ $resourceNameForDocs }}", "Atualizar {{ $resourceNameForDocs }}"),
-            "Search{{ $resourceName }}" => new RoutesDocInfo("Buscar {{ $resourceNameForDocs }}", "Buscar {{ $resourceNameForDocs }}"),
-            "Delete{{ $resourceName }}" => new RoutesDocInfo("Deletar {{ $resourceNameForDocs }}", "Deletar {{ $resourceNameForDocs }}"),
+            "Get{{ $resourceName }}" => new RoutesDocInfo("Resgatar {{ $resourceGramaticalName }}", "Resgatar {{ $resourceGramaticalName }}"),
+            "Create{{ $resourceName }}" => new RoutesDocInfo("Criar {{ $resourceGramaticalName }}", "Criar {{ $resourceGramaticalName }}"),
+            "Update{{ $resourceName }}" => new RoutesDocInfo("Atualizar {{ $resourceGramaticalName }}", "Atualizar {{ $resourceGramaticalName }}"),
+            "Search{{ $resourceName }}" => new RoutesDocInfo("Buscar {{ $resourceGramaticalName }}", "Buscar {{ $resourceGramaticalName }}"),
+            "Delete{{ $resourceName }}" => new RoutesDocInfo("Deletar {{ $resourceGramaticalName }}", "Deletar {{ $resourceGramaticalName }}"),
             default => new RoutesDocInfo("", ""),
         };
     }

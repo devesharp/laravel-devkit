@@ -2,6 +2,7 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\PolicyGenerator;
 
 class PolicyGeneratorsTest extends TestCaseGenerator
@@ -18,22 +19,22 @@ class PolicyGeneratorsTest extends TestCaseGenerator
 
     public function testNamespacePolicy()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Policies');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\Products\Policies');
     }
 
     public function testPolicyBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/policy/policy-simple.php'), $this->generator->render());
+        $this->assertTemplate('policy/policy-simple.php', $this->generator->render());
     }
 
 }

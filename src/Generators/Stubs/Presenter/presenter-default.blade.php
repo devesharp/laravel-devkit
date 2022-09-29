@@ -1,10 +1,4 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use Devesharp\Patterns\Presenter\Presenter;
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}Presenter extends Presenter {
 //    public function fullName()

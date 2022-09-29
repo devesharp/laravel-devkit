@@ -1,35 +1,23 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use {{ $routeDocsNamespace }}{{ $resourceName }}RouteDoc;
-use {{ $dtoNamespace }}\Create{{ $resourceName }}Dto;
-use {{ $dtoNamespace }}\Search{{ $resourceName }}Dto;
-use {{ $dtoNamespace }}\Update{{ $resourceName }}Dto;
-use {{ $modelNamespace }}\{{ $resourceName }};
-use {{ $userModelNamespace }}\Users;
-{!!  $useNamespace !!}
-use Illuminate\Support\Facades\Hash;
-use Tests\TestCase;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}RouteTest extends TestCase
 {
     /**
-     * @testdox [POST] /v1/{{ $routeName }}
+     * @testdox [POST] /v1/{{ $resourceURI }}
      */
     public function testRoute{{ $resourceName }}Create()
     {
-{!!  $headerFnTest !!}
-        ${{ $userVariable }}->access_token = JWTAuth::fromUser(${{ $userVariable }});
-        $resourceData = {{ $resourceName }}::factory()->raw();
+        @include('devesharp-generators::Tests/commons.header-test', ['userToken' => true])
 
-        $response = $this->withPost('/v1/{{ $routeName }}')
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withPost('/v1/{{ $resourceURI }}')
             ->setRouteInfo('Create{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
-            ->addGroups(['{{ $resourceNameForDocs }}'])
+            ->addGroups(['{{ $resourceGramaticalName }}'])
             ->addBody($resourceData, Create{{ $resourceName }}Dto::class)
             ->run();
 
@@ -40,7 +28,7 @@ class {{ $resourceName }}RouteTest extends TestCase
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
-@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at" || !empty($field['now']))
         $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif($field['type'] == "date")
         $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
@@ -51,20 +39,23 @@ class {{ $resourceName }}RouteTest extends TestCase
     }
 
     /**
-     * @testdox [POST] /v1/{{ $routeName }}/:id
+     * @testdox [POST] /v1/{{ $resourceURI }}/:id
      */
     public function testRoute{{ $resourceName }}Update()
     {
-{!!  $headerFnTest !!}
-        ${{ $userVariable }}->access_token = JWTAuth::fromUser(${{ $userVariable }});
-        $resourceData = {{ $resourceName }}::factory()->raw();
-        $resource = {{ $resourceName }}::factory()->create();
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'update' => true, 'user_token' => true])
 
-        $response = $this->withPost('/v1/{{ $routeName }}/:id')
-            ->addPath('id', $resource->id, 'ID do {{ $resourceNameForDocs }}')
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withPost('/v1/{{ $resourceURI }}/:id')
+            ->addPath('id', $resource->id, 'ID do {{ $resourceGramaticalName }}')
             ->setRouteInfo('Update{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
-            ->addGroups(['{{ $resourceNameForDocs }}'])
+            ->addGroups(['{{ $resourceGramaticalName }}'])
             ->addBody($resourceData, Update{{ $resourceName }}Dto::class)
             ->run();
 
@@ -75,7 +66,7 @@ class {{ $resourceName }}RouteTest extends TestCase
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
-@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at" || !empty($field['now']))
         $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif($field['type'] == "date")
         $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
@@ -86,19 +77,22 @@ class {{ $resourceName }}RouteTest extends TestCase
     }
 
     /**
-     * @testdox [GET] /v1/{{ $routeName }}/:id
+     * @testdox [GET] /v1/{{ $resourceURI }}/:id
      */
     public function testRoute{{ $resourceName }}Get()
     {
-{!!  $headerFnTest !!}
-        ${{ $userVariable }}->access_token = JWTAuth::fromUser(${{ $userVariable }});
-        $resource = {{ $resourceName }}::factory()->create();
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'user_token' => true])
 
-        $response = $this->withGet('/v1/{{ $routeName }}/:id')
-            ->addPath('id', $resource->id, 'ID do {{ $resourceNameForDocs }}')
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withGet('/v1/{{ $resourceURI }}/:id')
+            ->addPath('id', $resource->id, 'ID do {{ $resourceGramaticalName }}')
             ->setRouteInfo('Get{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
-            ->addGroups(['{{ $resourceNameForDocs }}'])
+            ->addGroups(['{{ $resourceGramaticalName }}'])
             ->run();
 
         $responseData = json_decode($response->getContent(), true);
@@ -108,7 +102,7 @@ class {{ $resourceName }}RouteTest extends TestCase
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
-@elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
+@elseif($field['name'] == "created_at" || $field['name'] == "updated_at" || !empty($field['now']))
         $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif($field['type'] == "date")
         $this->assertDateEqual($resource->{{ $field['name'] }}, $responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
@@ -119,18 +113,21 @@ class {{ $resourceName }}RouteTest extends TestCase
     }
 
     /**
-     * @testdox [POST] /v1/{{ $routeName }}/search
+     * @testdox [POST] /v1/{{ $resourceURI }}/search
      */
     public function testRoute{{ $resourceName }}Search()
     {
-{!!  $headerFnTest !!}
-        ${{ $userVariable }}->access_token = JWTAuth::fromUser(${{ $userVariable }});
-        {{ $resourceName }}::factory()->count(3)->create();
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'search' => true, 'user_token' => true])
 
-        $response = $this->withPost('/v1/{{ $routeName }}/search')
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withPost('/v1/{{ $resourceURI }}/search')
             ->setRouteInfo('Search{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
-            ->addGroups(['{{ $resourceNameForDocs }}'])
+            ->addGroups(['{{ $resourceGramaticalName }}'])
             ->addBody([
                 'filters' => [
                     'id' => 1
@@ -146,20 +143,22 @@ class {{ $resourceName }}RouteTest extends TestCase
     }
 
     /**
-     * @testdox [DELETE] /v1/{{ $routeName }}/:id
+     * @testdox [DELETE] /v1/{{ $resourceURI }}/:id
      */
     public function testRoute{{ $resourceName }}Delete()
     {
-{!!  $headerFnTest !!}
-        ${{ $userVariable }}->access_token = JWTAuth::fromUser(${{ $userVariable }});
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
 
-        $resource = {{ $resourceName }}::factory()->create();
-
-        $response = $this->withDelete('/v1/{{ $routeName }}/:id')
-            ->addPath('id', $resource->id, 'Id do {{ $resourceNameForDocs }}')
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withDelete('/v1/{{ $resourceURI }}/:id')
+            ->addPath('id', $resource->id, 'Id do {{ $resourceGramaticalName }}')
             ->setRouteInfo('Delete{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
-            ->addGroups(['{{ $resourceNameForDocs }}'])
+            ->addGroups(['{{ $resourceGramaticalName }}'])
             ->run();
 
         $responseData = json_decode($response->getContent(), true);

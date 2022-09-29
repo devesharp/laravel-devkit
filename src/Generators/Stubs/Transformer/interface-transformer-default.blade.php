@@ -1,8 +1,4 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
+@include('devesharp-generators::commons.header')
 
 enum {{ $resourceName }}TransformerType
 {

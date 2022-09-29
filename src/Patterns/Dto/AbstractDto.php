@@ -125,7 +125,9 @@ abstract class AbstractDto extends Collection
                     }else {
                         $rulesExtends[] = (new $rule([], false))->getValidateRules();
                     }
-                }catch (\Exception $e) {}
+                }catch (\Exception $e) {
+                    var_dump($e->getMessage());
+                }
             }
             unset($rules['_extends_']);
         }
@@ -177,9 +179,20 @@ abstract class AbstractDto extends Collection
     {
         $newArray = [];
 
+        /**
+         * @var string $key
+         * @var Rule $value
+         */
         foreach ($array as $key => $value) {
-            $newArray[$key] = str_replace('required|', '', $value);
-            $newArray[$key] = str_replace('|required', '', $newArray[$key]);
+            if (is_string($value)) {
+                $value = str_replace('required|', '', $value);
+                $value = str_replace('|required', '', $value);
+                $newArray[$key] = $value;
+            } else {
+                $value->rules = str_replace('required|', '', $value->rules);
+                $value->rules = str_replace('|required', '', $value->rules);
+                $newArray[$key] = $value;
+            }
         }
 
         return $newArray;

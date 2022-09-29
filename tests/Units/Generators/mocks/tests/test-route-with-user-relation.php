@@ -1,27 +1,32 @@
 <?php
 
-namespace Tests\Routes\ModuleExample;
+namespace Tests\Routes\Products;
 
-use App\Modules\ModuleExample\Supports\DocsResourceExampleRouteDoc;
-use App\Modules\ModuleExample\Dtos\CreateResourceExampleDto;
-use App\Modules\ModuleExample\Dtos\SearchResourceExampleDto;
-use App\Modules\ModuleExample\Dtos\UpdateResourceExampleDto;
-use App\Modules\ModuleExample\Resources\Models\ResourceExample;
+use \Illuminate\Support\Carbon;
+use App\Modules\Platforms\Resources\Models\Platforms;
 use App\Modules\Users\Resources\Models\Users;
-use App\Modules\ModuleExample\Resources\Models\Platforms;
-use App\Modules\ModuleExample\Resources\Models\UsersTypes;
-
+use App\Modules\Cartegories\Resources\Models\Cartegories;
+use App\Modules\Products\Supports\DocsEletronicsRouteDoc;
+use App\Modules\Products\Dtos\CreateEletronicsDto;
+use App\Modules\Products\Dtos\SearchEletronicsDto;
+use App\Modules\Products\Dtos\UpdateEletronicsDto;
+use App\Modules\Products\Resources\Models\Eletronics;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
-class ResourceExampleRouteTest extends TestCase
+class EletronicsRouteTest extends TestCase
 {
     /**
-     * @testdox [POST] /v1/resource-example
+     * @testdox [POST] /v1/eletronics
      */
-    public function testRouteResourceExampleCreate()
+    public function testRouteEletronicsCreate()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Mocks
+        |--------------------------------------------------------------------------
+        */
         $platforms = Platforms::factory()->create();
         $usersTypes = UsersTypes::factory()->create();
         $user = User::factory([
@@ -29,13 +34,25 @@ class ResourceExampleRouteTest extends TestCase
             'type_id' => $usersTypes->id,
         ])->create();
         $user->access_token = JWTAuth::fromUser($user);
-        $resourceData = ResourceExample::factory()->raw();
 
-        $response = $this->withPost('/v1/resource-example')
-            ->setRouteInfo('CreateResourceExample', ResourceExampleRouteDoc::class)
+        $cartegory = Cartegories::factory()->create();
+        $resourceData = Eletronics::factory([
+            'platform_id' => $platform->id,
+            'user_id' => $user->id,
+            'category_id' => $cartegory->id,
+            'created_by' => $user->id,
+        ])->bodyForRequest()->raw();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withPost('/v1/eletronics')
+            ->setRouteInfo('CreateEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
-            ->addGroups(['ResourceExample'])
-            ->addBody($resourceData, CreateResourceExampleDto::class)
+            ->addGroups(['Eletronics'])
+            ->addBody($resourceData, CreateEletronicsDto::class)
             ->run();
 
         $responseData = json_decode($response->getContent(), true);
@@ -46,7 +63,7 @@ class ResourceExampleRouteTest extends TestCase
         $this->assertSame($resourceData['title'], $responseData['data']['title'], 'title');
         $this->assertSame($resourceData['body'], $responseData['data']['body'], 'body');
         $this->assertSame($resourceData['is_featured'], $responseData['data']['is_featured'], 'is_featured');
-        $this->assertDateEqual($resourceData['published_at'], $responseData['data']['published_at'], 'published_at');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['published_at'], 'published_at');
         $this->assertSame($resourceData['password'], $responseData['data']['password'], 'password');
         $this->assertSame($resourceData['post_type'], $responseData['data']['post_type'], 'post_type');
         $this->assertSame($resourceData['status'], $responseData['data']['status'], 'status');
@@ -56,26 +73,48 @@ class ResourceExampleRouteTest extends TestCase
     }
 
     /**
-     * @testdox [POST] /v1/resource-example/:id
+     * @testdox [POST] /v1/eletronics/:id
      */
-    public function testRouteResourceExampleUpdate()
+    public function testRouteEletronicsUpdate()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Mocks
+        |--------------------------------------------------------------------------
+        */
         $platforms = Platforms::factory()->create();
         $usersTypes = UsersTypes::factory()->create();
         $user = User::factory([
             'platform_id' => $platforms->id,
             'type_id' => $usersTypes->id,
         ])->create();
-        $user->access_token = JWTAuth::fromUser($user);
-        $resourceData = ResourceExample::factory()->raw();
-        $resource = ResourceExample::factory()->create();
 
-        $response = $this->withPost('/v1/resource-example/:id')
-            ->addPath('id', $resource->id, 'ID do ResourceExample')
-            ->setRouteInfo('UpdateResourceExample', ResourceExampleRouteDoc::class)
+        $cartegory = Cartegories::factory()->create();
+        $resource = Eletronics::factory([
+            'platform_id' => $platform->id,
+            'user_id' => $user->id,
+            'category_id' => $cartegory->id,
+            'created_by' => $user->id,
+        ])->create();
+        $resourceData = Eletronics::factory([
+                'platform_id' => $platform->id,
+                'user_id' => $user->id,
+                'category_id' => $cartegory->id,
+                'created_by' => $user->id,
+        ])->bodyForRequest()->raw();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withPost('/v1/eletronics/:id')
+            ->addPath('id', $resource->id, 'ID do Eletronics')
+            ->setRouteInfo('UpdateEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
-            ->addGroups(['ResourceExample'])
-            ->addBody($resourceData, UpdateResourceExampleDto::class)
+            ->addGroups(['Eletronics'])
+            ->addBody($resourceData, UpdateEletronicsDto::class)
             ->run();
 
         $responseData = json_decode($response->getContent(), true);
@@ -86,7 +125,7 @@ class ResourceExampleRouteTest extends TestCase
         $this->assertSame($resourceData['title'], $responseData['data']['title'], 'title');
         $this->assertSame($resourceData['body'], $responseData['data']['body'], 'body');
         $this->assertSame($resourceData['is_featured'], $responseData['data']['is_featured'], 'is_featured');
-        $this->assertDateEqual($resourceData['published_at'], $responseData['data']['published_at'], 'published_at');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['published_at'], 'published_at');
         $this->assertSame($resourceData['password'], $responseData['data']['password'], 'password');
         $this->assertSame($resourceData['post_type'], $responseData['data']['post_type'], 'post_type');
         $this->assertSame($resourceData['status'], $responseData['data']['status'], 'status');
@@ -96,10 +135,15 @@ class ResourceExampleRouteTest extends TestCase
     }
 
     /**
-     * @testdox [GET] /v1/resource-example/:id
+     * @testdox [GET] /v1/eletronics/:id
      */
-    public function testRouteResourceExampleGet()
+    public function testRouteEletronicsGet()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Mocks
+        |--------------------------------------------------------------------------
+        */
         $platforms = Platforms::factory()->create();
         $usersTypes = UsersTypes::factory()->create();
         $user = User::factory([
@@ -107,13 +151,18 @@ class ResourceExampleRouteTest extends TestCase
             'type_id' => $usersTypes->id,
         ])->create();
         $user->access_token = JWTAuth::fromUser($user);
-        $resource = ResourceExample::factory()->create();
+        $resource = Eletronics::factory()->create();
 
-        $response = $this->withGet('/v1/resource-example/:id')
-            ->addPath('id', $resource->id, 'ID do ResourceExample')
-            ->setRouteInfo('GetResourceExample', ResourceExampleRouteDoc::class)
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withGet('/v1/eletronics/:id')
+            ->addPath('id', $resource->id, 'ID do Eletronics')
+            ->setRouteInfo('GetEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
-            ->addGroups(['ResourceExample'])
+            ->addGroups(['Eletronics'])
             ->run();
 
         $responseData = json_decode($response->getContent(), true);
@@ -124,7 +173,7 @@ class ResourceExampleRouteTest extends TestCase
         $this->assertSame($resource->title, $responseData['data']['title'], 'title');
         $this->assertSame($resource->body, $responseData['data']['body'], 'body');
         $this->assertSame($resource->is_featured, $responseData['data']['is_featured'], 'is_featured');
-        $this->assertDateEqual($resource->published_at, $responseData['data']['published_at'], 'published_at');
+        $this->assertDateLessOrEqualThanNow($responseData['data']['published_at'], 'published_at');
         $this->assertSame($resource->password, $responseData['data']['password'], 'password');
         $this->assertSame($resource->post_type, $responseData['data']['post_type'], 'post_type');
         $this->assertSame($resource->status, $responseData['data']['status'], 'status');
@@ -134,10 +183,15 @@ class ResourceExampleRouteTest extends TestCase
     }
 
     /**
-     * @testdox [POST] /v1/resource-example/search
+     * @testdox [POST] /v1/eletronics/search
      */
-    public function testRouteResourceExampleSearch()
+    public function testRouteEletronicsSearch()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Mocks
+        |--------------------------------------------------------------------------
+        */
         $platforms = Platforms::factory()->create();
         $usersTypes = UsersTypes::factory()->create();
         $user = User::factory([
@@ -145,17 +199,22 @@ class ResourceExampleRouteTest extends TestCase
             'type_id' => $usersTypes->id,
         ])->create();
         $user->access_token = JWTAuth::fromUser($user);
-        ResourceExample::factory()->count(3)->create();
+        Eletronics::factory()->count(3)->create();
 
-        $response = $this->withPost('/v1/resource-example/search')
-            ->setRouteInfo('SearchResourceExample', ResourceExampleRouteDoc::class)
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withPost('/v1/eletronics/search')
+            ->setRouteInfo('SearchEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
-            ->addGroups(['ResourceExample'])
+            ->addGroups(['Eletronics'])
             ->addBody([
                 'filters' => [
                     'id' => 1
                 ]
-            ], SearchResourceExampleDto::class)
+            ], SearchEletronicsDto::class)
             ->run();
 
         $responseData = json_decode($response->getContent(), true);
@@ -166,10 +225,15 @@ class ResourceExampleRouteTest extends TestCase
     }
 
     /**
-     * @testdox [DELETE] /v1/resource-example/:id
+     * @testdox [DELETE] /v1/eletronics/:id
      */
-    public function testRouteResourceExampleDelete()
+    public function testRouteEletronicsDelete()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Mocks
+        |--------------------------------------------------------------------------
+        */
         $platforms = Platforms::factory()->create();
         $usersTypes = UsersTypes::factory()->create();
         $user = User::factory([
@@ -178,13 +242,18 @@ class ResourceExampleRouteTest extends TestCase
         ])->create();
         $user->access_token = JWTAuth::fromUser($user);
 
-        $resource = ResourceExample::factory()->create();
+        $resource = Eletronics::factory()->create();
 
-        $response = $this->withDelete('/v1/resource-example/:id')
-            ->addPath('id', $resource->id, 'Id do ResourceExample')
-            ->setRouteInfo('DeleteResourceExample', ResourceExampleRouteDoc::class)
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
+        $response = $this->withDelete('/v1/eletronics/:id')
+            ->addPath('id', $resource->id, 'Id do Eletronics')
+            ->setRouteInfo('DeleteEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
-            ->addGroups(['ResourceExample'])
+            ->addGroups(['Eletronics'])
             ->run();
 
         $responseData = json_decode($response->getContent(), true);

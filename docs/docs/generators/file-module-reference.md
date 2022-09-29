@@ -214,6 +214,9 @@ Nome da tabela que irá fazer a relação
 #### id
 Id da tabela que irá fazer a relação
 
+### campo: valueOnSearch
+Valores usados ao buscar recurso
+
 ### campo: valueOnCreate
 Saber se esse campo deve ser resgatado do usuário na criação do documento. Como exemplo o campo user_id_created.
 Ex:

@@ -10,7 +10,7 @@ class MigrationGenerator extends TemplateGenerator
 {
     public string $resourceType = 'migration';
 
-    public function getFile(): string
+    public function getFileName(): string
     {
         return date('Y_m_d_His') . '_create_' . $this->templateData->tableName . '_table.php';
     }

@@ -1,25 +1,4 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use {{ $routeDocsNamespace }}\{{ $resourceName }}RouteDoc;
-use {{ $dtoNamespace }}\Create{{ $resourceName }}Dto;
-use {{ $dtoNamespace }}\Search{{ $resourceName }}Dto;
-use {{ $dtoNamespace }}\Update{{ $resourceName }}Dto;
-use {{ $modelNamespace }}\{{ $resourceName }};
-use {{ $userModelNamespace }}\Users;
-use {{ $serviceNamespace }}\{{ $resourceName }}Service;
-{!!  $useNamespace !!}
-@if(!empty($fieldsRelationTest))
-@foreach($fieldsRelationTest as $fieldRelationTest)
-@if(!$fieldRelationTest['alreadyBeenDefined'])
-use {{$fieldRelationTest['namespace']}};
-@endif
-@endforeach
-@endif
-use Tests\TestCase;
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}UnitTest extends TestCase
 {
@@ -37,26 +16,24 @@ class {{ $resourceName }}UnitTest extends TestCase
      */
     public function testCreate{{ $resourceName }}()
     {
-{!!  $headerFnTest !!}
-bodyForRequest
-@if(empty($fieldsRelationTest))
-        $resourceData = {{ $resourceName }}::factory()->raw();
-@else
-@foreach($fieldsRelationTest as $fieldRelationTest)
-@if(!$fieldRelationTest['usedUserRelation'] && !$fieldRelationTest['alreadyBeenDefined'])
-        ${{$fieldRelationTest['variable']}} = {{$fieldRelationTest['resourceName']}}::factory()->create();
-@endif
-@endforeach
-        $resourceData = {{ $resourceName }}::factory([
-@foreach($fieldsRelationTest as $fieldRelationTest)
-            '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
-@endforeach
-        ])->raw();
-@endif
+        @include('devesharp-generators::Tests/commons.header-test')
 
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
         $resource = $this->service->create(Create{{ $resourceName }}Dto::make($resourceData), ${{ $userVariable }}, 'default');
+        $resourceModel = {{ $resourceName }}::find($resource['id']);
 
-        $this->assertGreaterThanOrEqual(1, $resource['id']);
+@if(!empty($fieldsUsedOnResource))
+        // Testing relations
+@foreach($fieldsUsedOnResource as $fieldRelationTest)
+        $this->assertSame(${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}}, $resourceModel->{{ $fieldRelationTest['localKey']  }}, '{{ $fieldRelationTest['localKey'] }}');
+@endforeach
+
+@endif
+        // Testing output transformer
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual(1, $resource['id']);
@@ -78,33 +55,13 @@ bodyForRequest
      */
     public function testUpdate{{ $resourceName }}()
     {
-{!!  $headerFnTest !!}
-{{-- --}}
-@if(empty($fieldsRelationTest))
-        $resource = {{ $resourceName }}::factory()->create();
-@else
-@foreach($fieldsRelationTest as $fieldRelationTest)
-@if(!$fieldRelationTest['usedUserRelation'] && !$fieldRelationTest['alreadyBeenDefined'])
-            ${{$fieldRelationTest['variable']}} = {{$fieldRelationTest['resourceName']}}::factory()->create();
-@endif
-@endforeach
-        $resource = {{ $resourceName }}::factory([
-@foreach($fieldsRelationTest as $fieldRelationTest)
-            '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
-@endforeach
-        ])->create();
-@endif
-{{-- --}}
-@if(empty($fieldsRelationTest))
-        $resourceData = {{ $resourceName }}::factory()->raw();
-@else
-        $resourceData = {{ $resourceName }}::factory([
-@foreach($fieldsRelationTest as $fieldRelationTest)
-            '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
-@endforeach
-        ])->raw();
-@endif
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'update' => true])
 
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
         $resource = $this->service->update($resource['id'], Update{{ $resourceName }}Dto::make($resourceData), ${{ $userVariable }}, 'default');
 
 @foreach($fieldsTransformer as $field)
@@ -128,12 +85,16 @@ bodyForRequest
      */
     public function testGet{{ $resourceName }}()
     {
-{!!  $headerFnTest !!}
-        $resourceOther = {{ $resourceName }}::factory()->create();
-        $resource = {{ $resourceName }}::factory()->create();
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
 
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
         $resourceGet = $this->service->get($resource->id, ${{ $userVariable }});
 
+        // Testing output transformer
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual($resource->id, $resourceGet['id']);
@@ -152,9 +113,13 @@ bodyForRequest
      */
     public function testSearch{{ $resourceName }}()
     {
-{!!  $headerFnTest !!}
-        {{ $resourceName }}::factory()->count(5)->create();
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'search' => true])
 
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
         $results = $this->service->search(Search{{ $resourceName }}Dto::make([
             "filters" => [
                 "id" => 1
@@ -168,24 +133,13 @@ bodyForRequest
      */
     public function testDelete{{ $resourceName }}()
     {
-{!!  $headerFnTest !!}
-@if(empty($fieldsRelationTest))
-        $resourceData = {{ $resourceName }}::factory()->raw();
-@else
-@foreach($fieldsRelationTest as $fieldRelationTest)
-@if(!$fieldRelationTest['usedUserRelation'] && !$fieldRelationTest['alreadyBeenDefined'])
-        ${{$fieldRelationTest['variable']}} = {{$fieldRelationTest['resourceName']}}::factory()->create();
-@endif
-@endforeach
-        $resourceData = {{ $resourceName }}::factory([
-@foreach($fieldsRelationTest as $fieldRelationTest)
-            '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
-@endforeach
-        ])->raw();
-@endif
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
 
-        $resource = $this->service->create(Create{{ $resourceName }}Dto::make($resourceData), ${{ $userVariable }});
-
+        /*
+        |--------------------------------------------------------------------------
+        | Tests
+        |--------------------------------------------------------------------------
+        */
         $this->service->delete($resource['id'], ${{ $userVariable }});
 
         $this->assertFalse(!!{{ $resourceName }}::query()->find($resource['id'])->enabled);

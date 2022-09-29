@@ -3,7 +3,9 @@
 @endphp
 
 namespace {{ $namespaceApp }};
+@if(!empty($imports))
 
 @foreach($imports as $import)
 use {{ $import }};
 @endforeach
+@endif

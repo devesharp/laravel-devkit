@@ -30,14 +30,16 @@ class {{ $resourceName }}Factory extends Factory
     *
     * @return array
     */
-    public function bodyForRequest(): array
+    public function bodyForRequest()
     {
-        return [
+        return $this->state(function (array $attributes) {
+            return [
 @foreach($fieldsFaker as $field)
 @if($field['request'])
-            '{{ $field['name'] }}' => {!! $field['faker_function'] !!},
+                '{{ $field['name'] }}' => {!! $field['faker_function'] !!},
 @endif
 @endforeach
-        ];
+            ];
+        });
     }
 }

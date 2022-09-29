@@ -14,8 +14,11 @@ class FileSystem
     }
 
     public function readFile(string $path) {
-//        file_get_contents($path);
-        return '';
+        if (isset($this->three[$path])) {
+            return $this->three[$path];
+        }
+
+        return file_get_contents($path);
     }
 
     public function render() {

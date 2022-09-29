@@ -3,20 +3,25 @@
 namespace Devesharp\Generators;
 
 use Devesharp\Generators\Common\BaseGeneratorAbstract;
+use Devesharp\Generators\Common\TemplateGenerator;
 
-class TransformerGenerator extends BaseGeneratorAbstract
+class TransformerGenerator extends TemplateGenerator
 {
 
     public string $resourceType = 'transformer';
 
-    public function getFile(): string
+    public function getTemplateFilename(): string
     {
         return 'devesharp-generators::Transformer/transformer-default';
     }
 
-    public function getData()
+    function loadImports(): void {
+        $this->templateData->addImport('Devesharp\Patterns\Transformer\Transformer');
+        $this->templateData->addImport('{{ $modelNamespace }}\{{ $resourceName }}');
+    }
+
+    public function getData(): array
     {
-        return [
-        ];
+        return [];
     }
 }

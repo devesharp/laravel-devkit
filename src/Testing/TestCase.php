@@ -16,8 +16,8 @@ trait TestCase
      * @param $exclude
      * @return void
      */
-    function assertDateEqual($leftArray, $array, $exclude = []) {
-        $this->assertSame(Carbon::parse($leftArray)->toString(), Carbon::parse($array)->toString());
+    function assertDateEqual($leftArray, $array, $string = '') {
+        $this->assertSame(Carbon::parse($leftArray)->toString(), Carbon::parse($array)->toString(), $string);
     }
 
     function assertDateLessOrEqualThanNow($array, $message = '') {

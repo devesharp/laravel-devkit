@@ -165,6 +165,7 @@ class TemplateFieldsGenerator
                 $fields[] = [
                     'name' => $key,
                     'type' => $type,
+                    'valueOnCreate' => !empty($field['valueOnCreate']),
                     'now' => !empty($field['valueOnCreate']['value']) && $field['valueOnCreate']['value'] == 'now',
                 ];
             }
@@ -272,6 +273,40 @@ class TemplateFieldsGenerator
                             $treatmentField['value'] = "\Carbon\Carbon::now()";
                         } else {
                             $treatmentField['value'] = "'" . $field['valueOnCreate']['value'] . "'";
+                        }
+                    }
+                }
+
+                $fields[] = $treatmentField;
+            }
+        }
+        return $fields;
+    }
+
+    public function getServiceValuesOnSearch(TemplateData &$templateData)
+    {
+        $fields = [];
+        foreach ($templateData->fieldsRaw as $key => $field) {
+            if (!empty($field['valueOnSearch'])) {
+                $treatmentField = [
+                    'fieldName' => $key,
+                    'userFieldName' => $field['valueOnCreate']['getByUserKey'] ?? '',
+                    'value' => $field['valueOnCreate']['value'] ?? '',
+                    'valueRaw' => $field['valueOnCreate']['valueRaw'] ?? '',
+                    'queryFn' => 'whereEqual',
+                ];
+
+                if (!empty($field['valueOnSearch']['value'])) {
+                    if (is_numeric($field['valueOnSearch']['value'])) {
+                        $treatmentField['value'] = $field['valueOnSearch']['value'];
+                        $treatmentField['queryFn'] = 'whereInt';
+                    } else {
+                        if ($field['dbType'] == 'date' || $field['dbType'] == 'datetime' ||  $field['dbType'] == 'timestamp' ||  $field['dbType'] == 'time' && $field['valueOnSearch']['value'] == 'now') {
+                            $treatmentField['value'] = "\Carbon\Carbon::now()";
+                            $treatmentField['queryFn'] = 'whereDate';
+                        } else {
+                            $treatmentField['value'] = "'" . $field['valueOnSearch']['value'] . "'";
+                            $treatmentField['queryFn'] = 'whereSameString';
                         }
                     }
                 }
@@ -488,28 +523,7 @@ class TemplateFieldsGenerator
                 $usedUserRelation = $tableForeign == 'Users';
                 $namespaceModel = $config->getNamespace('model');
                 $namespaceModel = str_replace('{{ModuleName}}', $tableForeign, $namespaceModel);
-//                var_dump($namespaceModel);
 
-                /**
-                 *
-                 *
-                 *
-                 * ALBERTO CONTINUAR
-                 * ESTÁ FICANDO DIFICIL DE FAZER ISSO SEM TER UMA UNIFICAÇÃO
-                 * POR EXEMPLO IMPORTAÇÃO,
-                 * alguns geradores precisam de importações iguais, então seria interessante
-                 * poder adicionar uma importação global, e depois adicionar as importações
-                 * assim podeser ver se existe alguma importação repetido
-                 *
-                 * adicionar no arquivo de configuração gerador
-                 * nome do modulo
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
                 foreach ($relationsConfig as $relation) {
                     foreach ($relation as $item) {
                         if ($item['resource'] == $tableForeign) {
@@ -532,7 +546,11 @@ class TemplateFieldsGenerator
                     'localKey' => $key,
                     'variable' => $singularRelation,
                     'key' => $primaryKeyName,
+                    'valueOnCreate' => !empty($field['valueOnCreate']),
+                    'transformer' => !empty($field['transformer']),
                 ];
+
+                $templateData->addImport($namespaceModel . '\\' . $tableForeign);
             }
 
         }

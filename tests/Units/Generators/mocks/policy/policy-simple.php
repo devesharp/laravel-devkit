@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\ModuleExample\Policies;
+namespace App\Modules\Products\Policies;
 
-class ResourceExamplePolicy
+class EletronicsPolicy
 {
     function create($request) {
         // \App\Exceptions\Exception::Unauthorized();

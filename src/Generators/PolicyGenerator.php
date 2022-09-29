@@ -2,22 +2,22 @@
 
 namespace Devesharp\Generators;
 
+use Devesharp\Generators\Common\TemplateGenerator;
 
-use Devesharp\Generators\Common\BaseGeneratorAbstract;
-
-class PolicyGenerator extends BaseGeneratorAbstract
+class PolicyGenerator extends TemplateGenerator
 {
-
     public string $resourceType = 'policy';
 
-    public function getFile(): string
+    public function getTemplateFilename(): string
     {
         return 'devesharp-generators::Policy/policy-default';
     }
 
-    public function getData()
+    function loadImports(): void {
+    }
+
+    public function getData(): array
     {
-        return [
-        ];
+        return [];
     }
 }

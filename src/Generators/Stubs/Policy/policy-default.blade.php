@@ -1,28 +1,24 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}Policy
 {
-    function create($request) {
+    function create($requester) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function update($request, $model) {
+    function update($requester, $model) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function get($request, $model) {
+    function get($requester, $model) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function search($request) {
+    function search($requester) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function delete($request, $model) {
+    function delete($requester, $model) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 }

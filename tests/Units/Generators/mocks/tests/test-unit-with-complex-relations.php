@@ -35,9 +35,13 @@ class EletronicsUnitTest extends TestCase
         | Generate Mocks
         |--------------------------------------------------------------------------
         */
-        $user = Users::factory()->create();
-
         $platform = Platforms::factory()->create();
+        $usersType = UsersTypes::factory()->create();
+        $user = User::factory([
+            'platform_id' => $platform->id,
+            'type_id' => $usersType->id,
+        ])->create();
+
         $cartegory = Cartegories::factory()->create();
         $resourceData = Eletronics::factory([
             'platform_id' => $platform->id,
@@ -84,9 +88,13 @@ class EletronicsUnitTest extends TestCase
         | Generate Mocks
         |--------------------------------------------------------------------------
         */
-        $user = Users::factory()->create();
-
         $platform = Platforms::factory()->create();
+        $usersType = UsersTypes::factory()->create();
+        $user = User::factory([
+            'platform_id' => $platform->id,
+            'type_id' => $usersType->id,
+        ])->create();
+
         $cartegory = Cartegories::factory()->create();
         $resource = Eletronics::factory([
             'platform_id' => $platform->id,
@@ -131,9 +139,13 @@ class EletronicsUnitTest extends TestCase
         | Generate Mocks
         |--------------------------------------------------------------------------
         */
-        $user = Users::factory()->create();
-
         $platform = Platforms::factory()->create();
+        $usersType = UsersTypes::factory()->create();
+        $user = User::factory([
+            'platform_id' => $platform->id,
+            'type_id' => $usersType->id,
+        ])->create();
+
         $cartegory = Cartegories::factory()->create();
         $resource = Eletronics::factory([
             'platform_id' => $platform->id,
@@ -173,9 +185,13 @@ class EletronicsUnitTest extends TestCase
         | Generate Mocks
         |--------------------------------------------------------------------------
         */
-        $user = Users::factory()->create();
-
         $platform = Platforms::factory()->create();
+        $usersType = UsersTypes::factory()->create();
+        $user = User::factory([
+            'platform_id' => $platform->id,
+            'type_id' => $usersType->id,
+        ])->create();
+
         $cartegory = Cartegories::factory()->create();
         $resource = Eletronics::factory([
             'platform_id' => $platform->id,
@@ -207,9 +223,13 @@ class EletronicsUnitTest extends TestCase
         | Generate Mocks
         |--------------------------------------------------------------------------
         */
-        $user = Users::factory()->create();
-
         $platform = Platforms::factory()->create();
+        $usersType = UsersTypes::factory()->create();
+        $user = User::factory([
+            'platform_id' => $platform->id,
+            'type_id' => $usersType->id,
+        ])->create();
+
         $cartegory = Cartegories::factory()->create();
         $resource = Eletronics::factory([
             'platform_id' => $platform->id,

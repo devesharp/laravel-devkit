@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Modules\ModuleExample\Transformers;
+namespace App\Modules\Products\Transformers;
 
+use \Illuminate\Support\Carbon;
+use App\Modules\Platforms\Resources\Models\Platforms;
+use App\Modules\Users\Resources\Models\Users;
+use App\Modules\Cartegories\Resources\Models\Cartegories;
 use Devesharp\Patterns\Transformer\Transformer;
-use App\Modules\ModuleExample\Resources\Models\ResourceExample;
+use App\Modules\Products\Resources\Models\Eletronics;
 
-class ResourceExampleTransformer extends Transformer
+class EletronicsTransformer extends Transformer
 {
-    public $model = ResourceExample::class;
+    public $model = Eletronics::class;
 
     protected array $loads = [];
 

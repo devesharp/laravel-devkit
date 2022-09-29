@@ -1,10 +1,4 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use Devesharp\Patterns\Repository\RepositoryMysql;
+@include('devesharp-generators::commons.header')
 
 /**
  * Class {{ $resourceName }}Repository

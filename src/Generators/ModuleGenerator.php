@@ -3,14 +3,20 @@
 namespace Devesharp\Generators;
 
 use Devesharp\Generators\Common\BaseGeneratorAbstract;
+use Devesharp\Generators\Common\TemplateData;
 
 class ModuleGenerator
 {
-    public array $data = [];
+    public TemplateData $templateData;
 
-    function setData($data)
+    /**
+     * @param TemplateData $templateData
+     * @return ModuleGenerator
+     */
+    public function setTemplateData(TemplateData $templateData): ModuleGenerator
     {
-        $this->data = $data;
+        $this->templateData = $templateData;
+        return $this;
     }
 
     function generate($type, $options = [])
@@ -64,32 +70,33 @@ class ModuleGenerator
                 $generator = app(TransformerInterfaceGenerator::class);
                 break;
             case 'all':
-                if($this->data['withController']) { $this->generate('controller'); }
-                if($this->data['withDto']) {
+                if($this->templateData->withController) { $this->generate('controller'); }
+                if($this->templateData->withDto) {
                     $this->generate('dto', [ 'template' => 'create' ]);
                     $this->generate('dto', [ 'template' => 'update' ]);
                     $this->generate('dto', [ 'template' => 'search' ]);
                     $this->generate('dto', [ 'template' => 'delete' ]);
                 }
-                if($this->data['withFactory']) { $this->generate('factory'); }
-                if($this->data['withMigration']) { $this->generate('migration'); }
-                if($this->data['withModel']) { $this->generate('model'); }
-                if($this->data['withPolicy']) { $this->generate('policy'); }
-                if($this->data['withPresenter']) { $this->generate('presenter'); }
-                if($this->data['withRepository']) { $this->generate('repository'); }
-                if($this->data['withRouteDocs']) { $this->generate('route-docs'); }
-                if($this->data['withService']) { $this->generate('service'); }
-                if($this->data['withTransformer']) { $this->generate('transformer'); }
-                if($this->data['withTransformerInterface']) { $this->generate('interface-transformer'); }
-                if($this->data['withTestUnit']) { $this->generate('test-unit'); }
-                if($this->data['withTestRoute']) { $this->generate('test-route'); }
+                if($this->templateData->withFactory) { $this->generate('factory'); }
+                if($this->templateData->withMigration) { $this->generate('migration'); }
+                if($this->templateData->withModel) { $this->generate('model'); }
+                if($this->templateData->withPolicy) { $this->generate('policy'); }
+                if($this->templateData->withPresenter) { $this->generate('presenter'); }
+                if($this->templateData->withRepository) { $this->generate('repository'); }
+                if($this->templateData->withRouteDocs) { $this->generate('route-docs'); }
+                if($this->templateData->withService) { $this->generate('service'); }
+                if($this->templateData->withTransformer) { $this->generate('transformer'); }
+                if($this->templateData->withTransformerInterface) { $this->generate('interface-transformer'); }
+                if($this->templateData->withTestUnit) { $this->generate('test-unit'); }
+                if($this->templateData->withTestRoute) { $this->generate('test-route'); }
                 return;
             default:
                 throw new \Exception('Invalid type');
         }
 
-        $generator->setCommand($this);
-        $generator->setData($this->data, $options);
-        $generator->generate();
+//        $generator->setCommand($this);
+        $generator->setTemplateData(clone $this->templateData);
+        $generator->additionalData = $options;
+        $generator->handle();
     }
 }

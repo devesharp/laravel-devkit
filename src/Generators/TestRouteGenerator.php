@@ -4,19 +4,31 @@ namespace Devesharp\Generators;
 
 
 use Devesharp\Generators\Common\BaseGeneratorAbstract;
+use Devesharp\Generators\Common\TemplateGenerator;
 use Illuminate\Support\Str;
 
-class TestRouteGenerator extends BaseGeneratorAbstract
+class TestRouteGenerator extends TemplateGenerator
 {
-
     public string $resourceType = 'testRoute';
 
-    public function getFile(): string
+    public function getTemplateFilename(): string
     {
         return 'devesharp-generators::Tests/test-route-default';
     }
 
-    public function getData()
+    function loadImports(): void {
+        $this->templateData->addImport('{{ $routeDocsNamespace }}{{ $resourceName }}RouteDoc');
+        $this->templateData->addImport('{{ $dtoNamespace }}\Create{{ $resourceName }}Dto');
+        $this->templateData->addImport('{{ $dtoNamespace }}\Search{{ $resourceName }}Dto');
+        $this->templateData->addImport('{{ $dtoNamespace }}\Update{{ $resourceName }}Dto');
+        $this->templateData->addImport('{{ $modelNamespace }}\{{ $resourceName }}');
+        $this->templateData->addImport('{{ $userModelNamespace }}\Users');
+        $this->templateData->addImport('Illuminate\Support\Facades\Hash');
+        $this->templateData->addImport('Tests\TestCase');
+        $this->templateData->addImport('PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth');
+    }
+
+    public function getData(): array
     {
         $relations = config('devesharp_generator.relations', []);
         $userVariable = 'user';

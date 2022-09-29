@@ -2,6 +2,7 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\TransformerGenerator;
 use Illuminate\Support\Facades\Config;
 
@@ -18,32 +19,28 @@ class TransformerGeneratorsTest extends TestCaseGenerator
 
     public function testNamespaceTransformer()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Transformers');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\Products\Transformers');
     }
 
     public function testTransformerBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample'
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/transformer/transformer-simple.php'), $this->generator->render());
+        $this->assertTemplate('transformer/transformer-simple.php', $this->generator->render());
     }
 
     public function testTransformerBaseWithFile()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
+        $this->generator->setTemplateData(TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/transformer/transformer-with-file.php'), $this->generator->render());
+        $this->assertTemplate('transformer/transformer-with-file.php', $this->generator->render());
     }
 }

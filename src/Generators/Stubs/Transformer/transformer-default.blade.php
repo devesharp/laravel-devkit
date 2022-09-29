@@ -1,11 +1,4 @@
-@php
-    echo "<?php".PHP_EOL;
-@endphp
-
-namespace {{ $namespaceApp }};
-
-use Devesharp\Patterns\Transformer\Transformer;
-use {{ $modelNamespace }}\{{ $resourceName }};
+@include('devesharp-generators::commons.header')
 
 class {{ $resourceName }}Transformer extends Transformer
 {

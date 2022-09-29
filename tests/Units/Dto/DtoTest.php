@@ -46,7 +46,7 @@ class DtoTest extends \Tests\TestCase
     /**
      * @testdox Dto - extender outro Dto
      */
-    public function testDtoExtend()
+    public function testDtoExtendUpdated()
     {
         $data = new UpdateDtoStub(['name' => 'John', 'age' => 10, 'extends' => true]);
 

@@ -33,7 +33,7 @@ class TemplateData extends DataTransferObject
     public string $resourceGramaticalName = "";
 
     /**
-     * @var string $routeName URI do recurso
+     * @var string $resourceURI URI do recurso
      */
     public string $resourceURI = "";
 
@@ -138,6 +138,26 @@ class TemplateData extends DataTransferObject
      */
     public array $fieldsUsedOnResource = [];
 
+    /**
+     * @var array valores usados no $filters no Service
+     */
+    public array $filtersSearchable = [];
+
+    /**
+     * @var array valores usados no $sorts no Service
+     */
+    public array $filtersSort = [];
+
+    /**
+     * @var array valores usados ao criar recurso no Service
+     */
+    public array $valueOnCreate = [];
+
+    /**
+     * @var array valores usados ao buscar recurso no Service
+     */
+    public array $valueOnSearch = [];
+
     public function __construct(...$args)
     {
         parent::__construct($args);
@@ -174,20 +194,20 @@ class TemplateData extends DataTransferObject
         $templateData->moduleName = $fileData['module'] ?? $fileData['name'] ?? '';
         $templateData->resourceName = $fileData['name'] ?? $fileData['module'] ?? '';
 
-        $templateData->withController = $fileData['layers']['controller'] ?? true;
-        $templateData->withDto = $fileData['layers']['dto']  ?? true;
-        $templateData->withService = $fileData['layers']['service']  ?? true;
-        $templateData->withMigration = $fileData['layers']['migration']  ?? true;
-        $templateData->withFactory = $fileData['layers']['factory']  ?? true;
-        $templateData->withModel = $fileData['layers']['model']  ?? true;
-        $templateData->withPolicy = $fileData['layers']['policy']  ?? true;
-        $templateData->withPresenter = $fileData['layers']['presenter']  ?? true;
-        $templateData->withRepository = $fileData['layers']['repository']  ?? true;
-        $templateData->withRouteDocs = $fileData['layers']['routeDocs']  ?? true;
-        $templateData->withTransformerInterface = $fileData['layers']['transformerInterface']  ?? true;
-        $templateData->withTransformer = $fileData['layers']['transformer']  ?? true;
-        $templateData->withTestRoute = $fileData['layers']['testRoute']  ?? true;
-        $templateData->withTestUnit = $fileData['layers']['testUnit']  ?? true;
+        $templateData->withController = $fileData['layers']['withController'] ?? true;
+        $templateData->withDto = $fileData['layers']['withDto']  ?? true;
+        $templateData->withService = $fileData['layers']['withService']  ?? true;
+        $templateData->withMigration = $fileData['layers']['withMigration']  ?? true;
+        $templateData->withFactory = $fileData['layers']['withFactory']  ?? true;
+        $templateData->withModel = $fileData['layers']['withModel']  ?? true;
+        $templateData->withPolicy = $fileData['layers']['withPolicy']  ?? true;
+        $templateData->withPresenter = $fileData['layers']['withPresenter']  ?? true;
+        $templateData->withRepository = $fileData['layers']['withRepository']  ?? true;
+        $templateData->withRouteDocs = $fileData['layers']['withRouteDocs']  ?? true;
+        $templateData->withTransformerInterface = $fileData['layers']['withTransformerInterface']  ?? true;
+        $templateData->withTransformer = $fileData['layers']['withTransformer']  ?? true;
+        $templateData->withTestRoute = $fileData['layers']['withTestRoute']  ?? true;
+        $templateData->withTestUnit = $fileData['layers']['withTestUnit']  ?? true;
 
         $templateData->fieldsRaw = $fileData['fields'] ?? [];
 
@@ -203,6 +223,10 @@ class TemplateData extends DataTransferObject
             $templateData->fieldsPropertyPHPDocs = $fieldGenerator->getPropertyPHPDocs($templateData);
             $templateData->modelRelationsFunctions = $fieldGenerator->getModelRelationFunctions($templateData);
             $templateData->fieldsUsedOnResource = $fieldGenerator->getFieldsUsedOnResource($templateData);
+            $templateData->filtersSearchable = $fieldGenerator->getFiltersSearchable($templateData);
+            $templateData->filtersSort = $fieldGenerator->getFiltersSort($templateData);
+            $templateData->valueOnCreate = $fieldGenerator->getUsersServiceRelation($templateData);
+            $templateData->valueOnSearch = $fieldGenerator->getServiceValuesOnSearch($templateData);
         }
 
         return $templateData;

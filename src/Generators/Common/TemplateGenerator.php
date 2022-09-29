@@ -134,10 +134,12 @@ abstract class TemplateGenerator
     {
         $this->moduleName = $templateData->moduleName ?? $templateData->resourceName;
         $this->resourceName = $templateData->resourceName ?? $templateData->moduleName;
+
         $templateData->namespaceApp = $this->getNamespace();
         $templateData->resourceName = $this->resourceName;
         $templateData->resourceURI = Str::slug(Str::snake($data['routeName'] ?? $this->resourceName));
         $templateData->tableName = Str::snake(trim($this->resourceName));
+        $templateData->resourceGramaticalName = !empty($templateData->resourceGramaticalName) ? $templateData->resourceGramaticalName : $this->resourceName;
 
 //        $templateData->resourceNameForDocs = $this->resourceName;
 
@@ -174,7 +176,7 @@ abstract class TemplateGenerator
         // Carregar importações
         $this->loadImports();
 
-        return view($this->getTemplateFilename(), [...$this->templateData->toArray(), ...$this->additionalData])->render();
+        return view($this->getTemplateFilename(), [...$this->templateData->toArray(), ...$this->additionalData, ...$this->getData()])->render();
     }
 
     function loadImports(): void
@@ -189,7 +191,27 @@ abstract class TemplateGenerator
      */
     function handle()
     {
+        $content = $this->render();
+        $filename = $this->getPath();
+        $filename .= '/' . $this->getFileName();
+        $baseFileName = str_replace(base_path(''), '', $filename);
 
+        if (file_exists($filename)) {
+//            $this->infoExistFile($baseFileName);
+            return;
+        }
+
+        try {
+//            if (!file_exists(dirname($filename))) {
+//                mkdir(dirname($filename), 0777, true);
+//            }
+
+            $this->fileSystem->writeFile($filename, $content);
+//            $this->infoCreateFile($baseFileName);
+        }catch (\Exception $e) {
+//            $this->infoErrorFile($baseFileName);
+            var_dump($e->getMessage());
+        }
     }
 
     /**
@@ -201,7 +223,7 @@ abstract class TemplateGenerator
     {
         $suffix = $this->replaceString($this->config->getSuffix(Str::camel($this->resourceType)));
         $prefix = $this->replaceString($this->config->getPrefix(Str::camel($this->resourceType)));
-        return $prefix . Str::studly($this->moduleName) . $suffix . '.php';
+        return $prefix . Str::studly($this->resourceName) . $suffix . '.php';
     }
 
     /**
@@ -212,6 +234,16 @@ abstract class TemplateGenerator
     public function getNamespace(): string
     {
         return $this->replaceString($this->config->getNamespace(Str::camel($this->resourceType)));
+    }
+
+    /**
+     * Resgatar caminho
+     *
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->replaceString($this->config->getPath(Str::camel($this->resourceType)));
     }
 
     /**

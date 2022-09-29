@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Modules\ModuleExample\Resources\Repositories;
+namespace App\Modules\Products\Resources\Repositories;
 
 use Devesharp\Patterns\Repository\RepositoryMysql;
 
 /**
- * Class ResourceExampleRepository
+ * Class EletronicsRepository
  *
  * @method public                                      Builder getModel()
- * @method App\Modules\ModuleExample\Resources\Models\ResourceExample findById($id, $enabled = true)
- * @method App\Modules\ModuleExample\Resources\Models\ResourceExample findIdOrFail($id, $enabled = true)
+ * @method App\Modules\Products\Resources\Models\Eletronics findById($id, $enabled = true)
+ * @method App\Modules\Products\Resources\Models\Eletronics findIdOrFail($id, $enabled = true)
  */
-class ResourceExampleRepository extends RepositoryMysql
+class EletronicsRepository extends RepositoryMysql
 {
     /**
      * @var string
      */
-    protected $model = \App\Modules\ModuleExample\Resources\Models\ResourceExample::class;
+    protected $model = \App\Modules\Products\Resources\Models\Eletronics::class;
 }

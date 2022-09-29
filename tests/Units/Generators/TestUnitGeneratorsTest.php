@@ -2,6 +2,7 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\TestUnitGenerator;
 use Illuminate\Support\Facades\Config;
 
@@ -18,23 +19,19 @@ class TestUnitGeneratorsTest extends TestCaseGenerator
 
     public function testNamespaceTestUnit()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'Tests\Units\ModuleMain');
+        $this->assertEquals($this->generator->getNamespace(), 'Tests\Units\Products');
     }
 
     public function testTestUnitBase2()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
+        $this->generator->setTemplateData(TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-unit-with-file.php'), $this->generator->render());
+        $this->assertTemplate('tests/test-unit-with-file.php', $this->generator->render());
     }
 
     public function testTestUnitBaseWithUserRelation()
@@ -58,12 +55,8 @@ class TestUnitGeneratorsTest extends TestCaseGenerator
             ],
         ]);
 
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
+        $this->generator->setTemplateData(TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'));
         
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/tests/test-unit-simple.php'), $this->generator->render());
+        $this->assertTemplate('tests/test-unit-with-complex-relations.php', $this->generator->render());
     }
 }

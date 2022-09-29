@@ -2,6 +2,7 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\RepositoryGenerator;
 
 class RepositoryGeneratorsTest extends TestCaseGenerator
@@ -18,21 +19,21 @@ class RepositoryGeneratorsTest extends TestCaseGenerator
 
     public function testNamespaceRepository()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Repositories');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\Products\Resources\Repositories');
     }
 
     public function testRepositoryBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/repository/repository-simple.php'), $this->generator->render());
+        $this->assertTemplate('repository/repository-simple.php', $this->generator->render());
     }
 }

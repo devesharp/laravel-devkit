@@ -2,6 +2,7 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\PresenterGenerator;
 
 class PresenterGeneratorsTest extends TestCaseGenerator
@@ -15,24 +16,24 @@ class PresenterGeneratorsTest extends TestCaseGenerator
         $this->generator = app(PresenterGenerator::class);
     }
 
-    public function testNamespacePressenter()
+    public function testNamespacePresenter()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Resources\Presenters');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\Products\Resources\Presenters');
     }
 
-    public function testPressenterBase()
+    public function testPresenterBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/presenter/presenter-simple.php'), $this->generator->render());
+        $this->assertTemplate('presenter/presenter-simple.php', $this->generator->render());
     }
 
 }

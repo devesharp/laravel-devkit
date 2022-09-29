@@ -2,22 +2,23 @@
 
 namespace Devesharp\Generators;
 
+use Devesharp\Generators\Common\TemplateGenerator;
 
-use Devesharp\Generators\Common\BaseGeneratorAbstract;
-
-class RepositoryGenerator extends BaseGeneratorAbstract
+class RepositoryGenerator extends TemplateGenerator
 {
-
     public string $resourceType = 'repository';
 
-    public function getFile(): string
+    public function getTemplateFilename(): string
     {
         return 'devesharp-generators::Repository/repository-default';
     }
 
-    public function getData()
+    function loadImports(): void {
+        $this->templateData->addImport('Devesharp\Patterns\Repository\RepositoryMysql');
+    }
+
+    public function getData(): array
     {
-        return [
-        ];
+        return [];
     }
 }

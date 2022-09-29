@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Modules\ModuleExample\Supports\Docs;
+namespace App\Modules\Products\Supports\Docs;
 
 use Devesharp\APIDocs\RoutesDocAbstract;
 use Devesharp\APIDocs\RoutesDocInfo;
 
-class ResourceExampleRouteDoc extends RoutesDocAbstract
+class EletronicsRouteDoc extends RoutesDocAbstract
 {
     public function getRouteInfo(string $name): RoutesDocInfo {
         return match ($name) {
-            "CreateResourceExample" => new RoutesDocInfo("Criar ResourceExample", "Criar ResourceExample"),
-            "UpdateResourceExample" => new RoutesDocInfo("Atualizar ResourceExample", "Atualizar ResourceExample"),
-            "SearchResourceExample" => new RoutesDocInfo("Buscar ResourceExample", "Buscar ResourceExample"),
-            "DeleteResourceExample" => new RoutesDocInfo("Deletar ResourceExample", "Deletar ResourceExample"),
+            "GetEletronics" => new RoutesDocInfo("Resgatar Eletronics", "Resgatar Eletronics"),
+            "CreateEletronics" => new RoutesDocInfo("Criar Eletronics", "Criar Eletronics"),
+            "UpdateEletronics" => new RoutesDocInfo("Atualizar Eletronics", "Atualizar Eletronics"),
+            "SearchEletronics" => new RoutesDocInfo("Buscar Eletronics", "Buscar Eletronics"),
+            "DeleteEletronics" => new RoutesDocInfo("Deletar Eletronics", "Deletar Eletronics"),
             default => new RoutesDocInfo("", ""),
         };
     }

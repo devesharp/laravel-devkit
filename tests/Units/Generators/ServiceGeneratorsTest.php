@@ -2,6 +2,7 @@
 
 namespace Tests\Units\Generators;
 
+use Devesharp\Generators\Common\TemplateData;
 use Devesharp\Generators\ServiceGenerator;
 use Illuminate\Support\Facades\Config;
 
@@ -18,22 +19,28 @@ class ServiceGeneratorsTest extends TestCaseGenerator
 
     public function testNamespaceService()
     {
-        $this->generator->setData([
-            'module' => 'ModuleMain',
-            'name' => 'ResourceExample',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\ModuleMain\Services');
+        $this->assertEquals($this->generator->getNamespace(), 'App\Modules\Products\Services');
     }
 
     public function testServiceBase()
     {
-        $this->generator->setData([
-            'module' => 'ModuleExample',
-            'name' => 'ResourceExample',
-            'file_template' => __DIR__ . '/mocks/fields.yml',
-        ]);
+        $this->generator->setTemplateData(new TemplateData(
+            moduleName: 'Products',
+            resourceName: 'Eletronics',
+        ));
 
-        $this->assertEquals(file_get_contents(__DIR__ . '/mocks/service/service-simple.php'), $this->generator->render());
+        $this->assertTemplate('service/service-simple.php', $this->generator->render());
+    }
+
+    public function testServiceBaseWithFields()
+    {
+        $this->generator->setTemplateData(TemplateData::makeByFile(__DIR__ . '/mocks/fields.yml'));
+
+        $this->assertTemplate('service/service-with-fields.php', $this->generator->render());
     }
 }

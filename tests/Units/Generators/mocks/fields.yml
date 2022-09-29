@@ -18,7 +18,10 @@ fields:
     platform_id:
         dbType: "foreign"
         relation: "mt1,Platforms,id"
-        getByUser: true
+        valueOnCreate:
+            value: 1
+        valueOnSearch:
+            getByUserKey: 1
         searchable: true
         dto: false
         description: "Platform ID"
@@ -26,11 +29,20 @@ fields:
         dbType: "foreign"
         relation: "mt1,Users,id"
         sort: true
-        getByUser: true
+        valueOnCreate:
+            getByUserKey: 'id'
+        valueOnSearch:
+            getByUserKey: 'id'
         searchable: true
         dto: false
         nullable: true
         description: "The user who created the post"
+    category_id:
+        dbType: "foreign"
+        relation: "mt1,Cartegories,id"
+        searchable: true
+        dto: true
+        description: "The category of the product"
     title:
         dbType: "string"
         rules: "required"
@@ -58,6 +70,8 @@ fields:
         sort: true
         searchable: true
         dto: false
+        valueOnCreate:
+            value: 'now'
         transformer: true
         description: "When was this post published?"
     password:
@@ -86,7 +100,8 @@ fields:
         dbType: "foreign"
         relation: "mt1,Users,id"
         rules: "required|min:1"
-        getByUser: true
+        valueOnCreate:
+            getByUserKey: 'id'
         searchable: true
         dto: false
         transformer: true

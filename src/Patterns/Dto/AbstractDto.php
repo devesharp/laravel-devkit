@@ -186,12 +186,25 @@ abstract class AbstractDto extends Collection
         foreach ($array as $key => $value) {
             if (is_string($value)) {
                 $value = str_replace('required|', '', $value);
-                $value = str_replace('|required', '', $value);
+                $value = str_replace('|required|', '|', $value);
+                $re = '/\|required$/m';
+                $value = preg_replace($re, "", $value);
                 $newArray[$key] = $value;
             } else {
-                $value->rules = str_replace('required|', '', $value->rules);
-                $value->rules = str_replace('|required', '', $value->rules);
-                $newArray[$key] = $value;
+                if (is_string($value->rules)) {
+                    $value->rules = str_replace('required|', '', $value->rules);
+                    $value->rules = str_replace('|required|', '|', $value->rules);
+                    $re = '/\|required$/m';
+                    $value->rules = preg_replace($re, "", $value->rules);
+                    $newArray[$key] = $value;
+                } else {
+                    $rule = $value;
+                    if (array_search('required', $rule) !== false) {
+                        unset($rule[array_search('required', $rule)]);
+                    }
+                    $newArray[$key] = array_values($rule);
+                }
+
             }
         }
 

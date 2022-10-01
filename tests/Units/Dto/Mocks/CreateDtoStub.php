@@ -10,9 +10,9 @@ class CreateDtoStub extends AbstractDto
     protected function configureValidatorRules(): array
     {
         return [
-            'name' => new Rule('string|max:100|required', 'Nome'),
+            'name' => new Rule('string|required|max:100|required', 'Nome'),
             'age' => new Rule('numeric|required', 'Idade'),
-            'active' => new Rule('boolean', 'Ativo' ),
+            'active' => new Rule('boolean|required_if:name,==,1', 'Ativo' ),
         ];
     }
 }

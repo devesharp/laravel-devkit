@@ -43,6 +43,11 @@ class TemplateData extends DataTransferObject
     public string $tableName = "";
 
     /**
+     * @var string hora atual Y_m_d_His para criar o nome do arquivo migration
+     */
+    public string $now = "";
+
+    /**
      * Se o recurso já existe ou se está sendo criado junto
      */
     public bool $withController = false;
@@ -168,7 +173,7 @@ class TemplateData extends DataTransferObject
 
         $string = Blade::render($string, $this->toArray());
         foreach ($this->imports as $import) {
-            if (Str::contains($import, $string)) {
+            if ($import == $string) {
                 return;
             }
         }

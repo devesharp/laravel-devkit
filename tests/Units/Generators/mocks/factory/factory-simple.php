@@ -32,9 +32,11 @@ class EletronicsFactory extends Factory
     *
     * @return array
     */
-    public function bodyForRequest(): array
+    public function bodyForRequest()
     {
-        return [
-        ];
+        return $this->state(function (array $attributes) {
+            return [
+            ];
+        });
     }
 }

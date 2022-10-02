@@ -400,12 +400,12 @@ class FileTemplateManager
 
         foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
             if (!empty($field['relation'])) {
-                $typeRelation = explode(",", $field['relation'])[0];
+                $typeRelation = $field['relation']['type'];
 
-                $tableForeign = explode(",", $field['relation'])[1];
+                $tableForeign = $field['relation']['resource'];
                 $singularRelation = Str::camel(Str::singular($tableForeign));
                 $pluralRelation = Str::camel(Str::plural($tableForeign));
-                $primaryKeyName = explode(",", $field['relation'])[2];
+                $primaryKeyName = $field['relation']['key'];
 
                 if (str_replace('_id', '', $key) != $singularRelation && substr($key, -2) != "Id") {
                     $singularRelation .= Str::studly($key);
@@ -474,38 +474,17 @@ class FileTemplateManager
 
         foreach ($this->fileModuleGenerator['fields'] as $key => $field) {
             if (!empty($field['relation'])) {
-                $typeRelation = explode(",", $field['relation'])[0];
-                $tableForeign = explode(",", $field['relation'])[1];
+                $typeRelation = $field['relation']['type'];
+                $tableForeign = $field['relation']['resource'];
                 $singularRelation = Str::camel(Str::singular($tableForeign));
                 $pluralRelation = Str::camel(Str::plural($tableForeign));
-                $primaryKeyName = explode(",", $field['relation'])[2];
+                $primaryKeyName = $field['relation']['key'];
 
-                $relationsConfig = config('devesharp_generator.relations', []);
+                $relationsConfig = config('devesharp_dev_kit.relations', []);
                 $usedUserRelation = $tableForeign == 'Users';
                 $namespaceModel = $config->getNamespace('model');
                 $namespaceModel = str_replace('{{ModuleName}}', $tableForeign, $namespaceModel);
-//                var_dump($namespaceModel);
 
-                /**
-                 *
-                 *
-                 *
-                 * ALBERTO CONTINUAR
-                 * ESTÁ FICANDO DIFICIL DE FAZER ISSO SEM TER UMA UNIFICAÇÃO
-                 * POR EXEMPLO IMPORTAÇÃO,
-                 * alguns geradores precisam de importações iguais, então seria interessante
-                 * poder adicionar uma importação global, e depois adicionar as importações
-                 * assim podeser ver se existe alguma importação repetido
-                 *
-                 * adicionar no arquivo de configuração gerador
-                 * nome do modulo
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
                 foreach ($relationsConfig as $relation) {
                     foreach ($relation as $item) {
                         if ($item['resource'] == $tableForeign) {
@@ -532,8 +511,6 @@ class FileTemplateManager
             }
 
         }
-
-        var_dump($relations);
 
         return $relations;
     }
@@ -622,8 +599,8 @@ class FileTemplateManager
             $fields[] = $migrationField;
 
             if (Str::contains($field['dbType'], 'foreign')) {
-                $foreignTable = Str::snake(trim(explode(",", $field['relation'])[1]));
-                $foreignField = explode(",", $field['relation'])[2] ?? 'id';
+                $foreignTable = Str::snake(trim($field['relation']['resource']));
+                $foreignField = $field['relation']['key'] ?? 'id';
 
                 $foreignKeys[] = "\$table->foreign('".$key."')->references('".$foreignField."')->on('".$foreignTable."');";
             }

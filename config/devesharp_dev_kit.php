@@ -40,33 +40,6 @@ return [
         'testUnit' => base_path('tests/Units/{{ModuleName}}'),
         'api_routes' => base_path('routes/api.php'),
     ],
-//    "relations" => [
-//        "Users" => [
-//            "platform_id" => [
-//                "resource" => "Platforms",
-//                "field" => "id",
-//            ],
-//            "type_id" => [
-//                "resource" => "UsersTypes",
-//                "field" => "id",
-//            ],
-//        ],
-//        "Platforms" => [
-//            "system_id" => [
-//                "resource" => "System",
-//                "field" => "id",
-//            ]
-//        ],
-//    ],
-    'commands' => [
-        'group_by_name' => true, // Agrupar arquivos por nome
-        'snippets' => [
-            'unit-tests' => [
-                'header-test' => '$userAdmin = Users::factory()->create();',
-                'header-namespaces' => 'use \App\Modules\ModuleName\Models\ServiceName;'
-            ]
-        ]
-    ],
     'APIDocs' => [
         'version' => "1.0",
         'name' => "API " . env('name'),

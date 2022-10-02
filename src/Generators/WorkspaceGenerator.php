@@ -33,14 +33,22 @@ class WorkspaceGenerator
             $modules[] = $moduleData;
         }
 
+        $now = date('Y_m_d_Hi');
+        $seconds = date('s');
+
         foreach ($modules as $module) {
             /** @var ModuleGenerator $moduleGenerator */
             $moduleGenerator = app(ModuleGenerator::class);
-            $moduleGenerator->setTemplateData(TemplateData::makeByFile($module['file_template']));
+            $templateData = TemplateData::makeByFile($module['file_template']);
+            // Como os migrations são criados muito rápido, é necessário adicionar um segundo para que o nome do arquivo seja único
+            $templateData->now = $now . $seconds;
+            $seconds++;
+
+            $moduleGenerator->setTemplateData($templateData);
             $moduleGenerator->generate('all');
         }
 
-        var_dump(app(FileSystem::class)->getFiles());
+//        var_dump(app(FileSystem::class)->getFiles());
 //            /** @var ModuleGenerator $moduleGenerator */
 //            $moduleGenerator = app(ModuleGenerator::class);
 //            $moduleGenerator->setData([

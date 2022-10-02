@@ -6,7 +6,7 @@ use \Illuminate\Support\Carbon;
 use App\Modules\Platforms\Resources\Models\Platforms;
 use App\Modules\Users\Resources\Models\Users;
 use App\Modules\Cartegories\Resources\Models\Cartegories;
-use App\Modules\Products\Supports\DocsEletronicsRouteDoc;
+use App\Modules\Products\Supports\Docs\EletronicsRouteDoc;
 use App\Modules\Products\Dtos\CreateEletronicsDto;
 use App\Modules\Products\Dtos\SearchEletronicsDto;
 use App\Modules\Products\Dtos\UpdateEletronicsDto;
@@ -88,6 +88,7 @@ class EletronicsRouteTest extends TestCase
             'platform_id' => $platforms->id,
             'type_id' => $usersTypes->id,
         ])->create();
+        $user->access_token = JWTAuth::fromUser($user);
 
         $cartegory = Cartegories::factory()->create();
         $resource = Eletronics::factory([
@@ -151,7 +152,14 @@ class EletronicsRouteTest extends TestCase
             'type_id' => $usersTypes->id,
         ])->create();
         $user->access_token = JWTAuth::fromUser($user);
-        $resource = Eletronics::factory()->create();
+
+        $cartegory = Cartegories::factory()->create();
+        $resource = Eletronics::factory([
+            'platform_id' => $platform->id,
+            'user_id' => $user->id,
+            'category_id' => $cartegory->id,
+            'created_by' => $user->id,
+        ])->create();
 
         /*
         |--------------------------------------------------------------------------
@@ -199,7 +207,14 @@ class EletronicsRouteTest extends TestCase
             'type_id' => $usersTypes->id,
         ])->create();
         $user->access_token = JWTAuth::fromUser($user);
-        Eletronics::factory()->count(3)->create();
+
+        $cartegory = Cartegories::factory()->create();
+        $resource = Eletronics::factory([
+            'platform_id' => $platform->id,
+            'user_id' => $user->id,
+            'category_id' => $cartegory->id,
+            'created_by' => $user->id,
+        ])->count(5)->create();
 
         /*
         |--------------------------------------------------------------------------
@@ -240,9 +255,14 @@ class EletronicsRouteTest extends TestCase
             'platform_id' => $platforms->id,
             'type_id' => $usersTypes->id,
         ])->create();
-        $user->access_token = JWTAuth::fromUser($user);
 
-        $resource = Eletronics::factory()->create();
+        $cartegory = Cartegories::factory()->create();
+        $resource = Eletronics::factory([
+            'platform_id' => $platform->id,
+            'user_id' => $user->id,
+            'category_id' => $cartegory->id,
+            'created_by' => $user->id,
+        ])->create();
 
         /*
         |--------------------------------------------------------------------------

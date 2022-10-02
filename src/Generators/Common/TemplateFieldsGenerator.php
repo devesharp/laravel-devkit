@@ -17,6 +17,7 @@ class TemplateFieldsGenerator
 
             $rules = [];
             switch (strtolower($field['dbType'])) {
+                case 'foreign':
                 case 'integer':
                 case 'unsignedinteger':
                 case 'smallinteger':
@@ -439,12 +440,12 @@ class TemplateFieldsGenerator
 
         foreach ($templateData->fieldsRaw as $key => $field) {
             if (!empty($field['relation'])) {
-                $typeRelation = explode(",", $field['relation'])[0];
+                $typeRelation = $field['relation']['type'];
 
-                $tableForeign = explode(",", $field['relation'])[1];
+                $tableForeign = $field['relation']['resource'];
                 $singularRelation = Str::camel(Str::singular($tableForeign));
                 $pluralRelation = Str::camel(Str::plural($tableForeign));
-                $primaryKeyName = explode(",", $field['relation'])[2];
+                $primaryKeyName = $field['relation']['key'];
 
                 if (str_replace('_id', '', $key) != $singularRelation && substr($key, -2) != "Id") {
                     $singularRelation .= Str::studly($key);
@@ -513,16 +514,17 @@ class TemplateFieldsGenerator
 
         foreach ($templateData->fieldsRaw as $key => $field) {
             if (!empty($field['relation'])) {
-                $typeRelation = explode(",", $field['relation'])[0];
-                $tableForeign = explode(",", $field['relation'])[1];
+                $typeRelation = $field['relation']['type'];
+                $tableForeign = $field['relation']['resource'];
+                $moduleTableForeign = $field['relation']['module'] ?? $field['relation']['resource'];
                 $singularRelation = Str::camel(Str::singular($tableForeign));
                 $pluralRelation = Str::camel(Str::plural($tableForeign));
-                $primaryKeyName = explode(",", $field['relation'])[2];
+                $primaryKeyName = $field['relation']['key'];
 
-                $relationsConfig = config('devesharp_generator.relations', []);
+                $relationsConfig = config('devesharp_dev_kit.relations', []);
                 $usedUserRelation = $tableForeign == 'Users';
                 $namespaceModel = $config->getNamespace('model');
-                $namespaceModel = str_replace('{{ModuleName}}', $tableForeign, $namespaceModel);
+                $namespaceModel = str_replace('{{ModuleName}}', $moduleTableForeign, $namespaceModel);
 
                 foreach ($relationsConfig as $relation) {
                     foreach ($relation as $item) {
@@ -665,8 +667,8 @@ class TemplateFieldsGenerator
 
         foreach ($templateData->fieldsRaw as $key => $field) {
             if (Str::contains($field['dbType'], 'foreign')) {
-                $foreignTable = Str::snake(trim(explode(",", $field['relation'])[1]));
-                $foreignField = explode(",", $field['relation'])[2] ?? 'id';
+                $foreignTable = Str::snake(trim($field['relation']['resource']));
+                $foreignField = $field['relation']['key'] ?? 'id';
 
                 $foreignKeys[] = "\$table->foreign('".$key."')->references('".$foreignField."')->on('".$foreignTable."');";
             }

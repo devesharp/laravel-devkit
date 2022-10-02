@@ -3,6 +3,9 @@
 namespace App\Modules\Products\Resources\Models;
 
 use \Illuminate\Support\Carbon;
+use App\Modules\Platforms\Resources\Models\Platforms;
+use App\Modules\Users\Resources\Models\Users;
+use App\Modules\Cartegories\Resources\Models\Cartegories;
 use Devesharp\Support\ModelGetTable;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Products\Resources\Presenters\EletronicsPresenter;
@@ -17,6 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $enabled
  * @property string $platform_id
  * @property string $user_id
+ * @property string $category_id
  * @property string $title
  * @property string $body
  * @property bool $is_featured
@@ -63,6 +67,10 @@ class Eletronics extends Model
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\Products\Resources\Models\Users {
         return $this->belongsTo(\App\Modules\Products\Resources\Models\Users::class, 'user_id', 'id');
+    }
+
+    public function cartegoryCategoryId(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\Products\Resources\Models\Cartegories {
+        return $this->belongsTo(\App\Modules\Products\Resources\Models\Cartegories::class, 'category_id', 'id');
     }
 
     public function userCreatedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Modules\Products\Resources\Models\Users {

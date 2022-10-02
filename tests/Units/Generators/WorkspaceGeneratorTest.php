@@ -38,7 +38,7 @@ class WorkspaceGeneratorTest extends TestCaseGenerator
 
         $dirMock = __DIR__ . '/mocks/modules/with-fields/';
         $prefix = '';
-        Config::set('devesharp_generator.path', [
+        Config::set('devesharp_dev_kit.path', [
             'controller' => $prefix . 'app/Modules/{{ModuleName}}/Controllers',
             'dto' => $prefix . 'app/Modules/{{ModuleName}}/Dtos',
             'service' => $prefix . 'app/Modules/{{ModuleName}}/Services',

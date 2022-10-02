@@ -3,6 +3,9 @@
 namespace App\Modules\Products\Services;
 
 use \Illuminate\Support\Carbon;
+use App\Modules\Platforms\Resources\Models\Platforms;
+use App\Modules\Users\Resources\Models\Users;
+use App\Modules\Cartegories\Resources\Models\Cartegories;
 use Devesharp\Patterns\Service\Service;
 use Devesharp\Patterns\Service\ServiceFilterEnum;
 use Devesharp\Patterns\Transformer\Transformer;
@@ -68,6 +71,10 @@ class EletronicsService extends Service
         ],
         'user_id' => [
             'column' => 'eletronics.user_id',
+            'filter' => ServiceFilterEnum::whereEqual,
+        ],
+        'category_id' => [
+            'column' => 'eletronics.category_id',
             'filter' => ServiceFilterEnum::whereEqual,
         ],
         'title' => [

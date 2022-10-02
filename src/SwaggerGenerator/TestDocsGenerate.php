@@ -7,6 +7,7 @@ use Devesharp\Patterns\Validator\ValidatorAPIGenerator;
 use Devesharp\SwaggerGenerator\Utils\Ref;
 use Devesharp\SwaggerGenerator\Utils\Route;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class TestDocsGenerate
 {
@@ -171,6 +172,10 @@ class TestDocsGenerate
          */
         foreach ($this->route->parameters as $parameter) {
             if ($parameter['in'] == 'path') {
+                if (!Str::contains($path, ':' . $parameter['name'])) {
+                    throw new \Exception( 'Path :' . $parameter['name'] . ' não usado na URI ' . $this->route->path);
+                }
+
                 $path = str_replace(':' . $parameter['name'], $parameter['example'], $path);
                 $pathFixed = str_replace(':' . $parameter['name'], '{' . $parameter['name'] . '}', $pathFixed);
             }else if ($parameter['in'] == 'query') {

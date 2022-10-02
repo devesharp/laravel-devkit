@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Modules\Posts\Dtos;
+namespace App\Modules\Products\Dtos;
 
+use \Illuminate\Support\Carbon;
+use App\Modules\Platforms\Resources\Models\Platforms;
+use App\Modules\Users\Resources\Models\Users;
+use App\Modules\Cartegories\Resources\Models\Cartegories;
 use Devesharp\Patterns\Dto\AbstractDto;
 use Devesharp\Patterns\Dto\Rule;
 use Devesharp\Patterns\Dto\Templates\SearchTemplateDto;
 
-class SearchPostsDto extends AbstractDto
+class SearchEletronicsDto extends AbstractDto
 {
     protected function configureValidatorRules(): array
     {
@@ -16,6 +20,7 @@ class SearchPostsDto extends AbstractDto
             'filters.id' => new Rule('numeric_string', 'The ID of the post'),
             'filters.platform_id' => new Rule('string', 'Platform ID'),
             'filters.user_id' => new Rule('string', 'The user who created the post'),
+            'filters.category_id' => new Rule('string', 'The category of the product'),
             'filters.title' => new Rule('string', 'The title of the post'),
             'filters.body' => new Rule('string', 'The body of the post'),
             'filters.is_featured' => new Rule('bool', 'Is this post featured?'),

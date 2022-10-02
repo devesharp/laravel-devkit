@@ -17,7 +17,7 @@ class TestRouteGenerator extends TemplateGenerator
     }
 
     function loadImports(): void {
-        $this->templateData->addImport('{{ $routeDocsNamespace }}{{ $resourceName }}RouteDoc');
+        $this->templateData->addImport('{{ $routeDocsNamespace }}\{{ $resourceName }}RouteDoc');
         $this->templateData->addImport('{{ $dtoNamespace }}\Create{{ $resourceName }}Dto');
         $this->templateData->addImport('{{ $dtoNamespace }}\Search{{ $resourceName }}Dto');
         $this->templateData->addImport('{{ $dtoNamespace }}\Update{{ $resourceName }}Dto');
@@ -30,7 +30,7 @@ class TestRouteGenerator extends TemplateGenerator
 
     public function getData(): array
     {
-        $relations = config('devesharp_generator.relations', []);
+        $relations = config('devesharp_dev_kit.relations', []);
         $userVariable = 'user';
         $headerFnTest = '';
         $useNamespace = '';

@@ -140,6 +140,7 @@ abstract class TemplateGenerator
         $templateData->resourceURI = Str::slug(Str::snake($data['routeName'] ?? $this->resourceName));
         $templateData->tableName = Str::snake(trim($this->resourceName));
         $templateData->resourceGramaticalName = !empty($templateData->resourceGramaticalName) ? $templateData->resourceGramaticalName : $this->resourceName;
+        $templateData->now = empty($templateData->now) ? date('Y_m_d_His') : $templateData->now;
 
 //        $templateData->resourceNameForDocs = $this->resourceName;
 

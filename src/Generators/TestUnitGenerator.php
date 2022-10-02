@@ -29,7 +29,7 @@ class TestUnitGenerator extends TemplateGenerator
 
     public function getData(): array
     {
-        $relations = config('devesharp_generator.relations', []);
+        $relations = config('devesharp_dev_kit.relations', []);
         $userVariable = 'user';
         $headerFnTest = '';
         $useNamespace = '';

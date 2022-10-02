@@ -7,7 +7,7 @@ class {{ $resourceName }}RouteTest extends TestCase
      */
     public function testRoute{{ $resourceName }}Create()
     {
-        @include('devesharp-generators::Tests/commons.header-test', ['userToken' => true])
+        @include('devesharp-generators::Tests/commons.header-test', ['user_token' => true])
 
         /*
         |--------------------------------------------------------------------------

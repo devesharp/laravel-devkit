@@ -21,9 +21,9 @@ class GeneratorsProvider extends ServiceProvider
             return new \Devesharp\Generators\Common\FileSystem();
         });
 
-        $path = realpath(__DIR__ . '/../../../config/devesharp_generator.php');
-        $this->publishes([$path => config_path('devesharp_generator.php')], 'devesharp-laravel-devit-config');
-        $this->mergeConfigFrom($path, 'devesharp_generator');
+        $path = realpath(__DIR__ . '/../../../config/devesharp_dev_kit.php');
+        $this->publishes([$path => config_path('devesharp_dev_kit.php')], 'devesharp-laravel-devit-config');
+        $this->mergeConfigFrom($path, 'devesharp_dev_kit');
 
         /**
          * Register makes

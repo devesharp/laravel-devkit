@@ -4,23 +4,23 @@ namespace App\Modules\Products\Policies;
 
 class EletronicsPolicy
 {
-    function create($request) {
+    function create($requester) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function update($request, $model) {
+    function update($requester, $model) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function get($request, $model) {
+    function get($requester, $model) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function search($request) {
+    function search($requester) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 
-    function delete($request, $model) {
+    function delete($requester, $model) {
         // \App\Exceptions\Exception::Unauthorized();
     }
 }

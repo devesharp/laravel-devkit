@@ -45,7 +45,7 @@ abstract class TestCase extends Orchestra
             $table->timestampsTz();
         });
 
-        Config::set('devesharp_generator.namespace', [
+        Config::set('devesharp_dev_kit.namespace', [
             'controller' => 'App\Modules\{{ModuleName}}\Resources\Controllers',
             'dto' => 'App\Modules\{{ModuleName}}\Dtos',
             'service' => 'App\Modules\{{ModuleName}}\Services',

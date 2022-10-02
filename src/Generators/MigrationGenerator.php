@@ -12,7 +12,7 @@ class MigrationGenerator extends TemplateGenerator
 
     public function getFileName(): string
     {
-        return date('Y_m_d_His') . '_create_' . $this->templateData->tableName . '_table.php';
+        return $this->templateData->now . '_create_' . $this->templateData->tableName . '_table.php';
     }
 
     public function getTemplateFilename(): string

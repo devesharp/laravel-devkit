@@ -3,6 +3,7 @@
 namespace Tests\Units\Generators;
 
 use Devesharp\Generators\Common\FileSystem;
+use Devesharp\Generators\Common\FileTemplateManager;
 use Devesharp\Generators\Common\GeneratorConfig;
 use Devesharp\Generators\MigrationGenerator;
 use Devesharp\Generators\ModuleGenerator;
@@ -20,7 +21,7 @@ class ModuleTest extends TestCaseGenerator
 
         $this->fileSystem = app(FileSystem::class);
 
-        $mock = \Mockery::mock(MigrationGenerator::class, [new GeneratorConfig(),$this->fileSystem])->makePartial();
+        $mock = \Mockery::mock(MigrationGenerator::class, [new GeneratorConfig(), $this->fileSystem, new FileTemplateManager()])->makePartial();
         $mock->shouldReceive('getFileName')->andReturn('create_service_table.php');
         $this->instance(MigrationGenerator::class, $mock);
 
@@ -32,7 +33,7 @@ class ModuleTest extends TestCaseGenerator
      */
     public function testTransformerBase()
     {
-        $this->generator->setData([
+        $this->generator->setTemplateData([
             'module' => 'Example',
             'name' => 'Example',
             'withController' => true,
@@ -52,7 +53,7 @@ class ModuleTest extends TestCaseGenerator
 
         $dirMock = __DIR__ . '/mocks/modules/basic/';
         $prefix = '';
-        Config::set('devesharp_generator.path', [
+        Config::set('devesharp_dev_kit.path', [
             'controller' => $prefix . 'app/Modules/{{ModuleName}}/Controllers',
             'dto' => $prefix . 'app/Modules/{{ModuleName}}/Dtos',
             'service' => $prefix . 'app/Modules/{{ModuleName}}/Services',
@@ -82,7 +83,7 @@ class ModuleTest extends TestCaseGenerator
      */
     public function testTransformerBaseWithFile()
     {
-        $this->generator->setData([
+        $this->generator->setTemplateData([
             'module' => 'Example',
             'name' => 'Example',
             'file_template' => __DIR__ . '/mocks/fields.yml',
@@ -104,7 +105,7 @@ class ModuleTest extends TestCaseGenerator
 
         $dirMock = __DIR__ . '/mocks/modules/with-fields/';
         $prefix = '';
-        Config::set('devesharp_generator.path', [
+        Config::set('devesharp_dev_kit.path', [
             'controller' => $prefix . 'app/Modules/{{ModuleName}}/Controllers',
             'dto' => $prefix . 'app/Modules/{{ModuleName}}/Dtos',
             'service' => $prefix . 'app/Modules/{{ModuleName}}/Services',

@@ -6,7 +6,6 @@ use \Illuminate\Support\Carbon;
 use App\Modules\Platforms\Resources\Models\Platforms;
 use App\Modules\Users\Resources\Models\Users;
 use App\Modules\Cartegories\Resources\Models\Cartegories;
-use App\Modules\Products\Supports\Docs\EletronicsRouteDoc;
 use App\Modules\Products\Dtos\CreateEletronicsDto;
 use App\Modules\Products\Dtos\SearchEletronicsDto;
 use App\Modules\Products\Dtos\UpdateEletronicsDto;
@@ -48,7 +47,7 @@ class EletronicsUnitTest extends TestCase
             'user_id' => $user->id,
             'category_id' => $cartegory->id,
             'created_by' => $user->id,
-        ])->bodyForRequest();
+        ])->bodyForRequest()->raw();
 
         /*
         |--------------------------------------------------------------------------
@@ -107,7 +106,7 @@ class EletronicsUnitTest extends TestCase
                 'user_id' => $user->id,
                 'category_id' => $cartegory->id,
                 'created_by' => $user->id,
-        ])->bodyForRequest();
+        ])->bodyForRequest()->raw();
 
         /*
         |--------------------------------------------------------------------------

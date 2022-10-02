@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('enabled')->default('1');
             $table->unsignedBigInteger('platform_id');
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('category_id');
             $table->string('title');
             $table->text('body');
             $table->boolean('is_featured');
@@ -31,6 +32,7 @@ return new class extends Migration
 
             $table->foreign('platform_id')->references('id')->on('platforms');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('category_id')->references('id')->on('cartegories');
             $table->foreign('created_by')->references('id')->on('users');
         });
     }

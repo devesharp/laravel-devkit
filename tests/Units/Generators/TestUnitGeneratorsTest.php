@@ -36,7 +36,7 @@ class TestUnitGeneratorsTest extends TestCaseGenerator
 
     public function testTestUnitBaseWithUserRelation()
     {
-        Config::set('devesharp_generator.relations', [
+        Config::set('devesharp_dev_kit.relations', [
             "Users" => [
                 "platform_id" => [
                     "resource" => "Platforms",

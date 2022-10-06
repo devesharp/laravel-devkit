@@ -1,5 +1,5 @@
 {
-    "name": "devesharp/pattern",
+    "name": "devesharp/laravel-devkit",
     "autoload": {
         "psr-4": {
             "Devesharp\\": "src/"

@@ -3,6 +3,7 @@
 namespace Devesharp\Generators;
 
 use Devesharp\Generators\Common\FileSystem;
+use Devesharp\Generators\Common\TemplateData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use MichaelRubel\Formatters\Commands\MakeFormatterCommand;
@@ -37,6 +38,7 @@ class MakeAll extends Command
     protected function getOptions()
     {
         return [
+            ['all', 'all', InputOption::VALUE_OPTIONAL, 'All layers'],
             ['fieldsFile', null, InputOption::VALUE_OPTIONAL, 'Fields input as json file'],
 //            ['skip', null, InputOption::VALUE_OPTIONAL, 'Skip Specific Items to Generate ()'],
         ];
@@ -46,26 +48,37 @@ class MakeAll extends Command
     {
         $type = $this->argument('type');
 
-        $data = [
-            'module' => $this->argument('module'),
-            'name' => $this->argument('name') ?? $this->argument('module'),
-            'file_template' => $this->option('fieldsFile') ? base_path($this->option('fieldsFile')) :  '',
-            'withController' => $type == 'all' || $type == 'controller',
-            'withDto' => $type == 'all' || $type == 'dto',
-            'withService' => $type == 'all' || $type == 'service',
-            'withFactory' => $type == 'all' || $type == 'factory',
-            'withModel' => $type == 'all' || $type == 'model',
-            'withPolicy' => $type == 'all' || $type == 'policy',
-            'withPresenter' => $type == 'all' || $type == 'presenter',
-            'withRepository' => $type == 'all' || $type == 'repository',
-            'withRouteDocs' => $type == 'all' || $type == 'route-docs',
-            'withTransformerInterface' => $type == 'all' || $type == 'transformer-interface',
-            'withTransformer' => $type == 'all' || $type == 'transformer',
-            'withTestRoute' => $type == 'all' || $type == 'test-route',
-            'withTestUnit' => $type == 'all' || $type == 'test-unit',
-        ];
+        $data = null;
+        if (!empty($this->option('fieldsFile'))) {
+            $templateData = TemplateData::makeByFile($this->option('fieldsFile'));
+            if (empty($templateData->moduleName)) {
+                $templateData->moduleName = $this->argument('module');
+                $templateData->resourceName = $this->argument('name') ?? $this->argument('module');
+            }
+        } else {
+            $templateData = new TemplateData(
+                moduleName: $this->argument('module'),
+                resourceName: $this->argument('name') ?? $this->argument('module'),
+                withController: $this->option('all') || $this->confirm('Create Controller?'),
+                withDto: $this->option('all') || $this->confirm('Create Dto?'),
+                withFactory: $this->option('all') || $this->confirm('Create Factory?'),
+                withMigration: $this->option('all') || $this->confirm('Create Migration?'),
+                withModel: $this->option('all') || $this->confirm('Create Model?'),
+                withPolicy: $this->option('all') || $this->confirm('Create Policy?'),
+                withPresenter: $this->option('all') || $this->confirm('Create Presenter?'),
+                withRepository: $this->option('all') || $this->confirm('Create Repository?'),
+                withRouteDocs: $this->option('all') || $this->confirm('Create Route Docs?'),
+                withService: $this->option('all') || $this->confirm('Create Service?'),
+                withTransformer: $this->option('all') || $this->confirm('Create Transformer?'),
+                withTransformerInterface: $this->option('all') || $this->confirm('Create Transformer Interface?'),
+                withTestUnit: $this->option('all') || $this->confirm('Create Test Unit?'),
+                withTestRoute: $this->option('all') || $this->confirm('Create Test Route?'),
+            );
+        }
 
-        $this->generate($type, $data);
+        $moduleGenerator = app(ModuleGenerator::class);
+        $moduleGenerator->setTemplateData($templateData);
+        $moduleGenerator->generate($type);
 
         app(FileSystem::class)->render();
 

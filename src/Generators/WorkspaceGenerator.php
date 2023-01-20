@@ -5,6 +5,7 @@ namespace Devesharp\Generators;
 use Devesharp\Generators\Common\BaseGeneratorAbstract;
 use Devesharp\Generators\Common\FileSystem;
 use Devesharp\Generators\Common\TemplateData;
+use Devesharp\Generators\Common\TemplateGenerator;
 
 class WorkspaceGenerator
 {
@@ -44,6 +45,7 @@ class WorkspaceGenerator
             $templateData->now = $now . $seconds;
             $seconds++;
 
+            TemplateGenerator::$replace = !empty($module['replace']);
             $moduleGenerator->setTemplateData($templateData);
             $moduleGenerator->generate('all');
         }

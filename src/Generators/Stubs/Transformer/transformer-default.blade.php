@@ -23,7 +23,9 @@ class {{ $resourceName }}Transformer extends Transformer
 
         $transform = [];
 @foreach($fieldsTransformer as $field)
-@if($field['type'] == "float")
+@if($field['type'] == "number")
+        $transform['{{$field['name']}}'] = (int) $model->{{$field['name']}};
+@elseif($field['type'] == "float")
         $transform['{{$field['name']}}'] = (float) $model->{{$field['name']}};
 @elseif($field['type'] == "bool")
         $transform['{{$field['name']}}'] = (bool) $model->{{$field['name']}};

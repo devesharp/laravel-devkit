@@ -36,6 +36,7 @@ class GeneratorConfig
     public string $testRoutePath = "";
     public string $testUnitPath = "";
     public string $apiRoutesPath = "";
+    public string $permissionsPath = "";
 
     public string $controllerSuffix = "";
     public string $dtoSuffix = "";
@@ -98,6 +99,7 @@ class GeneratorConfig
         $this->testRoutePath = config('devesharp_dev_kit.path.testRoute', base_path('tests/Routes/{{ModuleName}}'));
         $this->testUnitPath = config('devesharp_dev_kit.path.testUnit', base_path('tests/Units/{{ModuleName}}'));
         $this->apiRoutesPath = config('devesharp_dev_kit.path.api_routes', base_path('api/api.php'));
+        $this->permissionsPath = config('devesharp_dev_kit.path.permissions', base_path('app/Modules/Users/Interfaces/UsersPermissions.php'));
 
         $this->controllerPrefix = config('devesharp_dev_kit.prefix.controller', '');
         $this->dtoPrefix = config('devesharp_dev_kit.prefix.dto', '');
@@ -124,7 +126,7 @@ class GeneratorConfig
         $this->repositorySuffix = config('devesharp_dev_kit.prefix.repository', 'Repository');
         $this->routeDocsSuffix = config('devesharp_dev_kit.prefix.routeDocs', 'RouteDocs');
         $this->transformerInterfaceSuffix = config('devesharp_dev_kit.prefix.transformerInterface', 'TransformerType');
-        $this->transformerSuffix = config('devesharp_dev_kit.prefix.transformer', 'transformer');
+        $this->transformerSuffix = config('devesharp_dev_kit.prefix.transformer', 'Transformer');
         $this->migrationSuffix = config('devesharp_dev_kit.prefix.migration', '');
         $this->testRouteSuffix = config('devesharp_dev_kit.prefix.testRoute', 'RouteTest');
         $this->testUnitSuffix = config('devesharp_dev_kit.prefix.testUnit', 'UnitTest');

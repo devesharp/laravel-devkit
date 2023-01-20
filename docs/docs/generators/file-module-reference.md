@@ -6,6 +6,138 @@ sidebar_position: 1
 
 Esses tópicos descrevem a versão 3 do formato de arquivo do Compose. Esta é a versão mais recente.
 
+## All Values
+```yml
+fields:
+    user_id_created:
+      dbType: "integer"
+      valueOnCreate:
+        getByUser: 'id'
+      rules: "required|min:3"
+      searchable: true
+      sort: true
+      dto: true
+      transformer: true
+      nullable: true
+      description: true
+      default: 1
+      valueOnSearch:
+        getByUser: 'id'
+```
+
+```yml
+name: Posts
+module: Posts
+components:
+    withController: true
+    withDto: true
+    withService: true
+    withFactory: true
+    withModel: true
+    withPolicy: true
+    withPresenter: true
+    withRepository: true
+    withRouteDocs: true
+    withTransformerInterface: true
+    withTransformer: true
+    withTestRoute: true
+    withTestUnit: true
+fields:
+    user_id_created:
+      dbType: 
+          - id 
+          - integer 
+          - bigint 
+          - string 
+          - text 
+          - boolean 
+          - date
+          - bigInteger
+          - timestamp
+          - increments
+          - integerIncrements
+          - tinyIncrements
+          - smallIncrements
+          - mediumIncrements
+          - bigIncrements
+          - char
+          - tinyText
+          - text
+          - mediumText
+          - longText
+          - tinyInteger
+          - smallInteger
+          - mediumInteger
+          - unsignedInteger
+          - unsignedTinyInteger
+          - unsignedSmallInteger
+          - unsignedMediumInteger
+          - unsignedBigInteger
+          - foreignId
+          - foreignIdFor
+          - float
+          - double
+          - decimal
+          - unsignedFloat
+          - unsignedDouble
+          - unsignedDecimal
+          - boolean
+          - enum
+          - set
+          - json
+          - jsonb
+          - date
+          - dateTime
+          - dateTimeTz
+          - time
+          - timeTz
+          - timestamp
+          - timestampTz
+          - timestamps
+          - nullableTimestamps
+          - timestampsTz
+          - softDeletes
+          - softDeletesTz
+          - year
+          - binary
+          - uuid
+          - foreignUuid
+          - ipAddress
+          - macAddress
+          - geometry
+          - point
+          - lineString
+          - polygon
+          - geometryCollection
+          - multiPoint
+          - multiLineString
+          - multiPolygon
+          - multiPolygonZ
+          - computed
+      relation:
+        type:
+          - 1t1
+          - 1tm
+          - mt1
+          - mtm
+          - hmt
+        resource: Users
+        key: id
+      valueOnCreate:
+        getByUser: 'id'
+      rules: "required|min:3"
+      searchable: true
+      sort: true
+      dto: true
+      transformer: true
+      nullable: true
+      description: true
+      default: 1
+      valueOnSearch:
+        getByUser: 'id'
+```
+
+
 ## module
 Nome do grupo do módulo (Normalmente o mesmo que o `nome do módulo`)
 

@@ -17,12 +17,13 @@ class TestRouteGenerator extends TemplateGenerator
     }
 
     function loadImports(): void {
-        $this->templateData->addImport('{{ $routeDocsNamespace }}\{{ $resourceName }}RouteDoc');
+        $this->templateData->addImport('{{ $routeDocsNamespace }}\{{ $resourceName }}RouteDocs');
         $this->templateData->addImport('{{ $dtoNamespace }}\Create{{ $resourceName }}Dto');
         $this->templateData->addImport('{{ $dtoNamespace }}\Search{{ $resourceName }}Dto');
         $this->templateData->addImport('{{ $dtoNamespace }}\Update{{ $resourceName }}Dto');
         $this->templateData->addImport('{{ $modelNamespace }}\{{ $resourceName }}');
         $this->templateData->addImport('{{ $userModelNamespace }}\Users');
+        $this->templateData->addImport('App\Modules\Users\Interfaces\UsersPermissions');
         $this->templateData->addImport('Illuminate\Support\Facades\Hash');
         $this->templateData->addImport('Tests\TestCase');
         $this->templateData->addImport('PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth');

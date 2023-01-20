@@ -93,6 +93,9 @@ class Transformer
         if (Helpers::isArrayAssoc($models)) {
             foreach ($models as $key => $model) {
                 $function = 'transform' . ucfirst(Str::camel($context));
+                if (!method_exists($this, $function)) {
+                    throw new \Exception($function . ' not found in ' . get_class($this));
+                }
                 $default = [];
 
                 // Se não for o contexto default e model, faz um load do transformDefault
@@ -109,6 +112,9 @@ class Transformer
         } else {
             foreach ($models as $model) {
                 $function = 'transform' . ucfirst(Str::camel($context));
+                if (!method_exists($this, $function)) {
+                    throw new \Exception($function . ' not found in ' . get_class($this));
+                }
                 $default = [];
 
                 // Se não for o contexto default e model, faz um load do transformDefault
@@ -139,6 +145,10 @@ class Transformer
         $context = $context->name ?? $context;
 
         $function = 'transform' . ucfirst(Str::camel($context));
+
+        if (!method_exists($this, $function)) {
+            throw new \Exception($function . ' not found in ' . get_class($this));
+        }
 
         foreach ($this->loads as $loadName => $load) {
             $repositoryClassString = $model[0];

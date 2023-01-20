@@ -10,6 +10,8 @@ use Web64\Colors\Facades\Colors;
 
 abstract class TemplateGenerator
 {
+    static $replace = false;
+
     public string $fileTemplate = '';
 
     public string $moduleName = '';
@@ -138,6 +140,7 @@ abstract class TemplateGenerator
         $templateData->namespaceApp = $this->getNamespace();
         $templateData->resourceName = $this->resourceName;
         $templateData->resourceURI = Str::slug(Str::snake($data['routeName'] ?? $this->resourceName));
+        $templateData->resourceNameUpperSnake = Str::upper(Str::snake($data['routeName'] ?? $this->resourceName));
         $templateData->tableName = Str::snake(trim($this->resourceName));
         $templateData->resourceGramaticalName = !empty($templateData->resourceGramaticalName) ? $templateData->resourceGramaticalName : $this->resourceName;
         $templateData->now = empty($templateData->now) ? date('Y_m_d_His') : $templateData->now;
@@ -194,10 +197,11 @@ abstract class TemplateGenerator
     {
         $content = $this->render();
         $filename = $this->getPath();
+
         $filename .= '/' . $this->getFileName();
         $baseFileName = str_replace(base_path(''), '', $filename);
 
-        if (file_exists($filename)) {
+        if (file_exists($filename) && !TemplateGenerator::$replace) {
 //            $this->infoExistFile($baseFileName);
             return;
         }

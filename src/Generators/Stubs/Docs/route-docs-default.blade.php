@@ -1,6 +1,6 @@
 @include('devesharp-generators::commons.header')
 
-class {{ $resourceName }}RouteDoc extends RoutesDocAbstract
+class {{ $resourceName }}RouteDocs extends RoutesDocAbstract
 {
     public function getRouteInfo(string $name): RoutesDocInfo {
         return match ($name) {

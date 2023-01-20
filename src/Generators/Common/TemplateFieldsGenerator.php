@@ -3,6 +3,7 @@
 namespace Devesharp\Generators\Common;
 
 //    ds:generator $typeName $module $name
+use Devesharp\Support\Collection;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
@@ -48,7 +49,7 @@ class TemplateFieldsGenerator
                     $rules = ['string'];
             }
 
-            if (!isset($field['dto']) || $field['dto']) {
+            if (!empty($field['dto'])) {
 
                 if (!empty($field['rules'])) {
                     $rules[] = $field['rules'];
@@ -138,6 +139,7 @@ class TemplateFieldsGenerator
                 case 'unsignedbiginteger':
                 case 'long':
                     $type = 'number';
+                    break;
                 case 'double':
                 case 'float':
                 case 'decimal':
@@ -261,7 +263,7 @@ class TemplateFieldsGenerator
             if (!empty($field['valueOnCreate'])) {
                 $treatmentField = [
                     'fieldName' => $key,
-                    'userFieldName' => $field['valueOnCreate']['getByUserKey'] ?? '',
+                    'userFieldName' => $field['valueOnCreate']['getByUser'] ?? '',
                     'value' => $field['valueOnCreate']['value'] ?? '',
                     'valueRaw' => $field['valueOnCreate']['valueRaw'] ?? '',
                 ];
@@ -281,6 +283,7 @@ class TemplateFieldsGenerator
                 $fields[] = $treatmentField;
             }
         }
+
         return $fields;
     }
 
@@ -323,53 +326,75 @@ class TemplateFieldsGenerator
         $fields = [];
         foreach ($templateData->fieldsRaw as $key => $field) {
             $fakerFn = '""';
-            $request = true;
+            $request = !empty($field['dto']);
 
-            switch (strtolower($field['dbType'])) {
-                case 'integer':
-                case 'unsignedinteger':
-                case 'smallinteger':
-                case 'biginteger':
-                case 'unsignedbiginteger':
-                case 'long':
-                    $fakerFn = 'fake()->randomFloat(2)';
-                    break;
-                case 'double':
-                case 'float':
-                case 'decimal':
-                    $fakerFn = 'fake()->randomNumber()';
-                    break;
-                case 'string':
-                case 'char':
-                case 'text':
-                    $fakerFn = 'fake()->text(100)';
-                    break;
-                case 'bool':
-                case 'boolean':
-                    $fakerFn = 'fake()->boolean()';
-                    break;
-                case 'date':
-                    $fakerFn = "fake()->date('Y-m-d')";
-                    break;
-                case 'datetime':
-                case 'timestamp':
-                    $fakerFn = "fake()->date('Y-m-d H:i:s')";
-                    break;
-                case 'time':
-                    $fakerFn = "fake()->date('H:i:s')";
-                    break;
-                default:
-                    if (Str::contains($field['dbType'], 'foreign')) {
-                        $fakerFn = 1;
-                        $request = false;
-                    } else {
+            if (!empty($field['relation'])) {
+                $fakerFn = '1';
+
+                if (!empty($field['nullable'])) {
+                    continue;
+                }
+            } else {
+                switch (strtolower($field['dbType'])) {
+                    case 'integer':
+                    case 'unsignedinteger':
+                    case 'smallinteger':
+                    case 'biginteger':
+                    case 'unsignedbiginteger':
+                    case 'long':
+                        $fakerFn = 'fake()->randomNumber';
+                        break;
+                    case 'double':
+                    case 'float':
+                    case 'decimal':
+                        $fakerFn = 'fake()->randomFloat(2)';
+                        break;
+                    case 'string':
+                    case 'char':
+                    case 'text':
                         $fakerFn = 'fake()->text(100)';
-                    }
-            }
+                        break;
+                    case 'bool':
+                    case 'boolean':
+                        $fakerFn = 'fake()->boolean()';
+                        break;
+                    case 'date':
+                        $fakerFn = "fake()->date('Y-m-d')";
+                        break;
+                    case 'datetime':
+                    case 'timestamp':
+                        $fakerFn = "fake()->date('Y-m-d H:i:s')";
+                        break;
+                    case 'time':
+                        $fakerFn = "fake()->date('H:i:s')";
+                        break;
+                    case 'enum':
+                        $fieldsString = Collection::make($field['acceptableValues'])
+                            ->map(fn($items) => "'$items'")
+                            ->map(fn($item) => is_numeric($item) ? floatval($item) : $item)->implode(',');
+                        $fakerFn = "fake()->randomElement([".$fieldsString."])";
+                        break;
+                    default:
+                        if (Str::contains($field['dbType'], 'foreign')) {
+                            $fakerFn = 1;
+                            $request = false;
+                        } else {
+                            $fakerFn = 'fake()->text(100)';
+                        }
+                }
 
-            if ($key == "enabled") {
-                $fakerFn = 'true';
-                $request = false;
+                if ($key == "CPF" || $key == "cpf") {
+                    $fakerFn = 'fake()->numerify("###.###.###-##")';
+                }
+
+                if ($key == "document" || $key == "RG") {
+                    $fakerFn = 'fake()->numerify("##.###.###-#")';
+                }
+
+                if ($key == "enabled") {
+                    $fakerFn = 'true';
+                    $request = false;
+                }
             }
 
             if (empty($field['primary']) && $key !== 'created_at' && $key !== 'updated_at') {
@@ -443,12 +468,12 @@ class TemplateFieldsGenerator
                 $typeRelation = $field['relation']['type'];
 
                 $tableForeign = $field['relation']['resource'];
-                $singularRelation = Str::camel(Str::singular($tableForeign));
+                $singularRelation = "relation" . Str::camel(Str::singular($key));
                 $pluralRelation = Str::camel(Str::plural($tableForeign));
                 $primaryKeyName = $field['relation']['key'];
 
                 if (str_replace('_id', '', $key) != $singularRelation && substr($key, -2) != "Id") {
-                    $singularRelation .= Str::studly($key);
+                    $singularRelation = "relation" . Str::studly(str_replace('_id', '', $key));
                 }
 
                 switch ($typeRelation) {
@@ -484,15 +509,21 @@ class TemplateFieldsGenerator
                         break;
                 }
 
+                // Trocar por nome modulo da relação
+                $config = app(GeneratorConfig::class);
+                $config->init();
+                $modelNamespace = $config->modelNamespace;
+                $modelNamespace = str_replace('{{ModuleName}}', $field['relation']['module'] ?? $field['relation']['resource'], $modelNamespace);
+
                 if (!empty($functionName)) {
                     $relations .= "\n";
                     if ($relation == 'belongsTo') {
-                        $relations .= "    public function $functionName(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\\{{\$modelNamespace}}\\$tableForeign {";
+                        $relations .= "    public function $functionName(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\\$modelNamespace\\$tableForeign {";
                     }else {
                         $relations .= "    public function $functionName():  {";
                     }
                     $relations .= "\n";
-                    $relations .= "        return \$this->$relation(\\{{\$modelNamespace}}\\$tableForeign::class, '$key', '$primaryKeyName');";
+                    $relations .= "        return \$this->$relation(\\$modelNamespace\\$tableForeign::class, '$key', '$primaryKeyName');";
                     $relations .= "\n";
                     $relations .= "    }";
                     $relations .= "\n";
@@ -584,7 +615,7 @@ class TemplateFieldsGenerator
             if ($key == 'enabled') {
                 $fields[] = [
                     'name' => 'deleted_at',
-                    'cast' => 'cast',
+                    'cast' => 'date',
                 ];
             }
 
@@ -604,6 +635,11 @@ class TemplateFieldsGenerator
         $createdAtField = null;
         $updatedAtField = null;
         $enabledAtField = null;
+        foreach ($templateData->fieldsRaw as $key => $field) {
+            if ($key == 'enabled') {
+                $enabledAtField = $field;
+            }
+        }
 
         foreach ($templateData->fieldsRaw as $key => $field) {
             if ($key == 'created_at') {
@@ -616,9 +652,16 @@ class TemplateFieldsGenerator
                 $enabledAtField = $field;
             }
 
+            if ($enabledAtField && $key == 'deleted_at') {
+                continue;
+            }
+
             if (Str::contains($field['dbType'], 'foreign')) {
                 $migrationField = '$table->unsignedBigInteger(\'' . $key . '\')';
-            } else {
+            } else if (Str::contains($field['dbType'], 'enum')) {
+                $fieldsString = Collection::make($field['acceptableValues'])->map(fn($items) => "'$items'")->map(fn($item) => is_numeric($item) ? floatval($item) : $item)->implode(',');
+                $migrationField = '$table->enum(\'' . $key . '\', [' . $fieldsString . '])';
+            }  else {
                 if ($field['dbType'] == "id" && $key == "id") {
                     $migrationField = '$table->' . $field['dbType'] . '()';
                 } else {
@@ -626,8 +669,14 @@ class TemplateFieldsGenerator
                 }
             }
 
-            if (!empty($field['default'])) {
-                $migrationField .= '->default(\'' . $field['default'] . '\')';
+            if (isset($field['default'])) {
+                if (is_bool($field['default'])) {
+                    $migrationField .= '->default(' . ($field['default'] ? 'true' : 'false') . ')';
+                } else if (is_numeric($field['default'])) {
+                    $migrationField .= '->default(' . $field['default'] . ')';
+                } else {
+                    $migrationField .= '->default(\'' . $field['default'] . '\')';
+                }
             }
 
             if ($field['dbType'] != "id" && !empty($field['primary'])) {
@@ -666,7 +715,7 @@ class TemplateFieldsGenerator
         $foreignKeys = [];
 
         foreach ($templateData->fieldsRaw as $key => $field) {
-            if (Str::contains($field['dbType'], 'foreign')) {
+            if (!empty($field['relation'])) {
                 $foreignTable = Str::snake(trim($field['relation']['resource']));
                 $foreignField = $field['relation']['key'] ?? 'id';
 

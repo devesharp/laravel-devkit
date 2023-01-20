@@ -14,6 +14,7 @@ class PolicyGenerator extends TemplateGenerator
     }
 
     function loadImports(): void {
+        $this->templateData->addImport('App\Modules\Users\Interfaces\UsersPermissions');
     }
 
     public function getData(): array

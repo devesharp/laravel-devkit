@@ -135,7 +135,7 @@ class TestDocsGenerate
             $this->route->bodyRequired = $data->getRequireds();
             $this->route->bodyDescription = $data->getDescriptions();
             $this->route->bodyEnum = $data->getEnums();
-            $this->route->body = $data->toArray();
+            $this->route->body = $data->all();
             $this->route->bodyComplete = $data->getDataModel(true);
         }else {
             $this->route->body = $data;

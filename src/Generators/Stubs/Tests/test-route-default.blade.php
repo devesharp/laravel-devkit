@@ -9,13 +9,16 @@ class {{ $resourceName }}RouteTest extends TestCase
     {
         @include('devesharp-generators::Tests/commons.header-test', ['user_token' => true])
 
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_CREATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
+
         /*
         |--------------------------------------------------------------------------
         | Tests
         |--------------------------------------------------------------------------
         */
         $response = $this->withPost('/v1/{{ $resourceURI }}')
-            ->setRouteInfo('Create{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
+            ->setRouteInfo('Create{{ $resourceName }}', {{ $resourceName }}RouteDocs::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
             ->addGroups(['{{ $resourceGramaticalName }}'])
             ->addBody($resourceData, Create{{ $resourceName }}Dto::class)
@@ -44,7 +47,8 @@ class {{ $resourceName }}RouteTest extends TestCase
     public function testRoute{{ $resourceName }}Update()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'update' => true, 'user_token' => true])
-
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_UPDATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
 
         /*
         |--------------------------------------------------------------------------
@@ -53,7 +57,7 @@ class {{ $resourceName }}RouteTest extends TestCase
         */
         $response = $this->withPost('/v1/{{ $resourceURI }}/:id')
             ->addPath('id', $resource->id, 'ID do {{ $resourceGramaticalName }}')
-            ->setRouteInfo('Update{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
+            ->setRouteInfo('Update{{ $resourceName }}', {{ $resourceName }}RouteDocs::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
             ->addGroups(['{{ $resourceGramaticalName }}'])
             ->addBody($resourceData, Update{{ $resourceName }}Dto::class)
@@ -82,6 +86,8 @@ class {{ $resourceName }}RouteTest extends TestCase
     public function testRoute{{ $resourceName }}Get()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'user_token' => true])
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
 
         /*
         |--------------------------------------------------------------------------
@@ -90,7 +96,7 @@ class {{ $resourceName }}RouteTest extends TestCase
         */
         $response = $this->withGet('/v1/{{ $resourceURI }}/:id')
             ->addPath('id', $resource->id, 'ID do {{ $resourceGramaticalName }}')
-            ->setRouteInfo('Get{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
+            ->setRouteInfo('Get{{ $resourceName }}', {{ $resourceName }}RouteDocs::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
             ->addGroups(['{{ $resourceGramaticalName }}'])
             ->run();
@@ -119,13 +125,16 @@ class {{ $resourceName }}RouteTest extends TestCase
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'search' => true, 'user_token' => true])
 
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_SEARCH]);
+
         /*
         |--------------------------------------------------------------------------
         | Tests
         |--------------------------------------------------------------------------
         */
         $response = $this->withPost('/v1/{{ $resourceURI }}/search')
-            ->setRouteInfo('Search{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
+            ->setRouteInfo('Search{{ $resourceName }}', {{ $resourceName }}RouteDocs::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
             ->addGroups(['{{ $resourceGramaticalName }}'])
             ->addBody([
@@ -147,7 +156,9 @@ class {{ $resourceName }}RouteTest extends TestCase
      */
     public function testRoute{{ $resourceName }}Delete()
     {
-        @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'user_token' => true])
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_DELETE]);
 
         /*
         |--------------------------------------------------------------------------
@@ -156,7 +167,7 @@ class {{ $resourceName }}RouteTest extends TestCase
         */
         $response = $this->withDelete('/v1/{{ $resourceURI }}/:id')
             ->addPath('id', $resource->id, 'Id do {{ $resourceGramaticalName }}')
-            ->setRouteInfo('Delete{{ $resourceName }}', {{ $resourceName }}RouteDoc::class)
+            ->setRouteInfo('Delete{{ $resourceName }}', {{ $resourceName }}RouteDocs::class)
             ->addHeader('Authorization', 'Bearer ' . ${{ $userVariable }}->access_token, 'Authorization')
             ->addGroups(['{{ $resourceGramaticalName }}'])
             ->run();

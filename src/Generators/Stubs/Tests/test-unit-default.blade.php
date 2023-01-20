@@ -17,6 +17,8 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testCreate{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test')
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_CREATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
 
         /*
         |--------------------------------------------------------------------------
@@ -56,6 +58,8 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testUpdate{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'update' => true])
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_UPDATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
 
         /*
         |--------------------------------------------------------------------------
@@ -86,6 +90,8 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testGet{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
+        // Permissions
+        $user->allow([ UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
 
         /*
         |--------------------------------------------------------------------------
@@ -114,6 +120,8 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testSearch{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'search' => true])
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_SEARCH]);
 
         /*
         |--------------------------------------------------------------------------
@@ -134,6 +142,8 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testDelete{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
+        // Permissions
+        $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_DELETE]);
 
         /*
         |--------------------------------------------------------------------------

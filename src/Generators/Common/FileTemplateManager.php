@@ -537,10 +537,19 @@ class FileTemplateManager
             }
 
             if ($key == 'enabled') {
-                $fields[] = [
-                    'name' => 'deleted_at',
-                    'cast' => 'cast',
-                ];
+                $deletedExist = false;
+                foreach ($this->fileModuleGenerator['fields'] as $key2 => $field2) {
+                    if ($key2 == 'deleted_at') {
+                        $deletedExist = false;
+                    }
+                }
+
+                if (!$deletedExist) {
+                    $fields[] = [
+                        'name' => 'deleted_at',
+                        'cast' => 'cast',
+                    ];
+                }
             }
 
             if (!empty($cast)) {

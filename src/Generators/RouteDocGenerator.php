@@ -14,8 +14,8 @@ class RouteDocGenerator extends TemplateGenerator
     }
 
     function loadImports(): void {
-        $this->templateData->addImport('Devesharp\APIDocs\RoutesDocAbstract');
-        $this->templateData->addImport('Devesharp\APIDocs\RoutesDocInfo');
+        $this->templateData->addImport('Devesharp\SwaggerGenerator\RoutesDocAbstract');
+        $this->templateData->addImport('Devesharp\SwaggerGenerator\RoutesDocInfo');
     }
 
     public function getData(): array

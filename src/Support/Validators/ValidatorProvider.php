@@ -31,5 +31,17 @@ class ValidatorProvider extends ServiceProvider
 
             return is_numeric($value);
         });
+
+        Validator::extendImplicit('color_hex', function ($attribute, $value, $parameters) {
+            if ($value === null) {
+                return true;
+            }
+
+            if (preg_match('/^#[a-f0-9]{6}$/i', $value)) {
+                return true;
+            }
+
+            return false;
+        });
     }
 }

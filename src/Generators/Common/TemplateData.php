@@ -28,6 +28,11 @@ class TemplateData extends DataTransferObject
     public string $resourceName = "";
 
     /**
+     * @var string $resourceNameUpperSnake nome do modulo
+     */
+    public string $resourceNameUpperSnake = "";
+
+    /**
      * @var string $resourceGramaticalName nome gramatical do recurso
      */
     public string $resourceGramaticalName = "";
@@ -198,6 +203,7 @@ class TemplateData extends DataTransferObject
 
         $templateData->moduleName = $fileData['module'] ?? $fileData['name'] ?? '';
         $templateData->resourceName = $fileData['name'] ?? $fileData['module'] ?? '';
+        $templateData->resourceGramaticalName = $fileData['gramatical_name'] ?? $templateData->resourceName;
 
         $templateData->withController = $fileData['layers']['withController'] ?? true;
         $templateData->withDto = $fileData['layers']['withDto']  ?? true;

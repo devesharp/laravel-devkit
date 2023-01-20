@@ -3,6 +3,7 @@
 namespace Devesharp\Generators;
 
 use Devesharp\Generators\Common\FileSystem;
+use Devesharp\Generators\Common\TemplateGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use MichaelRubel\Formatters\Commands\MakeFormatterCommand;
@@ -35,12 +36,17 @@ class MakeWorkspace extends Command
     {
         return [
             ['template', null, InputOption::VALUE_REQUIRED, 'Yml with workspace config'],
+            ['force', 'f', InputOption::VALUE_OPTIONAL, 'replace'],
         ];
     }
 
     public function handle()
     {
         $file = realpath(base_path($this->option('template')));
+
+        if (isset($this->options()['force'])) {
+            TemplateGenerator::$replace = true;
+        }
 
         app(WorkspaceGenerator::class)
             ->setData([

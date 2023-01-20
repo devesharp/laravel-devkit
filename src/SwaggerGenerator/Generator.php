@@ -383,7 +383,12 @@ class Generator
             }
 
             foreach ($data as $key => $datum) {
-                $schema['properties'][$key] = $this->dataToSchema($datum, $addExample);
+                try {
+                    $schema['properties'][$key] = $this->dataToSchema($datum, $addExample);
+                }catch (\Exception $e) {
+                    throw new \Exception("->{$key} {$e->getMessage()}");
+                }
+
             }
         }else if (is_array($data)) {
             $schema['type'] = 'array';
@@ -416,6 +421,12 @@ class Generator
                 $schema['format'] = 'double';
             } else {
                 $schema['type'] = gettype($data);
+
+                if (gettype($data) == 'NULL') {
+//                    throw new \Exception('Não é possível gerar documentação para um valor nulo');
+                    // Provisório
+                    $schema['type'] = 'string';
+                }
                 if (class_exists($data)) {
                     $class = app($data);
                     if ($class instanceof Ref) {
@@ -425,7 +436,7 @@ class Generator
                 }
             }
 
-            if ($addExample) {
+            if ($addExample && gettype($data) != 'NULL') {
                 $schema['example'] = $data;
             }
         }

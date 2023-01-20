@@ -239,7 +239,7 @@ class {{ $resourceName }}Service extends Service
             // Iniciar transação
             DB::beginTransaction();
 
-            $this->repository->updateById($id, ['enabled' => false]);
+            $this->repository->updateById($id, ['enabled' => false], $requester);
 
             DB::commit();
 

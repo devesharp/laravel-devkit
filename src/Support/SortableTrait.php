@@ -7,13 +7,22 @@ use Illuminate\Support\Str;
 /**
  * Trait Sortable.
  */
-trait Sortable
+trait SortableTrait
 {
     public $query = null;
 
+    public static function bootSortableTrait()
+    {
+        static::created(function ($model) {
+            if ($model->shouldSortWhenCreating) {
+                $model->moveToStart();
+            }
+        });
+    }
+
     public function createSortable()
     {
-        $this->buildQuery()->create([
+        $this->buildSortQuery()->create([
             $this->orderColumnNameForeignKey => $this->id,
             $this->orderColumnName => $this->getHighestOrderNumber(),
         ]);
@@ -23,7 +32,7 @@ trait Sortable
 
     public function getHighestOrderNumber(): int
     {
-        $lastSortable = $this->buildQuery()
+        $lastSortable = $this->buildSortQuery()
             ->where($this->orderColumnName, '!=', null)
             ->orderBy($this->orderColumnName, 'desc')
             ->first();
@@ -69,7 +78,7 @@ trait Sortable
         $this->moveTo(PHP_INT_MAX);
 
         if (isset($this->orderTableName)) {
-            $this->buildQuery()
+            $this->buildSortQuery()
                 ->where($this->orderColumnNameForeignKey, $this->id)
                 ->delete();
         } else {
@@ -83,7 +92,7 @@ trait Sortable
 
     public function getSort()
     {
-        $model = $this->buildQuery()
+        $model = $this->buildSortQuery()
             ->where($this->orderColumnNameForeignKey, $this->id)
             ->first();
 
@@ -107,7 +116,7 @@ trait Sortable
 
     public function moveToWithTable(int $position)
     {
-        $model = $this->buildQuery()
+        $model = $this->buildSortQuery()
             ->where($this->orderColumnNameForeignKey, $this->id)
             ->first();
 
@@ -134,7 +143,7 @@ trait Sortable
             return $this;
         }
 
-        $query = $this->buildQuery();
+        $query = $this->buildSortQuery();
 
         if (isset($model->{$this->orderColumnName})) {
             if ($model->{$this->orderColumnName} > $position) {
@@ -166,7 +175,7 @@ trait Sortable
 
         // Salva posição
         $model->{$this->orderColumnName} = $position;
-        $model->update();
+        $this->save();
 
         return $this;
     }
@@ -189,20 +198,30 @@ trait Sortable
         /**
          *  Não pode ser maior que o numero de sortable.
          */
-        $lastSortable = $this->buildQuery()
+        $lastSortable = $this->buildSortQuery()
             ->where($this->getGroup(), '!=', null)
             ->orderBy($this->getGroup(), 'desc')
             ->first();
 
         if (! empty($lastSortable)) {
-            if ($position > $lastSortable->{$this->getGroup()} + 1) {
+            // Caso o ultimo sortable tenha a mesma posição, não pode ser maior que o ultimo sortable
+            if ($lastSortable->id == $this->id) {
+                if ($position >= $lastSortable->{$this->getGroup()}) {
+                    $position = $lastSortable->{$this->getGroup()};
+                }
+
+                // Caso já seja a ultima posição, não precisa fazer nada
+                if ($position == $this->{$this->getGroup()}) {
+                    return $this;
+                }
+            }else if ($position > $lastSortable->{$this->getGroup()} + 1) {
                 $position = $lastSortable->{$this->getGroup()} + 1;
             }
         } else {
             $position = 0;
         }
 
-        $query = $this->buildQuery();
+        $query = $this->buildSortQuery();
         if (isset($this->{$this->getGroup()})) {
             if ($this->{$this->getGroup()} > $position) {
                 $query
@@ -220,6 +239,8 @@ trait Sortable
                 ->where($this->getGroup(), '>=', $position)
                 ->increment($this->getGroup());
         }
+
+        $this->refresh();
 
         // Salva posição
         $this->{$this->getGroup()} = $position;
@@ -256,7 +277,7 @@ trait Sortable
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function buildQuery()
+    public function buildSortQuery()
     {
         if (isset($this->orderTableName)) {
             return (new $this->orderTableName())->newQuery();
@@ -275,7 +296,7 @@ trait Sortable
     {
         if (isset($this->orderTableName)) {
             $sortable = 0;
-            $this->buildQuery()
+            $this->buildSortQuery()
                 ->where($this->orderColumnName, '!=', null)
                 ->whereNotNull($this->orderColumnName)
                 ->orderBy($this->orderColumnName, 'asc')
@@ -294,7 +315,7 @@ trait Sortable
             $sortable = 0;
 
             if (! isset($query)) {
-                $query = $this->buildQuery();
+                $query = $this->buildSortQuery();
             }
 
             $query

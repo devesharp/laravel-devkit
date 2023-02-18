@@ -2,7 +2,7 @@
 
 namespace Tests\Support;
 
-use Devesharp\Support\Sortable;
+use Devesharp\Support\SortableTrait;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ use Tests\TestCase;
  */
 class ModelSortable extends Model
 {
-    use Sortable;
+    use SortableTrait;
 
     protected string $orderColumnName = 'order_column';
 
@@ -31,7 +31,7 @@ class ModelSortable extends Model
  */
 class ModelSortableWithTableMysql extends Model
 {
-    use Sortable;
+    use SortableTrait;
 
     protected string $orderColumnNameForeignKey = 'model_id';
 

@@ -126,6 +126,7 @@ abstract class AbstractDto extends Collection
                         $rulesExtends[] = (new $rule([], false))->getValidateRules();
                     }
                 }catch (\Exception $e) {
+                    var_dump($e->getLine());
                     var_dump($e->getMessage());
                 }
             }
@@ -191,18 +192,36 @@ abstract class AbstractDto extends Collection
                 $value = preg_replace($re, "", $value);
                 $newArray[$key] = $value;
             } else {
-                if (is_string($value->rules)) {
-                    $value->rules = str_replace('required|', '', $value->rules);
-                    $value->rules = str_replace('|required|', '|', $value->rules);
-                    $re = '/\|required$/m';
-                    $value->rules = preg_replace($re, "", $value->rules);
-                    $newArray[$key] = $value;
-                } else {
-                    $rule = $value;
-                    if (array_search('required', $rule) !== false) {
-                        unset($rule[array_search('required', $rule)]);
+                if ($value instanceof Rule) {
+                    if (is_string($value->rules)) {
+                        $value->rules = str_replace('required|', '', $value->rules);
+                        $value->rules = str_replace('|required|', '|', $value->rules);
+                        $re = '/\|required$/m';
+                        $value->rules = preg_replace($re, "", $value->rules);
+                        $newArray[$key] = $value;
+                    } else {
+                        $rule = $value->rules;
+
+                        if (array_search('required', $rule) !== false) {
+                            unset($rule[array_search('required', $rule)]);
+                        }
+                        $newArray[$key] = array_values($rule);
                     }
-                    $newArray[$key] = array_values($rule);
+                } else {
+                    if (is_string($value)) {
+                        $value = str_replace('required|', '', $value);
+                        $value = str_replace('|required|', '|', $value);
+                        $re = '/\|required$/m';
+                        $value = preg_replace($re, "", $value);
+                        $newArray[$key] = $value;
+                    } else {
+                        $rule = $value;
+
+                        if (array_search('required', $rule) !== false) {
+                            unset($rule[array_search('required', $rule)]);
+                        }
+                        $newArray[$key] = array_values($rule);
+                    }
                 }
 
             }

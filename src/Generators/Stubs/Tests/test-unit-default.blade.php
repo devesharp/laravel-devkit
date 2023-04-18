@@ -30,8 +30,11 @@ class {{ $resourceName }}UnitTest extends TestCase
 
 @if(!empty($fieldsUsedOnResource))
         // Testing relations
-@foreach($fieldsUsedOnResource as $fieldRelationTest)
+@foreach($fieldsUsedOnResource as $fieldRelationTest)@if(!$fieldRelationTest['valueOnUser'])
         $this->assertSame(${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}}, $resourceModel->{{ $fieldRelationTest['localKey']  }}, '{{ $fieldRelationTest['localKey'] }}');
+@else
+        $this->assertSame($user->{{$fieldRelationTest['valueOnUser']}}, $resourceModel->{{ $fieldRelationTest['localKey']  }}, '{{ $fieldRelationTest['localKey'] }}');
+@endif
 @endforeach
 
 @endif

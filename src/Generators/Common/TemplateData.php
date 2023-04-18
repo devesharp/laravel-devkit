@@ -56,10 +56,12 @@ class TemplateData extends DataTransferObject
      * Se o recurso já existe ou se está sendo criado junto
      */
     public bool $withController = false;
+    public bool $withRoutes = false;
     public bool $withDto = false;
     public bool $withService = false;
     public bool $withMigration = false;
     public bool $withFactory = false;
+    public bool $withPermission = false;
     public bool $withModel = false;
     public bool $withPolicy = false;
     public bool $withPresenter = false;
@@ -117,6 +119,12 @@ class TemplateData extends DataTransferObject
      * @var array campos para serem usados na geração do Faker
      */
     public array $fieldsFaker = [];
+
+    /**
+     * @var array campos para serem usados na geração do Faker para docs
+     * Deixar os campos mais "bonitos", ao invés lorem ipsum
+     */
+    public array $fieldsFakerForDocs = [];
 
     /**
      * @var array todas as colunas para ser usado na geração do migration
@@ -206,6 +214,8 @@ class TemplateData extends DataTransferObject
         $templateData->resourceGramaticalName = $fileData['gramatical_name'] ?? $templateData->resourceName;
 
         $templateData->withController = $fileData['layers']['withController'] ?? true;
+        $templateData->withRoutes = $fileData['layers']['withRoutes'] ?? true;
+        $templateData->withPermission = $fileData['layers']['withPermission'] ?? true;
         $templateData->withDto = $fileData['layers']['withDto']  ?? true;
         $templateData->withService = $fileData['layers']['withService']  ?? true;
         $templateData->withMigration = $fileData['layers']['withMigration']  ?? true;
@@ -227,7 +237,9 @@ class TemplateData extends DataTransferObject
             $templateData->fieldsDto = $fieldGenerator->getFieldsForDto($templateData);
             $templateData->fieldsDtoSearch = $fieldGenerator->getFieldsForDtoSearch($templateData);
             $templateData->fieldsTransformer = $fieldGenerator->getFieldsForTransformer($templateData);
+//            var_dump($templateData->fieldsTransformer);
             $templateData->fieldsFaker = $fieldGenerator->getFieldsForFaker($templateData);
+            $templateData->fieldsFakerForDocs = $fieldGenerator->getFieldsForFakerDocs($templateData);
             $templateData->columnsMigration = $fieldGenerator->getColumnsForMigration($templateData);
             $templateData->relationColumnsMigration = $fieldGenerator->getRelationsColumnsForMigration($templateData);
             $templateData->fieldsModelCasts = $fieldGenerator->getFieldsForCasts($templateData);

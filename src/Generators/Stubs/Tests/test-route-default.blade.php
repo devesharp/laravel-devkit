@@ -7,7 +7,7 @@ class {{ $resourceName }}RouteTest extends TestCase
      */
     public function testRoute{{ $resourceName }}Create()
     {
-        @include('devesharp-generators::Tests/commons.header-test', ['user_token' => true])
+        @include('devesharp-generators::Tests/commons.header-test', ['user_token' => true,'forDocs' => true])
 
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_CREATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
@@ -46,7 +46,7 @@ class {{ $resourceName }}RouteTest extends TestCase
      */
     public function testRoute{{ $resourceName }}Update()
     {
-        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'update' => true, 'user_token' => true])
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'update' => true, 'user_token' => true,'forDocs' => true])
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_UPDATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
 
@@ -85,7 +85,7 @@ class {{ $resourceName }}RouteTest extends TestCase
      */
     public function testRoute{{ $resourceName }}Get()
     {
-        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'user_token' => true])
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'user_token' => true,'forDocs' => true])
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
 
@@ -123,7 +123,7 @@ class {{ $resourceName }}RouteTest extends TestCase
      */
     public function testRoute{{ $resourceName }}Search()
     {
-        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'search' => true, 'user_token' => true])
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'search' => true, 'user_token' => true,'forDocs' => true])
 
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_SEARCH]);
@@ -156,7 +156,7 @@ class {{ $resourceName }}RouteTest extends TestCase
      */
     public function testRoute{{ $resourceName }}Delete()
     {
-        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'user_token' => true])
+        @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'user_token' => true,'forDocs' => true])
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_DELETE]);
 

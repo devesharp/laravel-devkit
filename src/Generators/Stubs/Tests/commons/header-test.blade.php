@@ -12,7 +12,7 @@
 @if(!empty($create))
         $resource = {{ $resourceName }}::factory()->create();
 @else
-        $resourceData = {{ $resourceName }}::factory()->bodyForRequest()->raw();
+        $resourceData = {{ $resourceName }}::factory()->{!! !empty($forDocs) ? 'bodyForDocs()' : 'bodyForRequest()->raw()' !!};
 @endif
 @else
 @foreach($fieldsUsedOnResource as $fieldRelationTest)
@@ -25,8 +25,9 @@
 @else
         $resourceData = {{ $resourceName }}::factory([
 @endif
-@foreach($fieldsUsedOnResource as $fieldRelationTest)
+@foreach($fieldsUsedOnResource as $fieldRelationTest)@if(!$fieldRelationTest['valueOnUser'])
             '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
+@endif
 @endforeach
 @if(!empty($create))
 @if(!empty($search))
@@ -35,17 +36,17 @@
         ])->create();
 @endif
 @else
-        ])->bodyForRequest()->raw();
+        ])->{!! !empty($forDocs) ? 'bodyForDocs()' : 'bodyForRequest()->raw()' !!};
 @endif
 @endif
 @if(!empty($update))
 @if(empty($fieldsUsedOnResource))
-        $resourceData = {{ $resourceName }}::factory()->bodyForRequest()->raw();
+        $resourceData = {{ $resourceName }}::factory()->{!! !empty($forDocs) ? 'bodyForDocs()' : 'bodyForRequest()->raw()' !!};
 @else
         $resourceData = {{ $resourceName }}::factory([
 @foreach($fieldsUsedOnResource as $fieldRelationTest)
                 '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
 @endforeach
-        ])->bodyForRequest()->raw();
+        ])->{!! !empty($forDocs) ? 'bodyForDocs()' : 'bodyForRequest()->raw()' !!};
 @endif
 @endif

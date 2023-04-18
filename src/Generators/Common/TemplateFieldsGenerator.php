@@ -131,6 +131,8 @@ class TemplateFieldsGenerator
         foreach ($templateData->fieldsRaw as $key => $field) {
 
             $type = "string";
+            $subType = "";
+
             switch (strtolower($field['dbType'])) {
                 case 'integer':
                 case 'unsignedinteger':
@@ -164,10 +166,31 @@ class TemplateFieldsGenerator
                     $type = 'string';
             }
 
+            $keyLower = strtolower($key);
+
+            if ($keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'cnpj' || $keyLower == 'document' || Str::contains($keyLower, 'cpf') || Str::contains($keyLower, 'cnpj')) {
+                $subType = 'cpf';
+            }
+
+            if (Str::contains($keyLower, 'phone') || Str::contains($keyLower, 'celular') || Str::contains($keyLower, 'telefone')) {
+                $subType = 'phone';
+            }
+
+            if (Str::contains($keyLower, 'rg')) {
+                $subType = 'rg';
+            }
+
+            if (Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || Str::contains($keyLower, 'zip_postal')) {
+                $subType = 'cep';
+            }
+
+
             if (!empty($field['transformer'])) {
                 $fields[] = [
                     'name' => $key,
                     'type' => $type,
+                    'subType' => $subType,
+                    'format' => $field['format'] ?? '',
                     'valueOnCreate' => !empty($field['valueOnCreate']),
                     'now' => !empty($field['valueOnCreate']['value']) && $field['valueOnCreate']['value'] == 'now',
                 ];
@@ -260,6 +283,17 @@ class TemplateFieldsGenerator
     {
         $fields = [];
         foreach ($templateData->fieldsRaw as $key => $field) {
+            $keyLower = strtolower($key);
+            if ($keyLower == 'cep' || $keyLower == 'postal_code' || $keyLower == 'zipcode' || $keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'phone' || $keyLower == 'cellphone' || $keyLower == 'mobile' || $keyLower == 'mobilephone' || $keyLower == 'mobile_phone' || $keyLower == 'telephone' || $keyLower == 'document') {
+                $treatmentField = [
+                    'fieldName' => $key,
+                    'value' => 'format(OnlyLettersNumbersFormatter::class, $requestData["'.$key.'"])',
+                ];
+
+                $fields[] = $treatmentField;
+                continue;
+            }
+
             if (!empty($field['valueOnCreate'])) {
                 $treatmentField = [
                     'fieldName' => $key,
@@ -294,7 +328,7 @@ class TemplateFieldsGenerator
             if (!empty($field['valueOnSearch'])) {
                 $treatmentField = [
                     'fieldName' => $key,
-                    'userFieldName' => $field['valueOnCreate']['getByUserKey'] ?? '',
+                    'userFieldName' => $field['valueOnCreate']['getByUser'] ?? '',
                     'value' => $field['valueOnCreate']['value'] ?? '',
                     'valueRaw' => $field['valueOnCreate']['valueRaw'] ?? '',
                     'queryFn' => 'whereEqual',
@@ -328,7 +362,9 @@ class TemplateFieldsGenerator
             $fakerFn = '""';
             $request = !empty($field['dto']);
 
-            if (!empty($field['relation'])) {
+            if ($key == 'deleted_at') {
+                $fakerFn = 'null';
+            }else if (!empty($field['relation'])) {
                 $fakerFn = '1';
 
                 if (!empty($field['nullable'])) {
@@ -356,7 +392,11 @@ class TemplateFieldsGenerator
                         break;
                     case 'bool':
                     case 'boolean':
-                        $fakerFn = 'fake()->boolean()';
+                        if ($key == 'deleted_at') {
+                            $fakerFn = 'fake()->boolean()';
+                        }else {
+                            $fakerFn = 'fake()->boolean()';
+                        }
                         break;
                     case 'date':
                         $fakerFn = "fake()->date('Y-m-d')";
@@ -383,12 +423,20 @@ class TemplateFieldsGenerator
                         }
                 }
 
-                if ($key == "CPF" || $key == "cpf") {
+                if ($key == "CPF" || $key == "cpf" || $key == "CNPJ_or_CPF") {
                     $fakerFn = 'fake()->numerify("###.###.###-##")';
                 }
 
                 if ($key == "document" || $key == "RG") {
                     $fakerFn = 'fake()->numerify("##.###.###-#")';
+                }
+
+                if (Str::contains(strtolower($key), 'cep') || Str::contains(strtolower($key), 'postal_code') || Str::contains(strtolower($key), 'zip_postal')) {
+                    $fakerFn = 'fake()->numerify("#####-###")';
+                }
+
+                if ($key == 'email') {
+                    $fakerFn = 'fake()->email()';
                 }
 
                 if ($key == "enabled") {
@@ -403,6 +451,57 @@ class TemplateFieldsGenerator
                     'faker_function' => $fakerFn,
                     'request' => $request,
                 ];
+            }
+        }
+        return $fields;
+    }
+
+    public function getFieldsForFakerDocs(TemplateData &$templateData)
+    {
+        $fields = [];
+        foreach ($templateData->fieldsRaw as $key => $field) {
+            if (isset($field['dataForDocs']) && $field['dataForDocs'] != '') {
+                $numberTypes = [
+                    'id',
+                    'integer',
+                    'bigint',
+                    'bigInteger',
+                    'increments',
+                    'integerIncrements',
+                    'tinyIncrements',
+                    'smallIncrements',
+                    'mediumIncrements',
+                    'bigIncrements',
+                    'tinyInteger',
+                    'smallInteger',
+                    'mediumInteger',
+                    'unsignedInteger',
+                    'unsignedTinyInteger',
+                    'unsignedSmallInteger',
+                    'unsignedMediumInteger',
+                    'unsignedBigInteger',
+                    'foreignId',
+                    'foreignIdFor',
+                    'float',
+                    'double',
+                    'decimal',
+                    'unsignedFloat',
+                    'unsignedDouble',
+                    'unsignedDecimal',
+                ];
+
+                if (in_array($field['dbType'], $numberTypes) || $field['dbType'] == 'boolean') {
+                    $fields[] = [
+                        'name' => $key,
+                        'value' => $field['dataForDocs'],
+                    ];
+                } else {
+                    $fields[] = [
+                        'name' => $key,
+                        'value' => "'" . $field['dataForDocs'] . "'",
+                    ];
+                }
+
             }
         }
         return $fields;
@@ -520,7 +619,7 @@ class TemplateFieldsGenerator
                     if ($relation == 'belongsTo') {
                         $relations .= "    public function $functionName(): \Illuminate\Database\Eloquent\Relations\BelongsTo|\\$modelNamespace\\$tableForeign {";
                     }else {
-                        $relations .= "    public function $functionName():  {";
+                        $relations .= "    public function $functionName()  {";
                     }
                     $relations .= "\n";
                     $relations .= "        return \$this->$relation(\\$modelNamespace\\$tableForeign::class, '$key', '$primaryKeyName');";
@@ -552,6 +651,13 @@ class TemplateFieldsGenerator
                 $pluralRelation = Str::camel(Str::plural($tableForeign));
                 $primaryKeyName = $field['relation']['key'];
 
+                // Essa relação é usada para o usuário apenas quando deleta, não há sentido
+                // testar em outros lugares sem ser ao deletar
+                if ($key == 'deleted_by') continue;
+
+                // Não é necessário testar se não houver DTO, pois não se sabe o valor que ele vai ganhar
+                if (empty($field['dto'])) continue;
+
                 $relationsConfig = config('devesharp_dev_kit.relations', []);
                 $usedUserRelation = $tableForeign == 'Users';
                 $namespaceModel = $config->getNamespace('model');
@@ -573,6 +679,10 @@ class TemplateFieldsGenerator
                      * Por isso não é necessário criar o factory mais 1 vez, deve ser usado o mesmo
                      */
                     'usedUserRelation' => $usedUserRelation,
+                    /**
+                     * Caso o valor seja pego pelo usuário, deve verificar pelo usuário, não pela relação
+                     */
+                    'valueOnUser' => $field['valueOnCreate']['getByUser'] ?? null,
                     'alreadyBeenDefined' => collect($relations)->some(fn($item) => $item['resourceName'] == $tableForeign),
                     'namespace' => $namespaceModel . '\\' . $tableForeign,
                     'resourceName' => $tableForeign,

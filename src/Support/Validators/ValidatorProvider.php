@@ -32,6 +32,24 @@ class ValidatorProvider extends ServiceProvider
             return is_numeric($value);
         });
 
+        Validator::extendImplicit('numeric_array', function ($attribute, $value, $parameters) {
+            if ($value === null || $value == []) {
+                return true;
+            }
+
+            if (!is_array($value)) {
+                return false;
+            }
+
+            foreach ($value as $item) {
+                if (!is_numeric($item)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
         Validator::extendImplicit('color_hex', function ($attribute, $value, $parameters) {
             if ($value === null) {
                 return true;

@@ -24,6 +24,7 @@ abstract class BaseGeneratorAbstract
     public string $NamePtBr = '';
 
     // Modules created by the generator
+    public bool $withPermission = false;
     public bool $withController = false;
     public bool $withDto = false;
     public bool $withService = false;
@@ -67,6 +68,7 @@ abstract class BaseGeneratorAbstract
         $this->routeName = Str::slug(Str::snake($data['routeName'] ?? $this->resourceName));
         $this->NamePtBr = $data['NamePtBr'] ?? $this->resourceName;
         //
+        $this->withPermission = $data['withPermission'] ?? false;
         $this->withController = $data['withController'] ?? false;
         $this->withDto = $data['withDto'] ?? false;
         $this->withService = $data['withService'] ?? false;
@@ -84,6 +86,7 @@ abstract class BaseGeneratorAbstract
         $this->fieldsDto = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForDto() : [];
         $this->fieldsDtoSearch = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForDtoSearch() : [];
         $this->fieldsTransformer = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForTransformer() : [];
+        $this->fieldsFaker = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForFaker() : [];
         $this->fieldsFaker = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForFaker() : [];
         $this->fieldsMigration = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForMigration() : [];
         $this->fieldsCasts = !empty($data['file_template']) ? (new FileTemplateManager($data['file_template']))->getFieldsForCasts() : [];

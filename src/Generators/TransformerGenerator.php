@@ -17,6 +17,11 @@ class TransformerGenerator extends TemplateGenerator
 
     function loadImports(): void {
         $this->templateData->addImport('Devesharp\Patterns\Transformer\Transformer');
+        $this->templateData->addImport('Devesharp\Support\Formatters\DateTimeISOFormatter');
+        $this->templateData->addImport('Devesharp\Support\Formatters\CPFAndCNPJFormatter');
+        $this->templateData->addImport('Devesharp\Support\Formatters\CEPFormatter');
+        $this->templateData->addImport('Devesharp\Support\Formatters\PhoneFormatter');
+        $this->templateData->addImport('Devesharp\Support\Formatters\RGFormatter');
         $this->templateData->addImport('{{ $modelNamespace }}\{{ $resourceName }}');
     }
 

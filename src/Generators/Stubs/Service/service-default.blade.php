@@ -137,7 +137,7 @@ class {{ $resourceName }}Service extends Service
 @if(!empty($value['valueRaw']))
             $requestData['{{$value['fieldName']}}'] = {{$value['valueRaw']}};
 @elseif(!empty($value['value']))
-            $requestData['{{$value['fieldName']}}'] = {{$value['value']}};
+            $requestData['{{$value['fieldName']}}'] = {!! $value['value']  !!};
 @elseif(!empty($value['userFieldName']))
             $requestData['{{$value['fieldName']}}'] = $requester->{{$value['userFieldName']}};
 @endif

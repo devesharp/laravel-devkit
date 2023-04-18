@@ -319,10 +319,14 @@ class Transformer
 
     public static function item(
         $model,
-        Transformer $transform,
+        Transformer|string $transform,
         $context = 'default',
         $requester = null
     ) {
+        if (is_string($transform)) {
+            $transform = app($transform);
+        }
+
         return $transform->transformOne($model, $context, $requester);
     }
 
@@ -338,10 +342,13 @@ class Transformer
      */
     public static function collection(
         $models,
-        Transformer $transform,
+        Transformer|string $transform,
         $context = 'default',
         $requester = null
     ) {
+        if (is_string($transform)) {
+            $transform = app($transform);
+        }
         return $transform->transformMany($models, $context, $requester);
     }
 }

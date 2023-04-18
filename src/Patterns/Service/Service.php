@@ -71,11 +71,11 @@ class Service
         $repository,
         $transformer,
         $context,
-        $auth = null
+        $requester = null
     ) {
         return [
             'count' => $this->getSearchCount($repository),
-            'results' => $this->getSearchResults($repository, $transformer, $context, $auth = null),
+            'results' => $this->getSearchResults($repository, $transformer, $context, $requester),
         ];
     }
 

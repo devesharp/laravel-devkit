@@ -24,6 +24,7 @@ class ServiceGenerator extends TemplateGenerator
         $this->templateData->addImport('{{ $dtoNamespace }}\Search{{ $resourceName }}Dto');
         $this->templateData->addImport('{{ $dtoNamespace }}\Delete{{ $resourceName }}Dto');
         $this->templateData->addImport('Devesharp\Support\Collection');
+        $this->templateData->addImport('Devesharp\Support\Formatters\OnlyLettersNumbersFormatter');
         $this->templateData->addImport('Illuminate\Support\Facades\DB');
     }
 

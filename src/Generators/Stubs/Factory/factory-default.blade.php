@@ -28,7 +28,6 @@ class {{ $resourceName }}Factory extends Factory
     /**
     * Define the model's default state.
     *
-    * @return array
     */
     public function bodyForRequest()
     {
@@ -41,5 +40,18 @@ class {{ $resourceName }}Factory extends Factory
 @endforeach
             ];
         });
+    }
+
+    /**
+    * Body para gerar documentação mais acertiva com os valores gerados
+    *
+    */
+    public function bodyForDocs()
+    {
+        return [
+        @foreach($fieldsFakerForDocs as $field)
+        '{{ $field['name'] }}' => {!! $field['value'] !!},
+        @endforeach
+        ];
     }
 }

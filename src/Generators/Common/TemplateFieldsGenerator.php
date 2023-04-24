@@ -189,6 +189,7 @@ class TemplateFieldsGenerator
                 $fields[] = [
                     'name' => $key,
                     'type' => $type,
+                    'dto' => !empty($field['dto']),
                     'subType' => $subType,
                     'format' => $field['format'] ?? '',
                     'valueOnCreate' => !empty($field['valueOnCreate']),
@@ -656,7 +657,7 @@ class TemplateFieldsGenerator
                 if ($key == 'deleted_by') continue;
 
                 // Não é necessário testar se não houver DTO, pois não se sabe o valor que ele vai ganhar
-                if (empty($field['dto'])) continue;
+//                if (empty($field['dto'])) continue;
 
                 $relationsConfig = config('devesharp_dev_kit.relations', []);
                 $usedUserRelation = $tableForeign == 'Users';
@@ -689,6 +690,7 @@ class TemplateFieldsGenerator
                     'localKey' => $key,
                     'variable' => $singularRelation,
                     'key' => $primaryKeyName,
+                    'dto' => !empty($field['dto']),
                     'valueOnCreate' => !empty($field['valueOnCreate']),
                     'transformer' => !empty($field['transformer']),
                 ];
@@ -785,7 +787,13 @@ class TemplateFieldsGenerator
                 } else if (is_numeric($field['default'])) {
                     $migrationField .= '->default(' . $field['default'] . ')';
                 } else {
-                    $migrationField .= '->default(\'' . $field['default'] . '\')';
+                    if ($field['default'] == '') {
+                        if ($field['dbType'] == 'string' || $field['dbType'] == 'text' || $field['dbType'] == 'tinyText' || $field['dbType'] == 'mediumText' || $field['dbType'] == 'longText') {
+                            $migrationField .= '->default(\'' . $field['default'] . '\')';
+                        }
+                    } else {
+                        $migrationField .= '->default(\'' . $field['default'] . '\')';
+                    }
                 }
             }
 

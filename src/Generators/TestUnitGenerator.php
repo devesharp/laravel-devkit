@@ -39,7 +39,7 @@ class TestUnitGenerator extends TemplateGenerator
 
         if (!empty($relations['Users'])) {
             foreach ($relations['Users'] as $key => $field) {
-                $headerFnTest .= '        $' . Str::singular(Str::camel($field['resource'])) . ' = ' . $field['resource'] . '::factory()->create();' . PHP_EOL;
+                $headerFnTest .= '        $' . Str::singular(Str::camel($field['resource'])) . ' = ' . $field['resource'] . '::factory()->withRelations()->create();' . PHP_EOL;
                 $useNamespace .= 'use ' . $modelNamespace . '\\' . $field['resource'] . ';' . PHP_EOL;
             }
             $headerFnTest .= '        $user = User::factory([' . PHP_EOL;
@@ -48,7 +48,7 @@ class TestUnitGenerator extends TemplateGenerator
             }
             $headerFnTest .= '        ])->create();';
         } else {
-            $headerFnTest .= '        $user = Users::factory()->create();';
+            $headerFnTest .= '        $user = Users::factory()->withRelations()->create();';
         }
 
         return [

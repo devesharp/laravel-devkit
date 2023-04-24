@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $post_type
  * @property integer $status
  * @property string $created_by
- * @method App\Modules\Example\Resources\Presenters\ExamplePresenter present()
+ * @method \App\Modules\Example\Resources\Presenters\ExamplePresenter present()
  * @method static App\Modules\Example\Resources\Models\Example find($value)
  */
 class Example extends Model

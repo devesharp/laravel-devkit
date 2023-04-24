@@ -47,6 +47,8 @@ class {{ $resourceName }}UnitTest extends TestCase
     Se for create_at, updated_at ou valueOnCreate.staticValue, quer dizer que o horário
     sempre será o atual, assim o teste precisa ser diferente dos demais
 --}}        $this->assertDateLessOrEqualThanNow($resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif(!$field['dto'])
+    $this->assertTrue(isset($resource['{{ $field['name'] }}']), '{{ $field['name'] }}');
 @elseif($field['type'] == "date")
         $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
@@ -79,6 +81,8 @@ class {{ $resourceName }}UnitTest extends TestCase
         Se for create_at, updated_at ou valueOnCreate.staticValue, quer dizer que o horário
         sempre será o atual, assim o teste precisa ser diferente dos demais
     --}}        $this->assertDateLessOrEqualThanNow($resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif(!$field['dto'])
+    $this->assertTrue(isset($resource['{{ $field['name'] }}']), '{{ $field['name'] }}');
 @elseif($field['type'] == "date")
         $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else

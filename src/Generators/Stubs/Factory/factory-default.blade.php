@@ -25,6 +25,16 @@ class {{ $resourceName }}Factory extends Factory
         ];
     }
 
+    public function withRelations() {
+        return $this->state(function (array $attributes) {
+            return [
+@foreach($fieldsUsedOnResource as $fieldRelationTest)
+                '{{$fieldRelationTest['localKey']}}' => {{$fieldRelationTest['resourceName']}}::find(1)->id ?? {{$fieldRelationTest['resourceName']}}::factory()->withRelations()->create()->id,
+@endforeach
+            ];
+        });
+    }
+
     /**
     * Define the model's default state.
     *

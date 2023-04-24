@@ -17,7 +17,7 @@
 @else
 @foreach($fieldsUsedOnResource as $fieldRelationTest)
 @if(!$fieldRelationTest['usedUserRelation'] && !$fieldRelationTest['alreadyBeenDefined'])
-        ${{$fieldRelationTest['variable']}} = {{$fieldRelationTest['resourceName']}}::factory()->create();
+        ${{$fieldRelationTest['variable']}} = {{$fieldRelationTest['resourceName']}}::factory()->withRelations()->create();
 @endif
 @endforeach
 @if(!empty($create))
@@ -25,7 +25,7 @@
 @else
         $resourceData = {{ $resourceName }}::factory([
 @endif
-@foreach($fieldsUsedOnResource as $fieldRelationTest)@if(!$fieldRelationTest['valueOnUser'])
+@foreach($fieldsUsedOnResource as $fieldRelationTest)@if(!$fieldRelationTest['valueOnUser'] && $fieldRelationTest['dto'])
             '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
 @endif
 @endforeach

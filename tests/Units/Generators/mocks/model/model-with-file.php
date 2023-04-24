@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $post_type
  * @property integer $status
  * @property string $created_by
- * @method App\Modules\Products\Resources\Presenters\EletronicsPresenter present()
+ * @method \App\Modules\Products\Resources\Presenters\EletronicsPresenter present()
  * @method static App\Modules\Products\Resources\Models\Eletronics find($value)
  */
 class Eletronics extends Model

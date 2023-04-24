@@ -8,8 +8,8 @@ use Devesharp\Patterns\Repository\RepositoryMysql;
  * Class EletronicsRepository
  *
  * @method public                                      Builder getModel()
- * @method App\Modules\Products\Resources\Models\Eletronics findById($id, $enabled = true)
- * @method App\Modules\Products\Resources\Models\Eletronics findIdOrFail($id, $enabled = true)
+ * @method \App\Modules\Products\Resources\Models\Eletronics findById($id, $enabled = true)
+ * @method \App\Modules\Products\Resources\Models\Eletronics findIdOrFail($id, $enabled = true)
  */
 class EletronicsRepository extends RepositoryMysql
 {

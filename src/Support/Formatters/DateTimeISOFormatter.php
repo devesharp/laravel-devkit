@@ -12,7 +12,8 @@ use MichaelRubel\Formatters\Formatter;
 class DateTimeISOFormatter implements Formatter
 {
     public function __construct(
-        public string|null|CarbonInterface $date = null
+        public string|null|CarbonInterface $date = null,
+        public $formatString = '',
     ) {
         if (! $this->date instanceof CarbonInterface && !empty($this->date)) {
             $this->date = app(Carbon::class)->parse($this->date);
@@ -28,6 +29,9 @@ class DateTimeISOFormatter implements Formatter
     public function format(Collection $items): string
     {
         if ($this->date instanceof CarbonInterface) {
+            if (!empty($this->formatString)) {
+                return $this->date->format($this->formatString);
+            }
             return $this->date->utc()->toIso8601String(true);
         }
 

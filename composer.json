@@ -27,7 +27,6 @@
         "laravel": {
             "providers": [
                 "Devesharp\\Generators\\Provider\\GeneratorsProvider",
-                "Devesharp\\SwaggerGenerator\\Providers\\SwaggerGeneratorProvider",
                 "Devesharp\\Support\\Validators\\ValidatorProvider"
             ]
         }

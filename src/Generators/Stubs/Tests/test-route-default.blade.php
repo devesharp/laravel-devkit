@@ -31,6 +31,8 @@ class {{ $resourceName }}RouteTest extends TestCase
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
+@elseif(!$field['dto'])
+        $this->assertTrue(isset($responseData['data']['{{ $field['name'] }}']), '{{ $field['name'] }}');
 @elseif($field['name'] == "created_at" || $field['name'] == "updated_at" || !empty($field['now']))
         $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif($field['type'] == "date")
@@ -70,6 +72,8 @@ class {{ $resourceName }}RouteTest extends TestCase
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
+@elseif(!$field['dto'])
+        $this->assertTrue(isset($responseData['data']['{{ $field['name'] }}']), '{{ $field['name'] }}');
 @elseif($field['name'] == "created_at" || $field['name'] == "updated_at" || !empty($field['now']))
         $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif($field['type'] == "date")
@@ -108,6 +112,8 @@ class {{ $resourceName }}RouteTest extends TestCase
 @foreach($fieldsTransformer as $field)
 @if($field['name'] == "id")
         $this->assertGreaterThanOrEqual(1, $responseData['data']['{{ $field['name'] }}']);
+@elseif(!$field['dto'])
+        $this->assertTrue(isset($responseData['data']['{{ $field['name'] }}']), '{{ $field['name'] }}');
 @elseif($field['name'] == "created_at" || $field['name'] == "updated_at" || !empty($field['now']))
         $this->assertDateLessOrEqualThanNow($responseData['data']['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif($field['type'] == "date")

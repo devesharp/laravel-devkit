@@ -46,7 +46,7 @@ class TestUnitGenerator extends TemplateGenerator
             foreach ($relations['Users'] as $key => $field) {
                 $headerFnTest .= '            \'' . $key . '\' => $' . Str::singular(Str::camel($field['resource'])) . '->id,' . PHP_EOL;
             }
-            $headerFnTest .= '        ])->create();';
+            $headerFnTest .= '        ])->withRelations()->create();';
         } else {
             $headerFnTest .= '        $user = Users::factory()->withRelations()->create();';
         }

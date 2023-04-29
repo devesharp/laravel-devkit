@@ -40,16 +40,16 @@ class TestRouteGenerator extends TemplateGenerator
 
         if (!empty($relations['Users'])) {
             foreach ($relations['Users'] as $key => $field) {
-                $headerFnTest .= '        $' . Str::camel($field['resource']) . ' = ' . $field['resource'] . '::factory()->create();' . PHP_EOL;
+                $headerFnTest .= '        $' . Str::camel($field['resource']) . ' = ' . $field['resource'] . '::factory()->withRelations()->create();' . PHP_EOL;
                 $useNamespace .= 'use ' . $modelNamespace . '\\' . $field['resource'] . ';' . PHP_EOL;
             }
             $headerFnTest .= '        $user = User::factory([' . PHP_EOL;
             foreach ($relations['Users'] as $key => $field) {
                 $headerFnTest .= '            \'' . $key . '\' => $' . Str::camel($field['resource']) . '->id,' . PHP_EOL;
             }
-            $headerFnTest .= '        ])->create();';
+            $headerFnTest .= '        ])->withRelations()->create();';
         } else {
-            $headerFnTest .= '        $user = Users::factory()->create();';
+            $headerFnTest .= '        $user = Users::factory()->withRelations()->create();';
         }
 
         return [

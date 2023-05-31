@@ -82,7 +82,7 @@ class Exception extends \Exception
      */
     public static function NotFound($type = '')
     {
-        static::exception(static::NOT_FOUND_RESOURCE);
+        static::exception(static::NOT_FOUND_RESOURCE, $type);
     }
 
     /**

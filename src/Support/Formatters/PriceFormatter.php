@@ -13,7 +13,7 @@ class PriceFormatter implements Formatter
 {
 
     public function __construct(
-        public string|int|null $price = null,
+        public string|int|float|null $price = null,
         public bool $withDecimals = true,
     ) {}
 
@@ -26,6 +26,6 @@ class PriceFormatter implements Formatter
      */
     public function format(Collection $items): string
     {
-        return Masks::priceBr($this->price, $this->withDecimals);
+        return Masks::priceBr($this->price * 100, $this->withDecimals);
     }
 }

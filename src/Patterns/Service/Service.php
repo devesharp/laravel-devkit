@@ -317,4 +317,8 @@ class Service
         $this->__getOnlyCount__ = true;
         return $this;
     }
+
+    public function makeSearchPublic(&$data, $requester = null) {
+        return $this->makeSearch($data, $requester);
+    }
 }

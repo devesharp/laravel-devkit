@@ -4,11 +4,18 @@ namespace Devesharp\Patterns\Transformer;
 
 use Devesharp\Patterns\Repository\RepositoryInterface;
 use Devesharp\Support\Helpers;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Transformer
 {
     protected array $loads = [];
+
+    /**
+     * Contextos de transformação que não irão executar o transformDefault
+     * @var array
+     */
+    protected array $contextsIgnoreDefault = [];
 
     /**
      * @param $model
@@ -99,7 +106,7 @@ class Transformer
                 $default = [];
 
                 // Se não for o contexto default e model, faz um load do transformDefault
-                if ($context != 'default' && $context != 'model') {
+                if ($context != 'default' && $context != 'model' && !in_array($context, $this->contextsIgnoreDefault)) {
                     $default = $this->transformDefault($model, $requester, []);
                 }
 
@@ -118,7 +125,7 @@ class Transformer
                 $default = [];
 
                 // Se não for o contexto default e model, faz um load do transformDefault
-                if ($context != 'default' && $context != 'model') {
+                if ($context != 'default' && $context != 'model' && !in_array($context, $this->contextsIgnoreDefault)) {
                     $default = $this->transformDefault($model, $requester, []);
                 }
 
@@ -200,7 +207,7 @@ class Transformer
 
         $default = [];
         // Se não for o contexto default e model, faz um load do transformDefault
-        if ($context != 'default' && $context != 'model') {
+        if ($context != 'default' && $context != 'model' && !in_array($context, $this->contextsIgnoreDefault)) {
             $default = $this->transformDefault($model, $requester, []);
         }
 

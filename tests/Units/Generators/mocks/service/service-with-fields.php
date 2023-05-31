@@ -360,7 +360,7 @@ class EletronicsService extends Service
 
             $count = 0;
 
-            $query->chunk(50, function ($resources) use ($requester) {
+            $query->chunk(50, function ($resources) use ($requester, $count) {
                 foreach ($resources as $resource) {
                     $this->delete($resource->id, $requester);
                     $count++;

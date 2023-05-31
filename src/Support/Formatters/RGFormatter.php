@@ -25,6 +25,8 @@ class RGFormatter implements Formatter
      */
     public function format(Collection $items): string
     {
+        if (empty($this->RG)) return '';
+
         return Masks::RG($this->RG);
     }
 }

@@ -248,7 +248,7 @@ class ServiceStub extends Service
 
             $query = $this->makeSelectActions($data, $requester);
 
-            $query->chunk(50, function ($resources) use ($requester) {
+            $query->chunk(50, function ($resources) use ($requester, $count) {
                 foreach ($resources as $resource) {
                     $this->delete($resource->id, $requester);
                 }

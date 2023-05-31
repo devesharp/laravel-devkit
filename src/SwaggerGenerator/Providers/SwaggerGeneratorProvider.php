@@ -34,6 +34,10 @@ class SwaggerGeneratorProvider extends ServiceProvider
                 if (!empty($item['url']))
                     $apiDocs->addServers($item['url'], $item['description'] ?? '');
             }
+
+            if (!empty(config('devesharp_dev_kit.APIDocs.x-logo'))) {
+                $apiDocs->setLogo(config('devesharp_dev_kit.APIDocs.x-logo'));
+            }
         }
 
     }

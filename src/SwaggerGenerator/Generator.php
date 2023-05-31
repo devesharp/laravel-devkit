@@ -85,6 +85,11 @@ class Generator
         $this->openAPIJSON->info->version = $version;
     }
 
+    public function setLogo($logo): void
+    {
+        $this->openAPIJSON->info->{'x-logo'} = $logo;
+    }
+
     public function addBasicAuth(string $name): void
     {
         if (!isset($this->openAPIJSON->components->securitySchemes)) {

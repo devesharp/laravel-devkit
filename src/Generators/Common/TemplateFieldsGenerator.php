@@ -176,7 +176,7 @@ class TemplateFieldsGenerator
                 $subType = 'phone';
             }
 
-            if (Str::contains($keyLower, 'rg')) {
+            if ($keyLower == 'rg') {
                 $subType = 'rg';
             }
 
@@ -285,7 +285,13 @@ class TemplateFieldsGenerator
         $fields = [];
         foreach ($templateData->fieldsRaw as $key => $field) {
             $keyLower = strtolower($key);
-            if ($keyLower == 'cep' || $keyLower == 'postal_code' || $keyLower == 'zipcode' || $keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'phone' || $keyLower == 'cellphone' || $keyLower == 'mobile' || $keyLower == 'mobilephone' || $keyLower == 'mobile_phone' || $keyLower == 'telephone' || $keyLower == 'document') {
+
+            $format = $keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'cnpj' || $keyLower == 'document' || Str::contains($keyLower, 'cpf') || Str::contains($keyLower, 'cnpj') ||
+Str::contains($keyLower, 'phone') || Str::contains($keyLower, 'celular') || Str::contains($keyLower, 'telefone') ||
+$keyLower =='rg' ||
+Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || Str::contains($keyLower, 'zip_postal');
+
+            if ($format) {
                 $treatmentField = [
                     'fieldName' => $key,
                     'value' => 'format(OnlyLettersNumbersFormatter::class, $requestData["'.$key.'"])',
@@ -424,19 +430,25 @@ class TemplateFieldsGenerator
                         }
                 }
 
-                if ($key == "CPF" || $key == "cpf" || $key == "CNPJ_or_CPF") {
+                $keyLower = strtolower($key);
+
+                if ($keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'cnpj' || $keyLower == 'document' || Str::contains($keyLower, 'cpf') || Str::contains($keyLower, 'cnpj')) {
                     $fakerFn = 'fake()->numerify("###.###.###-##")';
                 }
 
-                if ($key == "document" || $key == "RG") {
+                if (Str::contains($keyLower, 'phone') || Str::contains($keyLower, 'celular') || Str::contains($keyLower, 'telefone')) {
+                    $fakerFn = 'fake()->numerify("(##) #####-####")';
+                }
+
+                if ($keyLower == 'rg') {
                     $fakerFn = 'fake()->numerify("##.###.###-#")';
                 }
 
-                if (Str::contains(strtolower($key), 'cep') || Str::contains(strtolower($key), 'postal_code') || Str::contains(strtolower($key), 'zip_postal')) {
+                if (Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || Str::contains($keyLower, 'zip_postal')) {
                     $fakerFn = 'fake()->numerify("#####-###")';
                 }
 
-                if ($key == 'email') {
+                if ($key == 'email' || Str::contains($keyLower, 'email')) {
                     $fakerFn = 'fake()->email()';
                 }
 

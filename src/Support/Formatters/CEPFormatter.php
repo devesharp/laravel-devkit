@@ -25,6 +25,8 @@ class CEPFormatter implements Formatter
      */
     public function format(Collection $items): string
     {
+        if (empty($this->cep)) return '';
+
         return Masks::CEP($this->cep);
     }
 }

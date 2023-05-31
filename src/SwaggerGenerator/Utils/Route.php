@@ -119,6 +119,11 @@ class Route
      */
     public array $security = [];
 
+    /**
+     * @var bool Quando houver mais de uma rota, ignorar esse body
+     */
+    public bool $ignoreDuplicateBody = false;
+
 
     /**
      * @param string $method

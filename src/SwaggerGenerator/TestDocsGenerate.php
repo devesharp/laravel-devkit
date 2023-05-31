@@ -109,6 +109,9 @@ class TestDocsGenerate
     function setRouteInfo($name, string $routeDoc = ''): self {
         if (class_exists($routeDoc)) {
             $routeInfo = (new $routeDoc())->getRouteInfo($name);
+            if (empty($routeInfo->name)) {
+                throw new \Exception('Route name ' . $name . ' not found in ' . $routeDoc);
+            }
             $this->addRouteName($routeInfo->name, $routeInfo->description);
         }
 
@@ -141,6 +144,13 @@ class TestDocsGenerate
             $this->route->body = $data;
             $this->route->bodyComplete = $data;
         }
+
+        return $this;
+    }
+
+    public function ignoreDuplicateBody($ignore = true): self
+    {
+        $this->route->ignoreDuplicateBody = $ignore;
 
         return $this;
     }

@@ -328,30 +328,33 @@ class Generator
                     ]
                 ];
             } else {
-                if (empty($path->{$method}->requestBody['content'][$route->bodyType]['schema']['oneOf'])) {
-                    $body = $path->{$method}->requestBody;
-                    $body['content'][$route->bodyType]['schema'] = [
-                        'oneOf' => [
-                            $path->{$method}->requestBody['content'][$route->bodyType]['schema'],
+                // Se não for ignorar o body duplicado
+                if (!$route->ignoreDuplicateBody) {
+                    if (empty($path->{$method}->requestBody['content'][$route->bodyType]['schema']['oneOf'])) {
+                        $body = $path->{$method}->requestBody;
+                        $body['content'][$route->bodyType]['schema'] = [
+                            'oneOf' => [
+                                $path->{$method}->requestBody['content'][$route->bodyType]['schema'],
+                                [
+                                    'title' => $route->variationName,
+                                    'description' => $route->variationDescription,
+                                    ...$schema
+                                ]
+                            ]
+                        ];
+                        $path->{$method}->requestBody = $body;
+                    } else {
+                        $body = $path->{$method}->requestBody;
+                        $body['content'][$route->bodyType]['schema']['oneOf'] = [
+                            ...$body['content'][$route->bodyType]['schema']['oneOf'],
                             [
                                 'title' => $route->variationName,
                                 'description' => $route->variationDescription,
                                 ...$schema
                             ]
-                        ]
-                    ];
-                    $path->{$method}->requestBody = $body;
-                } else {
-                    $body = $path->{$method}->requestBody;
-                    $body['content'][$route->bodyType]['schema']['oneOf'] = [
-                        ...$body['content'][$route->bodyType]['schema']['oneOf'],
-                        [
-                            'title' => $route->variationName,
-                            'description' => $route->variationDescription,
-                            ...$schema
-                        ]
-                    ];
-                    $path->{$method}->requestBody = $body;
+                        ];
+                        $path->{$method}->requestBody = $body;
+                    }
                 }
             }
         }

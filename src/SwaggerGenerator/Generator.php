@@ -17,6 +17,7 @@ use Devesharp\SwaggerGenerator\Utils\Get;
 use Devesharp\SwaggerGenerator\Utils\Ref;
 use Devesharp\SwaggerGenerator\Utils\Route;
 use Illuminate\Http\File;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class Generator
@@ -182,7 +183,7 @@ class Generator
     public function setDescription(string $description): void
     {
         if(!empty($this->openAPIJSON))
-            $this->openAPIJSON->info->description = $description;
+            $this->openAPIJSON->info->description = str_replace('{{date}}', Carbon::now()->timezone('America/Sao_Paulo')->format('d/m/Y H:i:s'), $description);
     }
 
     /**

@@ -218,6 +218,25 @@ class Service
                         );
                     }
 
+                    switch ($functionName) {
+                        case 'whereDateGtStartDay':
+                        case 'whereDateGteStartDay':
+                        case 'whereDateLtStartDay':
+                        case 'whereDateLteStartDay':
+                            $functionName = str_replace('StartDay', '', $functionName);
+                            $value = \Carbon\Carbon::make($value)->startOfDay();
+
+                            break;
+                        case 'whereDateGtEndDay':
+                        case 'whereDateGteEndDay':
+                        case 'whereDateLtEndDay':
+                        case 'whereDateLteEndDay':
+                            $functionName = str_replace('EndDay', '', $functionName);
+                            $value = \Carbon\Carbon::make($value)->endOfDay();
+
+                            break;
+                    }
+
                     if (
                         empty($filter['clause']) ||
                         'where' == $filter['clause']

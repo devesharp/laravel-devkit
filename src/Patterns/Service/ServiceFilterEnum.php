@@ -14,6 +14,14 @@ class ServiceFilterEnum
     const whereDateGte = "DateGte";
     const whereDateLt = "DateLt";
     const whereDateLte = "DateLte";
+    const whereDateGtStartDay = "whereDateGtStartDay";
+    const whereDateGteStartDay = "whereDateGteStartDay";
+    const whereDateLtStartDay = "whereDateLtStartDay";
+    const whereDateLteStartDay = "whereDateLteStartDay";
+    const whereDateGtEndDay = "whereDateGtEndDay";
+    const whereDateGteEndDay = "whereDateGteEndDay";
+    const whereDateLtEndDay = "whereDateLtEndDay";
+    const whereDateLteEndDay = "whereDateLteEndDay";
     const whereInt = "Int";
     const whereNotInt = "NotInt";
     const whereIntGt = "IntGt";

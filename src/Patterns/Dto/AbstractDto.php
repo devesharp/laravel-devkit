@@ -94,6 +94,29 @@ abstract class AbstractDto extends Collection
         // Current rules
         $rules = $this->configureValidatorRules();
 
+        foreach ($rules as $key => $rule) {
+
+            $validations = is_string($rule->rules) ? explode('|', $rule->rules) : $rule->rules;
+
+            // Resgata outra dto e coloca dentro da key escolhida
+            foreach ($validations as $item) {
+                if (is_string($item) && class_exists($item)) {
+                    $otherRules = (new $item([], false))->getValidateRules(true);
+
+                    $newValidation = Collection::make($validations)->filter(function ($rule) use ($item) {
+                        return $rule != $item;
+                    })->toArray();
+
+                    $rules[$key] = new Rule([...$newValidation, 'array'], $rule->description);
+                    foreach ($otherRules as $keyOther => $otherRule) {
+                        $rules[$key .'.' . $keyOther] = new Rule($otherRule->rules, $otherRule->description);
+                    }
+
+                    break;
+                }
+            }
+        }
+
         // Remove descriptions for keys
         if (!$raw) {
 //            var_dump($rules);
@@ -107,7 +130,6 @@ abstract class AbstractDto extends Collection
                 return $rule->rules;
             })->toArray();
         }
-
 
         // Extends Rules
         $rulesExtends = [];

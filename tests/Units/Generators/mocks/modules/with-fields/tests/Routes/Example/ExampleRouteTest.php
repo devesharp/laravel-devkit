@@ -27,6 +27,7 @@ class ExampleRouteTest extends TestCase
         $response = $this->withPost('/v1/example')
             ->setRouteInfo('CreateExample', ExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Example'])
             ->addBody($resourceData, CreateExampleDto::class)
             ->run();
@@ -62,6 +63,7 @@ class ExampleRouteTest extends TestCase
             ->addPath('id', $resource->id, 'ID do Example')
             ->setRouteInfo('UpdateExample', ExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Example'])
             ->addBody($resourceData, UpdateExampleDto::class)
             ->run();
@@ -96,6 +98,7 @@ class ExampleRouteTest extends TestCase
             ->addPath('id', $resource->id, 'ID do Example')
             ->setRouteInfo('GetExample', ExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Example'])
             ->run();
 
@@ -128,6 +131,7 @@ class ExampleRouteTest extends TestCase
         $response = $this->withPost('/v1/example/search')
             ->setRouteInfo('SearchExample', ExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Example'])
             ->addBody([
                 'filters' => [
@@ -157,6 +161,7 @@ class ExampleRouteTest extends TestCase
             ->addPath('id', $resource->id, 'Id do Example')
             ->setRouteInfo('DeleteExample', ExampleRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Example'])
             ->run();
 

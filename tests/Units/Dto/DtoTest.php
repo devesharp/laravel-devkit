@@ -7,6 +7,7 @@ use Devesharp\Support\Collection;
 use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Tests\Units\Dto\Mocks\AcceptAdditionalValuesDtoStub;
 use Tests\Units\Dto\Mocks\CreateDtoStub;
+use Tests\Units\Dto\Mocks\DeepDtoStub;
 use Tests\Units\Dto\Mocks\DtoWithEnumStub;
 use Tests\Units\Dto\Mocks\HiddenDtoStub;
 use Tests\Units\Dto\Mocks\RemoveRequiredsDtoStub;
@@ -52,6 +53,19 @@ class DtoTest extends \Tests\TestCase
 
         $this->assertInstanceOf(Collection::class, $data);
         $this->assertEquals($data->toArray(), ['name' => 'John', 'age' => 10]);
+    }
+
+    /**
+     * @testdox Dto - extender outro Dto
+     */
+    public function testDtoDeep()
+    {
+        $data = new DeepDtoStub([
+            'deep' => ['name' => 'John', 'age' => 10]
+        ]);
+
+        $this->assertInstanceOf(Collection::class, $data);
+        $this->assertEquals($data->toArray(), ['deep' => ['name' => 'John', 'age' => 10]]);
     }
 
 

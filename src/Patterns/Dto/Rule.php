@@ -11,7 +11,9 @@ use Illuminate\Support\Str;
 
 class Rule
 {
-    public function __construct(public array|string $rules, public string $description = '')
+    protected $dto;
+
+    public function __construct(public array|string|AbstractDto $rules, public string $description = '')
     {
     }
 }

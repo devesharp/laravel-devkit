@@ -219,18 +219,18 @@ class Service
                     }
 
                     switch ($functionName) {
-                        case 'whereDateGtStartDay':
-                        case 'whereDateGteStartDay':
-                        case 'whereDateLtStartDay':
-                        case 'whereDateLteStartDay':
+                        case 'DateGtStartDay':
+                        case 'DateGteStartDay':
+                        case 'DateLtStartDay':
+                        case 'DateLteStartDay':
                             $functionName = str_replace('StartDay', '', $functionName);
                             $value = \Carbon\Carbon::make($value)->startOfDay();
 
                             break;
-                        case 'whereDateGtEndDay':
-                        case 'whereDateGteEndDay':
-                        case 'whereDateLtEndDay':
-                        case 'whereDateLteEndDay':
+                        case 'DateGtEndDay':
+                        case 'DateGteEndDay':
+                        case 'DateLtEndDay':
+                        case 'DateLteEndDay':
                             $functionName = str_replace('EndDay', '', $functionName);
                             $value = \Carbon\Carbon::make($value)->endOfDay();
 

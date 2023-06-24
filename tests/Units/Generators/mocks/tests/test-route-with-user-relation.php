@@ -51,6 +51,7 @@ class EletronicsRouteTest extends TestCase
         $response = $this->withPost('/v1/eletronics')
             ->setRouteInfo('CreateEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Eletronics'])
             ->addBody($resourceData, CreateEletronicsDto::class)
             ->run();
@@ -114,6 +115,7 @@ class EletronicsRouteTest extends TestCase
             ->addPath('id', $resource->id, 'ID do Eletronics')
             ->setRouteInfo('UpdateEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Eletronics'])
             ->addBody($resourceData, UpdateEletronicsDto::class)
             ->run();
@@ -170,6 +172,7 @@ class EletronicsRouteTest extends TestCase
             ->addPath('id', $resource->id, 'ID do Eletronics')
             ->setRouteInfo('GetEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Eletronics'])
             ->run();
 
@@ -224,6 +227,7 @@ class EletronicsRouteTest extends TestCase
         $response = $this->withPost('/v1/eletronics/search')
             ->setRouteInfo('SearchEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Eletronics'])
             ->addBody([
                 'filters' => [
@@ -273,6 +277,7 @@ class EletronicsRouteTest extends TestCase
             ->addPath('id', $resource->id, 'Id do Eletronics')
             ->setRouteInfo('DeleteEletronics', EletronicsRouteDoc::class)
             ->addHeader('Authorization', 'Bearer ' . $user->access_token, 'Authorization')
+            ->addHeader('x-platform', 'abc-token', 'Token da plataforma')
             ->addGroups(['Eletronics'])
             ->run();
 

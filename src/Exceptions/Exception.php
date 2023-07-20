@@ -44,6 +44,10 @@ class Exception extends \Exception
                 return 'Houve um erro ao executar a ação, favor entrar em contato conosco';
                 break;
 
+            case static::PASSWORD_INCORRECT:
+                return 'Senha incorreta';
+                break;
+
             case static::UNAUTHORIZED:
             case static::TOKEN_INVALID:
                 return 'Não Autorizado';

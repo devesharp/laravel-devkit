@@ -123,6 +123,12 @@ class TestDocsGenerate
         return $this;
     }
 
+    function groupAPI($tag): self {
+//        $this->route->tags = (array) $tags;
+
+        return $this;
+    }
+
     /**
      * @param array $data
      * @param Validator $validator

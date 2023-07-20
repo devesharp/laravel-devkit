@@ -30,7 +30,7 @@ class ValidatorProvider extends ServiceProvider
             }
 
             return is_numeric($value);
-        });
+        }, 'O campo :attribute deve ser um número');
 
         Validator::extendImplicit('numeric_array', function ($attribute, $value, $parameters) {
             if ($value === null || $value == []) {

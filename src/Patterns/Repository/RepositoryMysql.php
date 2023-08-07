@@ -1459,12 +1459,24 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
+    function whereHas($data, $fn) {
+        $this->modelQuery->whereHas($data, $fn);
+
+        return $this;
+    }
+
+    function orWhereHas($data, $fn) {
+        $this->modelQuery->orWhereHas($data, $fn);
+
+        return $this;
+    }
+
 
     public function orderBy($column, $order): self
     {
-        if ('asc' === $order) {
+        if ('asc' === strtolower($order)) {
             $this->modelQuery = $this->modelQuery->orderBy($column, $order);
-        } elseif ('desc' === $order) {
+        } elseif ('desc' === strtolower($order)) {
             $this->modelQuery = $this->modelQuery->orderBy($column, $order);
         }
 

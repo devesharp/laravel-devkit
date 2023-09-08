@@ -13,4 +13,9 @@ class {{ $resourceName }}Repository extends RepositoryMysql
      * @@var string
      */
     protected $model = \{{ $modelNamespace }}\{{ $resourceName }}::class;
+
+@if($disableEnabledColumn)
+    protected bool $disableEnabledColumn = true;
+@endif
+
 }

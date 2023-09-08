@@ -24,8 +24,8 @@ class TestUnitGenerator extends TemplateGenerator
         $this->templateData->addImport('{{ $modelNamespace }}\{{ $resourceName }}');
         $this->templateData->addImport('{{ $userModelNamespace }}\Users');
         $this->templateData->addImport('{{ $serviceNamespace }}\{{ $resourceName }}Service');
-        $this->templateData->addImport('App\Modules\Users\Interfaces\UsersPermissions');
         $this->templateData->addImport('Tests\TestCase');
+        $this->templateData->addImport('App\Modules\Users\Interfaces\UsersPermissions');
     }
 
     public function getData(): array
@@ -55,6 +55,7 @@ class TestUnitGenerator extends TemplateGenerator
             'headerFnTest' => $headerFnTest,
             'userVariable' => $userVariable,
             'useNamespace' => $useNamespace,
+            'disableEnabledColumn' => !($this->templateData->fieldsRaw['enabled'] ?? false),
         ];
     }
 
@@ -70,11 +71,11 @@ class TestUnitGenerator extends TemplateGenerator
         $data = [...$this->templateData->toArray(), ...$this->additionalData, ...$this->getData()];
 
         $words = [];
-        $words[] = $data['resourceNameUpperSnake'].'_CREATE';
-        $words[] = $data['resourceNameUpperSnake'].'_UPDATE';
-        $words[] = $data['resourceNameUpperSnake'].'_VIEW';
-        $words[] = $data['resourceNameUpperSnake'].'_DELETE';
-        $words[] = $data['resourceNameUpperSnake'].'_SEARCH';
+        $words[] = ' ' . $data['resourceNameUpperSnake'].'_CREATE';
+        $words[] = ' ' . $data['resourceNameUpperSnake'].'_UPDATE';
+        $words[] = ' ' . $data['resourceNameUpperSnake'].'_VIEW';
+        $words[] = ' ' . $data['resourceNameUpperSnake'].'_DELETE';
+        $words[] = ' ' . $data['resourceNameUpperSnake'].'_SEARCH';
 
         $found = false;
         foreach ($words as $item) {
@@ -84,11 +85,13 @@ class TestUnitGenerator extends TemplateGenerator
             }
         }
 
-        if (!$found) {
-            if ($data['withPermission']) {
-                $render = $this->renderPermissions();
-                $file = str_replace("}", "\t" . $render . "\n}", $file);
-                $this->fileSystem->writeFile($this->config->permissionsPath, $file);
+        if (!!$data['withPolicy']) {
+            if (!$found) {
+                if ($data['withPermission']) {
+                    $render = $this->renderPermissions();
+                    $file = str_replace("}", "\t" . $render . "\n}", $file);
+                    $this->fileSystem->writeFile($this->config->permissionsPath, $file);
+                }
             }
         }
 

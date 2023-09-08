@@ -17,8 +17,10 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testCreate{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test')
+@if($withPolicy)
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_CREATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
+@endif
 
         /*
         |--------------------------------------------------------------------------
@@ -63,8 +65,10 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testUpdate{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'update' => true])
+@if($withPolicy)
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_UPDATE, UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
+@endif
 
         /*
         |--------------------------------------------------------------------------
@@ -97,8 +101,10 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testGet{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
+@if($withPolicy)
         // Permissions
         $user->allow([ UsersPermissions::{{$resourceNameUpperSnake}}_VIEW]);
+@endif
 
         /*
         |--------------------------------------------------------------------------
@@ -127,8 +133,10 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testSearch{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true, 'search' => true])
+@if($withPolicy)
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_SEARCH]);
+@endif
 
         /*
         |--------------------------------------------------------------------------
@@ -149,8 +157,10 @@ class {{ $resourceName }}UnitTest extends TestCase
     public function testDelete{{ $resourceName }}()
     {
         @include('devesharp-generators::Tests/commons.header-test', ['create' => true])
+@if($withPolicy)
         // Permissions
         $user->allow([UsersPermissions::{{$resourceNameUpperSnake}}_DELETE]);
+@endif
 
         /*
         |--------------------------------------------------------------------------
@@ -159,6 +169,10 @@ class {{ $resourceName }}UnitTest extends TestCase
         */
         $this->service->delete($resource['id'], ${{ $userVariable }});
 
+@if($disableEnabledColumn)
+        $this->assertEmpty(!!{{ $resourceName }}::query()->find($resource['id']));
+@else
         $this->assertFalse(!!{{ $resourceName }}::query()->find($resource['id'])->enabled);
+@endif
     }
 }

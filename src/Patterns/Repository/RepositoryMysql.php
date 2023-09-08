@@ -169,7 +169,7 @@ class RepositoryMysql extends RepositoryInterface
 
     public function delete()
     {
-        if ($this->softDelete) {
+        if ($this->softDelete && !$this->disableEnabledColumn) {
             $model = $this->update(['enabled' => 0]);
         } else {
             $model = $this->modelQuery->delete();
@@ -185,7 +185,7 @@ class RepositoryMysql extends RepositoryInterface
         $model = new $this->model();
         $model = $model->where($this->primaryKey, $id);
 
-        if ($this->softDelete) {
+        if ($this->softDelete && !$this->disableEnabledColumn) {
             if ($auth) {
                 $model->update([
                     'enabled' => 0,

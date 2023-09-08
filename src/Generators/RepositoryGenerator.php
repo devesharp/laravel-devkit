@@ -19,6 +19,8 @@ class RepositoryGenerator extends TemplateGenerator
 
     public function getData(): array
     {
-        return [];
+        return [
+            'disableEnabledColumn' => !($this->templateData->fieldsRaw['enabled'] ?? false),
+        ];
     }
 }

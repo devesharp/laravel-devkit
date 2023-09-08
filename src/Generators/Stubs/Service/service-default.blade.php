@@ -43,7 +43,7 @@ class {{ $resourceName }}Service extends Service
     public function __construct(
         protected \{{ $transformerNamespace }}\{{ $resourceName }}Transformer $transformer,
         protected \{{ $repositoryNamespace }}\{{ $resourceName }}Repository $repository,
-        protected \{{ $policyNamespace }}\{{ $resourceName }}Policy $policy
+        @if($withPolicy) protected \{{ $policyNamespace }}\{{ $resourceName }}Policy $policy, @endif
     ) {
     }
 
@@ -58,9 +58,10 @@ class {{ $resourceName }}Service extends Service
     public function create(Create{{ $resourceName }}Dto $data, $requester = null, $context = 'model')
     {
         try {
-
+@if($withPolicy)
             // Authorization
             $this->policy->create($requester);
+@endif
 
             // Iniciar transação
             DB::beginTransaction();
@@ -95,9 +96,10 @@ class {{ $resourceName }}Service extends Service
     ) {
         try {
             $model = $this->repository->findIdOrFail($id);
-
+@if($withPolicy)
             // Authorization
             $this->policy->update($requester, $model);
+@endif
 
             // Iniciar transação
             DB::beginTransaction();
@@ -167,8 +169,10 @@ class {{ $resourceName }}Service extends Service
             \Devesharp\Exceptions\Exception::NotFound({{ $modelNamespace }}\{{ $resourceName }}::class);
         }
 
+@if($withPolicy)
         if ($context != 'model')
             $this->policy->get($requester, $model);
+@endif
 
         return Transformer::item(
             $model,
@@ -185,8 +189,10 @@ class {{ $resourceName }}Service extends Service
      */
     public function search(Search{{ $resourceName }}Dto $data, $requester = null)
     {
+@if($withPolicy)
         // Authorization
         $this->policy->search($requester);
+@endif
 
         // Make query
         $query = $this->makeSearch($data, $requester);
@@ -233,13 +239,20 @@ class {{ $resourceName }}Service extends Service
         try {
             $model = $this->repository->findIdOrFail($id);
 
+@if($withPolicy)
             // Authorization
             $this->policy->delete($requester, $model);
+@endif
 
             // Iniciar transação
             DB::beginTransaction();
 
+@if($disableEnabledColumn)
+            $this->repository->deleteById($id, $requester);
+@else
             $this->repository->updateById($id, ['enabled' => false], $requester);
+@endif
+
 
             DB::commit();
 
@@ -262,8 +275,10 @@ class {{ $resourceName }}Service extends Service
     public function deleteMany(Delete{{ $resourceName }}Dto $data, $requester = null)
     {
         try {
+@if($withPolicy)
             // Authorization
             $this->policy->delete($requester);
+@endif
 
             $query = $this->makeSelectActions($data, $requester);
 

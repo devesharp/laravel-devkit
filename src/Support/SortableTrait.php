@@ -175,7 +175,7 @@ trait SortableTrait
 
         // Salva posição
         $model->{$this->orderColumnName} = $position;
-        $this->save();
+        $model->save();
 
         return $this;
     }

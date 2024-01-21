@@ -192,6 +192,7 @@ class TemplateFieldsGenerator
                     'dto' => !empty($field['dto']),
                     'subType' => $subType,
                     'format' => $field['format'] ?? '',
+                    'nullable' => !empty($field['nullable']),
                     'valueOnCreate' => !empty($field['valueOnCreate']),
                     'now' => !empty($field['valueOnCreate']['value']) && $field['valueOnCreate']['value'] == 'now',
                 ];
@@ -473,7 +474,7 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
     {
         $fields = [];
         foreach ($templateData->fieldsRaw as $key => $field) {
-            if (isset($field['dataForDocs']) && $field['dataForDocs'] != '') {
+            if (isset($field['dataForDocs'])) {
                 $numberTypes = [
                     'id',
                     'integer',
@@ -503,16 +504,32 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
                     'unsignedDecimal',
                 ];
 
-                if (in_array($field['dbType'], $numberTypes) || $field['dbType'] == 'boolean') {
+                if ($field['dataForDocs'] == 'null') {
                     $fields[] = [
                         'name' => $key,
-                        'value' => $field['dataForDocs'],
+                        'value' => 'null',
                     ];
-                } else {
-                    $fields[] = [
-                        'name' => $key,
-                        'value' => "'" . $field['dataForDocs'] . "'",
-                    ];
+                }else {
+                    if (in_array($field['dbType'], $numberTypes) || $field['dbType'] == 'boolean') {
+                        if ($field['dataForDocs'] != '') {
+                            $fields[] = [
+                                'name' => $key,
+                                'value' => $field['dataForDocs'],
+                            ];
+                        }
+                    } else {
+                        if ($field['dataForDocs'] == '') {
+                            $fields[] = [
+                                'name' => $key,
+                                'value' => "''",
+                            ];
+                        }else {
+                            $fields[] = [
+                                'name' => $key,
+                                'value' => "'" . $field['dataForDocs'] . "'",
+                            ];
+                        }
+                    }
                 }
 
             }
@@ -794,7 +811,9 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
             }
 
             if (isset($field['default'])) {
-                if (is_bool($field['default'])) {
+                if ($field['default'] == '') {
+                    $migrationField .= '->default("")';
+                }else if (is_bool($field['default'])) {
                     $migrationField .= '->default(' . ($field['default'] ? 'true' : 'false') . ')';
                 } else if (is_numeric($field['default'])) {
                     $migrationField .= '->default(' . $field['default'] . ')';

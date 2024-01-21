@@ -34,8 +34,11 @@ abstract class AbstractDto extends Collection
     {
         $this->originalData = new Collection($data);
 
+        $dataValidate = $data;
         // Remove valores null
-        $dataValidate = Helpers::arrayFilterNull($data);
+        if (!config('devesharp_dev_kit.no_ignore_null_values_dto')) {
+            $dataValidate = Helpers::arrayFilterNull($data);
+        }
 
         $rules = $this->getValidateRules();
 

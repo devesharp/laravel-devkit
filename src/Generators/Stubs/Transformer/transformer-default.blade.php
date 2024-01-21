@@ -32,7 +32,7 @@ class {{ $resourceName }}Transformer extends Transformer
 @elseif($field['subType'] == "cep")
         $transform['{{$field['name']}}'] = format(CEPFormatter::class, $model->{{$field['name']}});
 @elseif($field['type'] == "number")
-        $transform['{{$field['name']}}'] = (int) $model->{{$field['name']}};
+        $transform['{{$field['name']}}'] = @if(!$field['nullable']) (int) @endif $model->{{$field['name']}};
 @elseif($field['type'] == "float")
         $transform['{{$field['name']}}'] = (float) $model->{{$field['name']}};
 @elseif($field['type'] == "bool")

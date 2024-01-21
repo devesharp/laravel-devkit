@@ -14,7 +14,7 @@ class SearchTemplateDto extends AbstractDto
             'query' => new Rule('array'),
             'query.limit' => new Rule('numeric', 'Limite de registros'),
             'query.offset' => new Rule('numeric', 'Offset'),
-            'query.sort' => new Rule('array', 'Ordenação'),
+            'query.sort' => new Rule('string', 'Ordenação'),
         ];
     }
 }

@@ -98,7 +98,11 @@ class TemplateFieldsGenerator
                 case 'datetime':
                 case 'timestamp':
                 case 'time':
-                    $rules = ['string'];
+                    if (!empty($field['format'])) {
+                        $rules = ['date_format:'.$field['format']];
+                    } else {
+                        $rules = ['string'];
+                    }
                     break;
                 default:
                     $rules = ['string'];
@@ -287,21 +291,6 @@ class TemplateFieldsGenerator
         foreach ($templateData->fieldsRaw as $key => $field) {
             $keyLower = strtolower($key);
 
-            $format = $keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'cnpj' || $keyLower == 'document' || Str::contains($keyLower, 'cpf') || Str::contains($keyLower, 'cnpj') ||
-Str::contains($keyLower, 'phone') || Str::contains($keyLower, 'celular') || Str::contains($keyLower, 'telefone') ||
-$keyLower =='rg' ||
-Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || Str::contains($keyLower, 'zip_postal');
-
-            if ($format) {
-                $treatmentField = [
-                    'fieldName' => $key,
-                    'value' => 'format(OnlyLettersNumbersFormatter::class, $requestData["'.$key.'"])',
-                ];
-
-                $fields[] = $treatmentField;
-                continue;
-            }
-
             if (!empty($field['valueOnCreate'])) {
                 $treatmentField = [
                     'fieldName' => $key,
@@ -323,6 +312,42 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
                 }
 
                 $fields[] = $treatmentField;
+            }
+        }
+
+        return $fields;
+    }
+
+    public function getUsersUpdateValues(TemplateData &$templateData)
+    {
+        $fields = [];
+        foreach ($templateData->fieldsRaw as $key => $field) {
+            $keyLower = strtolower($key);
+
+            $removeLetter = $keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'cnpj' || $keyLower == 'document' || Str::contains($keyLower, 'cpf') || Str::contains($keyLower, 'cnpj') ||
+Str::contains($keyLower, 'phone') || Str::contains($keyLower, 'celular') || Str::contains($keyLower, 'telefone') ||
+Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || Str::contains($keyLower, 'zip_postal');
+
+            if ($removeLetter) {
+                $treatmentField = [
+                    'fieldName' => $key,
+                    'value' => 'format(OnlyLettersNumbersFormatter::class, $requestData["'.$key.'"])',
+                ];
+
+                $fields[] = $treatmentField;
+                continue;
+            }
+
+            $isDate = $field['dbType'] == 'date';
+
+            if ($isDate && !empty($field['format'])) {
+                $treatmentField = [
+                    'fieldName' => $key,
+                    'value' => 'Carbon::createFromFormat("'.$field['format'].'", $requestData["'.$key.'"])->format("Y-m-d")',
+                ];
+
+                $fields[] = $treatmentField;
+                continue;
             }
         }
 
@@ -407,7 +432,120 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
                         }
                         break;
                     case 'date':
+                        if (empty($field['format'])) {
+                            $fakerFn = "fake()->date('Y-m-d')";
+                        } else {
+                            $fakerFn = "fake()->date('".$field['format']."')";
+                        }
+
+                        break;
+                    case 'datetime':
+                    case 'timestamp':
+                        $fakerFn = "fake()->date('Y-m-d H:i:s')";
+                        break;
+                    case 'time':
+                        $fakerFn = "fake()->date('H:i:s')";
+                        break;
+                    case 'enum':
+                        $fieldsString = Collection::make($field['acceptableValues'])
+                            ->map(fn($items) => "'$items'")
+                            ->map(fn($item) => is_numeric($item) ? floatval($item) : $item)->implode(',');
+                        $fakerFn = "fake()->randomElement([".$fieldsString."])";
+                        break;
+                    default:
+                        if (Str::contains($field['dbType'], 'foreign')) {
+                            $fakerFn = 1;
+                            $request = false;
+                        } else {
+                            $fakerFn = 'fake()->text(100)';
+                        }
+                }
+
+                $keyLower = strtolower($key);
+
+                if ($keyLower == 'cpf' || $keyLower == 'cnpj_or_cpf' || $keyLower == 'cnpj' || $keyLower == 'cnpj' || $keyLower == 'document' || Str::contains($keyLower, 'cpf') || Str::contains($keyLower, 'cnpj')) {
+                    $fakerFn = 'fake()->numerify("###.###.###-##")';
+                }
+
+                if (Str::contains($keyLower, 'phone') || Str::contains($keyLower, 'celular') || Str::contains($keyLower, 'telefone')) {
+                    $fakerFn = 'fake()->numerify("(##) #####-####")';
+                }
+
+                if ($keyLower == 'rg') {
+                    $fakerFn = 'fake()->numerify("##.###.###-#")';
+                }
+
+                if (Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || Str::contains($keyLower, 'zip_postal')) {
+                    $fakerFn = 'fake()->numerify("#####-###")';
+                }
+
+                if ($key == 'email' || Str::contains($keyLower, 'email')) {
+                    $fakerFn = 'fake()->email()';
+                }
+
+                if ($key == "enabled") {
+                    $fakerFn = 'true';
+                    $request = false;
+                }
+            }
+
+            if (empty($field['primary']) && $key !== 'created_at' && $key !== 'updated_at') {
+                $fields[] = [
+                    'name' => $key,
+                    'faker_function' => $fakerFn,
+                    'request' => $request,
+                ];
+            }
+        }
+        return $fields;
+    }
+
+    public function getFieldsForFakerDefinition(TemplateData &$templateData)
+    {
+        $fields = [];
+        foreach ($templateData->fieldsRaw as $key => $field) {
+            $fakerFn = '""';
+            $request = !empty($field['dto']);
+
+            if ($key == 'deleted_at') {
+                $fakerFn = 'null';
+            }else if (!empty($field['relation'])) {
+                $fakerFn = '1';
+
+                if (!empty($field['nullable'])) {
+                    continue;
+                }
+            } else {
+                switch (strtolower($field['dbType'])) {
+                    case 'integer':
+                    case 'unsignedinteger':
+                    case 'smallinteger':
+                    case 'biginteger':
+                    case 'unsignedbiginteger':
+                    case 'long':
+                        $fakerFn = 'fake()->randomNumber';
+                        break;
+                    case 'double':
+                    case 'float':
+                    case 'decimal':
+                        $fakerFn = 'fake()->randomFloat(2)';
+                        break;
+                    case 'string':
+                    case 'char':
+                    case 'text':
+                        $fakerFn = 'fake()->text(100)';
+                        break;
+                    case 'bool':
+                    case 'boolean':
+                        if ($key == 'deleted_at') {
+                            $fakerFn = 'fake()->boolean()';
+                        }else {
+                            $fakerFn = 'fake()->boolean()';
+                        }
+                        break;
+                    case 'date':
                         $fakerFn = "fake()->date('Y-m-d')";
+
                         break;
                     case 'datetime':
                     case 'timestamp':
@@ -747,9 +885,11 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
                     break;
                 case 'date':
                 case 'datetime':
-                case 'timestamp':
                 case 'time':
                     $cast = "date";
+                    break;
+                case 'timestamp':
+                    $cast = "datetime";
                     break;
             }
 
@@ -811,7 +951,7 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
             }
 
             if (isset($field['default'])) {
-                if ($field['default'] == '') {
+                if ($field['default'] === '' && in_array($field['dbType'], ['string', 'text', 'tinyText', 'mediumText', 'longText'])) {
                     $migrationField .= '->default("")';
                 }else if (is_bool($field['default'])) {
                     $migrationField .= '->default(' . ($field['default'] ? 'true' : 'false') . ')';
@@ -868,7 +1008,15 @@ Str::contains($keyLower, 'cep') || Str::contains($keyLower, 'postal_code') || St
                 $foreignTable = Str::snake(trim($field['relation']['resource']));
                 $foreignField = $field['relation']['key'] ?? 'id';
 
-                $foreignKeys[] = "\$table->foreign('".$key."')->references('".$foreignField."')->on('".$foreignTable."');";
+                if (empty($field['relation']['hash'])) {
+                    $foreignKeys[] = "\$table->foreign('".$key."')->references('".$foreignField."')->on('".$foreignTable."');";
+                } else {
+                    // unique hash
+                    $reduce_name = collect(explode('_', $key))->map(fn($item) => $item[0])->implode('');
+                    $hash = $reduce_name . '_' . uniqid();
+                    $foreignKeys[] = "\$table->foreign('".$key."', '".$hash."')->references('".$foreignField."')->on('".$foreignTable."');";
+                }
+
             }
         }
 

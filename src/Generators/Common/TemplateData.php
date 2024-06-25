@@ -119,6 +119,7 @@ class TemplateData extends DataTransferObject
      * @var array campos para serem usados na geração do Faker
      */
     public array $fieldsFaker = [];
+    public array $fieldsFakerDefinition = [];
 
     /**
      * @var array campos para serem usados na geração do Faker para docs
@@ -170,6 +171,11 @@ class TemplateData extends DataTransferObject
      * @var array valores usados ao criar recurso no Service
      */
     public array $valueOnCreate = [];
+
+    /**
+     * @var array valores usados ao criar recurso no Service
+     */
+    public array $valueOnUpdate = [];
 
     /**
      * @var array valores usados ao buscar recurso no Service
@@ -239,6 +245,7 @@ class TemplateData extends DataTransferObject
             $templateData->fieldsTransformer = $fieldGenerator->getFieldsForTransformer($templateData);
 //            var_dump($templateData->fieldsTransformer);
             $templateData->fieldsFaker = $fieldGenerator->getFieldsForFaker($templateData);
+            $templateData->fieldsFakerDefinition = $fieldGenerator->getFieldsForFakerDefinition($templateData);
             $templateData->fieldsFakerForDocs = $fieldGenerator->getFieldsForFakerDocs($templateData);
             $templateData->columnsMigration = $fieldGenerator->getColumnsForMigration($templateData);
             $templateData->relationColumnsMigration = $fieldGenerator->getRelationsColumnsForMigration($templateData);
@@ -249,6 +256,7 @@ class TemplateData extends DataTransferObject
             $templateData->filtersSearchable = $fieldGenerator->getFiltersSearchable($templateData);
             $templateData->filtersSort = $fieldGenerator->getFiltersSort($templateData);
             $templateData->valueOnCreate = $fieldGenerator->getUsersServiceRelation($templateData);
+            $templateData->valueOnUpdate = $fieldGenerator->getUsersUpdateValues($templateData);
             $templateData->valueOnSearch = $fieldGenerator->getServiceValuesOnSearch($templateData);
         }
 

@@ -19,7 +19,7 @@ class {{ $resourceName }}Factory extends Factory
     public function definition()
     {
         return [
-@foreach($fieldsFaker as $field)
+@foreach($fieldsFakerDefinition as $field)
             '{{ $field['name'] }}' => {!! $field['faker_function'] !!},
 @endforeach
         ];

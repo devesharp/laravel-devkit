@@ -12,13 +12,15 @@ class MigrationGenerator extends TemplateGenerator
 
     public string $replaceFilename = "";
 
+    static $interator = 0;
+
     public function getFileName(): string
     {
         if (!empty($this->replaceFilename)) {
             return $this->replaceFilename;
         }
 
-        return $this->templateData->now . '_create_' . $this->templateData->tableName . '_table.php';
+        return $this->templateData->now . '_' . MigrationGenerator::$interator++ .  '_create_' . $this->templateData->tableName . '_table.php';
     }
 
     public function getTemplateFilename(): string

@@ -32,23 +32,11 @@ class {{ $resourceName }} extends Model
 
     protected $casts = [
 @foreach($fieldsModelCasts as $field)
-@if($field['cast'] !== 'date')
         '{{ $field['name'] }}' => '{{ $field['cast'] }}',
-@endif
 @endforeach
     ];
 
-@if(\Devesharp\Support\Collection::make($fieldsModelCasts)->some(fn($f) => $f['cast'] == 'date'))
-    protected $dates = [
-@foreach($fieldsModelCasts as $field)
-@if($field['cast'] === 'date')
-        '{{ $field['name'] }}',
-@endif
-@endforeach
-    ];
-@endif
 @if($withFactory)
-
     protected static function newFactory()
     {
         return {{ $resourceName }}Factory::new();

@@ -133,7 +133,6 @@ class {{ $resourceName }}Service extends Service
         string $method
     ) {
         if ($method == 'update') {
-
         } else if ($method == 'create') {
 @foreach($valueOnCreate as $value)
 @if(!empty($value['valueRaw']))
@@ -144,9 +143,16 @@ class {{ $resourceName }}Service extends Service
             $requestData['{{$value['fieldName']}}'] = $requester->{{$value['userFieldName']}};
 @endif
 @endforeach
-
-            return $requestData;
         }
+@foreach($valueOnUpdate as $value)
+@if(!empty($value['valueRaw']))
+            $requestData['{{$value['fieldName']}}'] = {{$value['valueRaw']}};
+@elseif(!empty($value['value']))
+            $requestData['{{$value['fieldName']}}'] = {!! $value['value']  !!};
+@elseif(!empty($value['userFieldName']))
+            $requestData['{{$value['fieldName']}}'] = $requester->{{$value['userFieldName']}};
+@endif
+@endforeach
 
         return $requestData;
     }

@@ -32,7 +32,7 @@ class DateTimeISOFormatter implements Formatter
             if (!empty($this->formatString)) {
                 return $this->date->format($this->formatString);
             }
-            return $this->date->utc()->toIso8601String(true);
+            return $this->date->format('Y-m-d H:i:s');
         }
 
         return '';

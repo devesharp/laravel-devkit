@@ -25,18 +25,25 @@
 @else
         $resourceData = {{ $resourceName }}::factory([
 @endif
-@foreach($fieldsUsedOnResource as $fieldRelationTest)@if(!$fieldRelationTest['valueOnUser'] && $fieldRelationTest['dto'])
-            '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
-@endif
-@endforeach
 @if(!empty($create))
 @if(!empty($search))
         ])->count(5)->create();
 @else
+@if(!empty($update))
+        ])->withRelations()->create();
+@else
         ])->create();
 @endif
+@endif
 @else
-        ])->{!! !empty($forDocs) ? 'bodyForDocs()' : 'bodyForRequest()->raw()' !!};
+        ])->{!! !empty($forDocs) ? 'bodyForDocs();' : 'bodyForRequest()->raw([' !!}
+@if(empty($forDocs) && !empty($fieldsUsedOnResource))
+@foreach($fieldsUsedOnResource as $fieldRelationTest)@if(!$fieldRelationTest['valueOnUser'] && $fieldRelationTest['dto'])
+                '{{$fieldRelationTest['localKey']}}' => ${{$fieldRelationTest['variable']}}->{{$fieldRelationTest['key']}},
+@endif
+@endforeach
+        ]);
+@endif
 @endif
 @endif
 @if(!empty($update))

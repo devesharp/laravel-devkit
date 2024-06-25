@@ -37,8 +37,10 @@ class {{ $resourceName }}Transformer extends Transformer
         $transform['{{$field['name']}}'] = (float) $model->{{$field['name']}};
 @elseif($field['type'] == "bool")
         $transform['{{$field['name']}}'] = (bool) $model->{{$field['name']}};
+@elseif($field['type'] == "date" && !empty($field['format']))
+        $transform['{{$field['name']}}'] = format(DateTimeISOFormatter::class, $model->{{$field['name']}}, "{{ $field['format'] }}");
 @elseif($field['type'] == "date" || $field['type'] == "datetime" || $field['type'] == "timestamp" || $field['type'] == "time")
-    $transform['{{$field['name']}}'] = format(DateTimeISOFormatter::class, $model->{{$field['name']}});
+        $transform['{{$field['name']}}'] = format(DateTimeISOFormatter::class, $model->{{$field['name']}});
 @elseif($field['type'] == "date")
         $transform['{{$field['name']}}'] = format(DateTimeISOFormatter::class, $model->{{$field['name']}});
 @else

@@ -42,8 +42,7 @@ class WorkspaceGenerator
             $moduleGenerator = app(ModuleGenerator::class);
             $templateData = TemplateData::makeByFile($module['file_template']);
             // Como os migrations são criados muito rápido, é necessário adicionar um segundo para que o nome do arquivo seja único
-            $templateData->now = $now . $seconds;
-            $seconds++;
+            $templateData->now = $now;
 
             TemplateGenerator::$replace = !empty($module['replace']);
             $moduleGenerator->setTemplateData($templateData);

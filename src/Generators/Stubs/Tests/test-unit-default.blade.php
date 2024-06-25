@@ -50,9 +50,11 @@ class {{ $resourceName }}UnitTest extends TestCase
     sempre será o atual, assim o teste precisa ser diferente dos demais
 --}}        $this->assertDateLessOrEqualThanNow($resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif(!$field['dto'])
-    $this->assertTrue(isset($resource['{{ $field['name'] }}']), '{{ $field['name'] }}');
-@elseif($field['type'] == "date")
+        $this->assertTrue(isset($resource['{{ $field['name'] }}']), '{{ $field['name'] }}');
+@elseif($field['type'] == "date" && empty($field['format']))
         $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date" && !empty($field['format']))
+        $this->assertSame($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
         $this->assertSame($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
@@ -86,9 +88,11 @@ class {{ $resourceName }}UnitTest extends TestCase
         sempre será o atual, assim o teste precisa ser diferente dos demais
     --}}        $this->assertDateLessOrEqualThanNow($resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @elseif(!$field['dto'])
-    $this->assertTrue(isset($resource['{{ $field['name'] }}']), '{{ $field['name'] }}');
-@elseif($field['type'] == "date")
+        $this->assertTrue(isset($resource['{{ $field['name'] }}']), '{{ $field['name'] }}');
+@elseif($field['type'] == "date" && empty($field['format']))
         $this->assertDateEqual($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date" && !empty($field['format']))
+        $this->assertEquals($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
         $this->assertSame($resourceData['{{ $field['name'] }}'], $resource['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif
@@ -119,8 +123,10 @@ class {{ $resourceName }}UnitTest extends TestCase
         $this->assertGreaterThanOrEqual($resource->id, $resourceGet['id']);
 @elseif($field['name'] == "created_at" || $field['name'] == "updated_at")
         $this->assertDateLessOrEqualThanNow($resourceGet['{{ $field['name'] }}'], '{{ $field['name'] }}');
-@elseif($field['type'] == "date")
+@elseif($field['type'] == "date" && empty($field['format']))
         $this->assertDateEqual($resource->{{ $field['name'] }}, $resourceGet['{{ $field['name'] }}'], '{{ $field['name'] }}');
+@elseif($field['type'] == "date" && !empty($field['format']))
+        $this->assertEquals($resource->{{ $field['name'] }}->format('{{ $field['format'] }}'), $resourceGet['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @else
         $this->assertSame($resource->{{ $field['name'] }}, $resourceGet['{{ $field['name'] }}'], '{{ $field['name'] }}');
 @endif

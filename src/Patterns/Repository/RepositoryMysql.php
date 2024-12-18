@@ -1460,6 +1460,7 @@ class RepositoryMysql extends RepositoryInterface
     }
 
     function with($data) {
+        
         $this->modelQuery->with($data);
 
         return $this;

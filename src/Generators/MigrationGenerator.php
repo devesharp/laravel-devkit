@@ -20,7 +20,7 @@ class MigrationGenerator extends TemplateGenerator
             return $this->replaceFilename;
         }
 
-        return $this->templateData->now . '_' . MigrationGenerator::$interator++ .  '_create_' . $this->templateData->tableName . '_table.php';
+        return $this->templateData->now . '_' . str_pad(MigrationGenerator::$interator++, 4, '0', STR_PAD_LEFT) .  '_create_' . $this->templateData->tableName . '_table.php';
     }
 
     public function getTemplateFilename(): string

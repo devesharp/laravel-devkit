@@ -50,7 +50,8 @@ class Transformer
     public function transformMany(
         array $models,
         $context = 'default',
-        $requester = null
+        $requester = null,
+        $moreData = []
     ) {
         $context = $context->name ?? $context;
 
@@ -113,7 +114,8 @@ class Transformer
                 $transformed[$key] = $this->{$function}(
                     $model,
                     $requester,
-                    $default
+                    $default,
+                    $moreData
                 );
             }
         } else {
@@ -126,10 +128,10 @@ class Transformer
 
                 // Se não for o contexto default e model, faz um load do transformDefault
                 if ($context != 'default' && $context != 'model' && !in_array($context, $this->contextsIgnoreDefault)) {
-                    $default = $this->transformDefault($model, $requester, []);
+                    $default = $this->transformDefault($model, $requester, [], $moreData);
                 }
 
-                $transformed[] = $this->{$function}($model, $requester, $default);
+                $transformed[] = $this->{$function}($model, $requester, $default, $moreData);
             }
         }
 
@@ -351,11 +353,12 @@ class Transformer
         $models,
         Transformer|string $transform,
         $context = 'default',
-        $requester = null
+        $requester = null,
+        $moreData = []
     ) {
         if (is_string($transform)) {
             $transform = app($transform);
         }
-        return $transform->transformMany($models, $context, $requester);
+        return $transform->transformMany($models, $context, $requester, $moreData);
     }
 }

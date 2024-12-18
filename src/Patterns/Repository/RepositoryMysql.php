@@ -1459,6 +1459,11 @@ class RepositoryMysql extends RepositoryInterface
         return $this;
     }
 
+    function with($data) {
+        $this->modelQuery->with($data);
+
+        return $this;
+    }
     function whereHas($data, $fn) {
         $this->modelQuery->whereHas($data, $fn);
 

@@ -71,11 +71,12 @@ class Service
         $repository,
         $transformer,
         $context,
-        $requester = null
+        $requester = null,
+        $moreData = []
     ) {
         return [
             'count' => $this->getSearchCount($repository),
-            'results' => $this->getSearchResults($repository, $transformer, $context, $requester),
+            'results' => $this->getSearchResults($repository, $transformer, $context, $requester, $moreData),
         ];
     }
 
@@ -103,7 +104,8 @@ class Service
         $repository,
         $transformer,
         $context,
-        $auth = null
+        $auth = null,
+        $moreData = []
     ): array
     {
         return Transformer::collection(
@@ -111,6 +113,7 @@ class Service
             $transformer,
             $context,
             $auth,
+            $moreData,
         );
     }
 

@@ -12,6 +12,7 @@
 /dist-old
 /transfer/vendor
 /transfer/tmp/
+node_modules
 *.env
 .phpunit.result.cache
 disable-xdebug.ini

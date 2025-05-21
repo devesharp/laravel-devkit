@@ -99,6 +99,11 @@ abstract class AbstractDto extends Collection
 
         foreach ($rules as $key => $rule) {
 
+            if(empty($rule)) {
+                unset($rules[$key]);
+                continue;
+            }
+
             $validations = is_string($rule->rules) ? explode('|', $rule->rules) : $rule->rules;
 
             // Resgata outra dto e coloca dentro da key escolhida

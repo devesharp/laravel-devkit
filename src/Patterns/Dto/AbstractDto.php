@@ -298,6 +298,7 @@ abstract class AbstractDto extends Collection
         return array_keys($rules);
     }
 
+    
     public function toArray() {
         return $this->data->toArray();
     }

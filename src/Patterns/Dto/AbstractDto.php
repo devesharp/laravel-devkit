@@ -302,6 +302,14 @@ abstract class AbstractDto extends Collection
         return $this->data->toArray();
     }
 
+    public function toOriginalArray() {
+        return $this->originalData->toArray();
+    }
+
+    public function toArrayWithHidden() {
+        return array_merge($this->data->toArray(), $this->hiddenData->toArray());
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Sobrescrita de métodos
